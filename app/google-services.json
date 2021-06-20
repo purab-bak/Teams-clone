@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "986346753834",
+    "project_id": "houseparty-new",
+    "storage_bucket": "houseparty-new.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:986346753834:android:613cd22ccfb05096045853",
+        "android_client_info": {
+          "package_name": "com.lite.housepartynew"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "986346753834-tbtrh2vg5kftberhoihbt7rgc4v87j53.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZIIJCObdsMBbrPXfNoR9vbg3C_X9HU58"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "986346753834-tbtrh2vg5kftberhoihbt7rgc4v87j53.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
