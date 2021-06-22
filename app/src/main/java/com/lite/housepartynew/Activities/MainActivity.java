@@ -48,6 +48,8 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean mCallEnd, mMuted;
 
+    String channelName;
+
 
 
     private final IRtcEngineEventHandler mRtcHandler = new IRtcEngineEventHandler() {
@@ -118,6 +120,9 @@ public class MainActivity extends AppCompatActivity {
         mCallBtn = findViewById(R.id.btn_call);
         mMuteBtn = findViewById(R.id.btn_mute);
         mSwitchCameraBtn = findViewById(R.id.btn_switch_camera);
+
+        channelName = getIntent().getStringExtra("channelName");
+        Toast.makeText(MainActivity.this, channelName, Toast.LENGTH_SHORT).show();
     }
 
     private void initEngineAndJoinChannel() {
@@ -215,7 +220,9 @@ public class MainActivity extends AppCompatActivity {
             token = null;
         }
 
-        mRtcEngine.joinChannel(token, "channel", "", 0);
+
+
+        mRtcEngine.joinChannel(token, channelName, "", 0);
 
         Toast.makeText(MainActivity.this, "Joined channel successfully", Toast.LENGTH_SHORT).show();
 
