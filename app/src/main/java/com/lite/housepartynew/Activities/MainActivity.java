@@ -215,7 +215,7 @@ public class MainActivity extends AppCompatActivity {
             token = null;
         }
 
-        mRtcEngine.joinChannel(token, "demoChannel1", "", 0);
+        mRtcEngine.joinChannel(token, "channel", "", 0);
 
         Toast.makeText(MainActivity.this, "Joined channel successfully", Toast.LENGTH_SHORT).show();
 
