@@ -20,4 +20,12 @@
         android:text="join"
         android:id="@+id/joinBtn"/>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Logout"
+        android:id="@+id/logoutBtn"
+        android:layout_gravity="end"/>
+
+
 </LinearLayout>

@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
             Manifest.permission.RECORD_AUDIO,
             Manifest.permission.CAMERA
     };
+
     private static final String TAG = "tag";
 
     private RtcEngine mRtcEngine;
@@ -50,8 +51,6 @@ public class MainActivity extends AppCompatActivity {
 
     String channelName;
 
-
-
     private final IRtcEngineEventHandler mRtcHandler = new IRtcEngineEventHandler() {
         @Override
         public void onJoinChannelSuccess(String channel, int uid, int elapsed) {
@@ -60,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Log.i("tag", "Join channel success, uid" + (uid));
+                    Log.i("tag", "Join channel " + channel + " success, uid" + (uid));
                 }
             });
 
@@ -123,6 +122,8 @@ public class MainActivity extends AppCompatActivity {
 
         channelName = getIntent().getStringExtra("channelName");
         Toast.makeText(MainActivity.this, channelName, Toast.LENGTH_SHORT).show();
+
+        //make fullscreen
     }
 
     private void initEngineAndJoinChannel() {
@@ -213,13 +214,11 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
     private void joinChanel() {
         String token = getString(R.string.agora_access_token);
         if (TextUtils.isEmpty(token)){
             token = null;
         }
-
 
 
         mRtcEngine.joinChannel(token, channelName, "", 0);
