@@ -8,7 +8,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="200dp"
         android:id="@+id/remote_video_view_container"
         android:background="@color/remoteBg">
 
@@ -27,6 +27,55 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/remote_back_icon_margin_bottom"
             android:id="@+id/icon_padding"
+            android:layout_alignParentBottom="true"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_below="@id/remote_video_view_container"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:id="@+id/remote_video_view_container2"
+        android:background="@color/remoteBg">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/icon_padding2">
+
+            <ImageView
+                android:layout_width="@dimen/remote_back_icon_size"
+                android:layout_height="@dimen/remote_back_icon_size"
+                android:layout_centerInParent="true"
+                android:src="@drawable/ic_launcher_foreground"/>
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/remote_back_icon_margin_bottom"
+            android:id="@+id/icon_padding2"
+            android:layout_alignParentBottom="true"/>
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_below="@id/remote_video_view_container2"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:id="@+id/remote_video_view_container3"
+        android:background="@color/remoteBg">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/icon_padding3">
+
+            <ImageView
+                android:layout_width="@dimen/remote_back_icon_size"
+                android:layout_height="@dimen/remote_back_icon_size"
+                android:layout_centerInParent="true"
+                android:src="@drawable/ic_launcher_foreground"/>
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/remote_back_icon_margin_bottom"
+            android:id="@+id/icon_padding3"
             android:layout_alignParentBottom="true"/>
     </RelativeLayout>
 

@@ -56,8 +56,10 @@ public class MainActivity extends AppCompatActivity {
 
     private FrameLayout mLocalContainer;
     private RelativeLayout mRemoteContainer;
+    private RelativeLayout mRemoteContainer2, mRemoteContainer3;
     private SurfaceView mLocalView;
     private SurfaceView mRemoteView;
+    private SurfaceView mRemoteView2, mRemoteView3;
 
     private ImageView mCallBtn, mMuteBtn, mSwitchCameraBtn;
 
@@ -120,11 +122,13 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         Log.i("tag", "RemoteVideo Starting, uid" + (uid));
+                        currentSessionInfo.setUserCount(currentSessionInfo.getUserCount()+1);
+
+
                         setupRemoteVideo(uid);
 
                         //userCount = getUserCountFromDatabase();
 
-                        currentSessionInfo.setUserCount(currentSessionInfo.getUserCount()+1);
                         Toast.makeText(MainActivity.this, "User count local "+currentSessionInfo.getUserCount(), Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -168,6 +172,9 @@ public class MainActivity extends AppCompatActivity {
         //make fullscreen
 
         currentSessionInfo = new SessionInfo(0, channelName);
+
+        mRemoteContainer2 = findViewById(R.id.remote_video_view_container2);
+        mRemoteContainer3 = findViewById(R.id.remote_video_view_container3);
     }
 
     private void initEngineAndJoinChannel() {
@@ -243,10 +250,18 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        mRemoteView = RtcEngine.CreateRendererView(getBaseContext());
-        mRemoteContainer.addView(mRemoteView);
-        mRtcEngine.setupRemoteVideo(new VideoCanvas(mRemoteView, VideoCanvas.RENDER_MODE_HIDDEN, uid));
-        mRemoteView.setTag(uid);
+        if (currentSessionInfo.getUserCount()<3){
+            mRemoteView = RtcEngine.CreateRendererView(getBaseContext());
+            mRemoteContainer.addView(mRemoteView);
+            mRtcEngine.setupRemoteVideo(new VideoCanvas(mRemoteView, VideoCanvas.RENDER_MODE_HIDDEN, uid));
+            mRemoteView.setTag(uid);
+        }
+        else{
+            mRemoteView2=RtcEngine.CreateRendererView(getBaseContext());
+            mRemoteContainer2.addView(mRemoteView2);
+            mRtcEngine.setupRemoteVideo(new VideoCanvas(mRemoteView2, VideoCanvas.RENDER_MODE_HIDDEN, uid));
+            mRemoteView2.setTag(uid);
+        }
     }
 
     private void removeRemoteVideo() {
