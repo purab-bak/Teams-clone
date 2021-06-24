@@ -1,6 +1,7 @@
 package com.lite.housepartynew.Activities;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -19,7 +20,20 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
+import com.google.firebase.database.ValueEventListener;
+import com.lite.housepartynew.Models.SessionInfo;
 import com.lite.housepartynew.R;
+
+import org.jetbrains.annotations.NotNull;
 
 import io.agora.rtc.Constants;
 import io.agora.rtc.IRtcEngineEventHandler;
@@ -51,6 +65,12 @@ public class MainActivity extends AppCompatActivity {
 
     String channelName;
 
+    FirebaseUser mCurrentUser;
+    FirebaseAuth mAuth;
+
+    DatabaseReference activeChannelsRef;
+    int userCount;
+
     private final IRtcEngineEventHandler mRtcHandler = new IRtcEngineEventHandler() {
         @Override
         public void onJoinChannelSuccess(String channel, int uid, int elapsed) {
@@ -60,10 +80,16 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     Log.i("tag", "Join channel " + channel + " success, uid" + (uid));
+
+                    Toast.makeText(MainActivity.this, "My UID : " + uid, Toast.LENGTH_SHORT).show();
+
+                    updateDatabase(uid);
+
                 }
             });
 
         }
+
 
         @Override
         public void onUserOffline(int uid, int reason) {
@@ -88,6 +114,10 @@ public class MainActivity extends AppCompatActivity {
                     public void run() {
                         Log.i("tag", "RemoteVideo Starting, uid" + (uid));
                         setupRemoteVideo(uid);
+
+                        userCount = getUserCountFromDatabase();
+
+                        //Toast.makeText(MainActivity.this, "Remote user " + uid, Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -121,8 +151,12 @@ public class MainActivity extends AppCompatActivity {
         mSwitchCameraBtn = findViewById(R.id.btn_switch_camera);
 
         channelName = getIntent().getStringExtra("channelName");
-        Toast.makeText(MainActivity.this, channelName, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(MainActivity.this, channelName, Toast.LENGTH_SHORT).show();
 
+        mAuth = FirebaseAuth.getInstance();
+        mCurrentUser = mAuth.getCurrentUser();
+
+        activeChannelsRef = FirebaseDatabase.getInstance().getReference().child("active-channels");
         //make fullscreen
     }
 
@@ -145,7 +179,7 @@ public class MainActivity extends AppCompatActivity {
     private void initializeEngine() {
         try {
             mRtcEngine = RtcEngine.create(getBaseContext(), getString(R.string.agora_app_id), mRtcHandler);
-            Toast.makeText(MainActivity.this, "Initialized Engine", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(MainActivity.this, "Initialized Engine", Toast.LENGTH_SHORT).show();
         }catch (Exception e){
             Log.e(TAG, Log.getStackTraceString(e));
             throw new RuntimeException("Need to check rtc sdk init fatal error\n" + Log.getStackTraceString(e));
@@ -161,9 +195,10 @@ public class MainActivity extends AppCompatActivity {
                 VideoEncoderConfiguration.ORIENTATION_MODE.ORIENTATION_MODE_FIXED_PORTRAIT
                 ));
 
-        Toast.makeText(MainActivity.this, "Setup Video config", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(MainActivity.this, "Setup Video config", Toast.LENGTH_SHORT).show();
 
     }
+
 
     private void setupLocalVideo(){
         mRtcEngine.enableVideo();
@@ -175,7 +210,7 @@ public class MainActivity extends AppCompatActivity {
         VideoCanvas localVideoCanvas = new VideoCanvas(mLocalView, VideoCanvas.RENDER_MODE_HIDDEN, 0);
         mRtcEngine.setupLocalVideo(localVideoCanvas);
 
-        Toast.makeText(MainActivity.this, "Setup Local Video", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(MainActivity.this, "Setup Local Video", Toast.LENGTH_SHORT).show();
 
     }
 
@@ -220,10 +255,9 @@ public class MainActivity extends AppCompatActivity {
             token = null;
         }
 
-
         mRtcEngine.joinChannel(token, channelName, "", 0);
 
-        Toast.makeText(MainActivity.this, "Joined channel successfully", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(MainActivity.this, "Joined channel successfully", Toast.LENGTH_SHORT).show();
 
     }
 
@@ -326,5 +360,56 @@ public class MainActivity extends AppCompatActivity {
         }
 
         RtcEngine.destroy();
+    }
+
+    private void updateDatabase(int uid){
+
+        activeChannelsRef.child(channelName).child("users").child(mCurrentUser.getUid()).setValue(uid);
+
+        //activeChannelsRef.child(channelName).child("users-count").setValue()
+
+
+        activeChannelsRef.child(channelName).runTransaction(new Transaction.Handler() {
+            @NonNull
+            @NotNull
+            @Override
+            public Transaction.Result doTransaction(@NonNull @NotNull MutableData currentData) {
+                if (currentData.child("user-count").getValue() != null){
+                    userCount = Integer.parseInt(currentData.child("user-count").getValue().toString()) + 1;
+                }
+                else {
+                    userCount = 1;
+                }
+
+                currentData.child("user-count").setValue(userCount);
+                return Transaction.success(currentData);
+            }
+
+            @Override
+            public void onComplete(@Nullable @org.jetbrains.annotations.Nullable DatabaseError error, boolean committed, @Nullable @org.jetbrains.annotations.Nullable DataSnapshot currentData) {
+                Toast.makeText(MainActivity.this, "Transaction complete", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "user count txn compl: " +userCount, Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+    }
+
+    private int getUserCountFromDatabase(){
+
+        activeChannelsRef.child(channelName).child("user-count").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                userCount = Integer.parseInt(snapshot.getValue().toString());
+                Toast.makeText(MainActivity.this, "User count from function call : "+userCount, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+            }
+        });
+
+        return userCount;
     }
 }
