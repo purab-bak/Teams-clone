@@ -71,6 +71,8 @@ public class MainActivity extends AppCompatActivity {
     DatabaseReference activeChannelsRef;
     int userCount;
 
+    SessionInfo currentSessionInfo;
+
     private final IRtcEngineEventHandler mRtcHandler = new IRtcEngineEventHandler() {
         @Override
         public void onJoinChannelSuccess(String channel, int uid, int elapsed) {
@@ -79,11 +81,16 @@ public class MainActivity extends AppCompatActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+
+                    currentSessionInfo.setUserCount(1);
+
                     Log.i("tag", "Join channel " + channel + " success, uid" + (uid));
 
                     Toast.makeText(MainActivity.this, "My UID : " + uid, Toast.LENGTH_SHORT).show();
 
-                    updateDatabase(uid);
+                    //updateDatabase(uid);
+
+                    currentSessionInfo.setUserCount(1);
 
                 }
             });
@@ -115,9 +122,10 @@ public class MainActivity extends AppCompatActivity {
                         Log.i("tag", "RemoteVideo Starting, uid" + (uid));
                         setupRemoteVideo(uid);
 
-                        userCount = getUserCountFromDatabase();
+                        //userCount = getUserCountFromDatabase();
 
-                        //Toast.makeText(MainActivity.this, "Remote user " + uid, Toast.LENGTH_SHORT).show();
+                        currentSessionInfo.setUserCount(currentSessionInfo.getUserCount()+1);
+                        Toast.makeText(MainActivity.this, "User count local "+currentSessionInfo.getUserCount(), Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -158,6 +166,8 @@ public class MainActivity extends AppCompatActivity {
 
         activeChannelsRef = FirebaseDatabase.getInstance().getReference().child("active-channels");
         //make fullscreen
+
+        currentSessionInfo = new SessionInfo(0, channelName);
     }
 
     private void initEngineAndJoinChannel() {
