@@ -53,4 +53,7 @@ dependencies {
 
     implementation 'com.intellij:annotations:+@jar'
 
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
+
+
 }

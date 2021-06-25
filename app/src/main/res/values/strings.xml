@@ -2,4 +2,6 @@
     <string name="app_name">HouseParty New</string>
     <string name="agora_app_id">fb33838f99ae4390aae1136b7fb3f20b</string>
     <string name="agora_access_token"></string>
+    <string name="bit_rate_value_with_unit">%d kbps</string>
+    <string name="frame_rate_value_with_unit">%d fps</string>
 </resources>
