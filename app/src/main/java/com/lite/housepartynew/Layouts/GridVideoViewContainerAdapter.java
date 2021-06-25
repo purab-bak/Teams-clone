@@ -6,6 +6,7 @@ import android.util.DisplayMetrics;
 import android.view.SurfaceView;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.WindowMetrics;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,6 +20,7 @@ public class GridVideoViewContainerAdapter extends VideoViewAdapter {
     public GridVideoViewContainerAdapter(Activity activity, int localUid, HashMap<Integer, SurfaceView> uids) {
         super(activity, localUid, uids);
     }
+
 
     @Override
     protected void customizedInit(HashMap<Integer, SurfaceView> uids, boolean force) {

@@ -66,7 +66,8 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String[] REQUESTED_PERMISSIONS = {
             Manifest.permission.RECORD_AUDIO,
-            Manifest.permission.CAMERA
+            Manifest.permission.CAMERA,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
 
     private static final String TAG = "tag";
@@ -104,6 +105,13 @@ public class MainActivity extends AppCompatActivity {
 
     private String userName="lul";
     private boolean isMuted = false;
+    private boolean mIsLandscape = false;
+
+    private boolean isLocalCall = true;
+    private String localState = Constant.USER_STATE_OPEN;
+
+
+
 
 
     private final IRtcEngineEventHandler mRtcHandler = new IRtcEngineEventHandler() {
@@ -122,6 +130,10 @@ public class MainActivity extends AppCompatActivity {
                     //updateDatabase(uid);
 
                     //multipleUsers
+
+                    //SurfaceView localView = mUidsList.remove(0);
+
+                    agoraUser.setAgoraUid(uid);
                     SurfaceView localView = mUidsList.remove(0);
                     mUidsList.put(uid, localView);
 
@@ -129,7 +141,6 @@ public class MainActivity extends AppCompatActivity {
             });
 
         }
-
 
         @Override
         public void onUserOffline(int uid, int reason) {
@@ -143,6 +154,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
+
 
         @Override
         public void onRemoteVideoStateChanged(int uid, int state, int reason, int elapsed) {
@@ -187,7 +199,8 @@ public class MainActivity extends AppCompatActivity {
         initUi();
 
         if (checkSelfPermission(REQUESTED_PERMISSIONS[0], PERMISSION_REQ_ID) &&
-                checkSelfPermission(REQUESTED_PERMISSIONS[1], PERMISSION_REQ_ID)) {
+                checkSelfPermission(REQUESTED_PERMISSIONS[1], PERMISSION_REQ_ID) &&
+                checkSelfPermission(REQUESTED_PERMISSIONS[2], PERMISSION_REQ_ID)) {
             //init engine
 
             initEngineAndJoinChannel();
@@ -222,7 +235,7 @@ public class MainActivity extends AppCompatActivity {
         initializeEngine();
 
         //setup video config
-        setupVideoConfig();
+        //setupVideoConfig();
 
         //setup local video
         setupLocalVideo();
@@ -243,16 +256,16 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void setupVideoConfig(){
-        mRtcEngine.enableVideo();
-
-        mRtcEngine.setVideoEncoderConfiguration(new VideoEncoderConfiguration(VideoEncoderConfiguration.VD_640x360,
-                VideoEncoderConfiguration.FRAME_RATE.FRAME_RATE_FPS_15,
-                VideoEncoderConfiguration.STANDARD_BITRATE,
-                VideoEncoderConfiguration.ORIENTATION_MODE.ORIENTATION_MODE_FIXED_PORTRAIT
-                ));
-
-    }
+//    private void setupVideoConfig(){
+//        mRtcEngine.enableVideo();
+//
+//        mRtcEngine.setVideoEncoderConfiguration(new VideoEncoderConfiguration(VideoEncoderConfiguration.VD_640x360,
+//                VideoEncoderConfiguration.FRAME_RATE.FRAME_RATE_FPS_15,
+//                VideoEncoderConfiguration.STANDARD_BITRATE,
+//                VideoEncoderConfiguration.ORIENTATION_MODE.ORIENTATION_MODE_FIXED_PORTRAIT
+//                ));
+//
+//    }
 
 
     //done
