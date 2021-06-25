@@ -5,19 +5,28 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.WindowInsets;
+import android.view.WindowInsetsController;
+import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -31,10 +40,19 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
+import com.lite.housepartynew.Layouts.GridVideoViewContainer;
+import com.lite.housepartynew.Layouts.RecyclerItemClickListener;
+import com.lite.housepartynew.Models.AgoraUser;
 import com.lite.housepartynew.Models.SessionInfo;
+import com.lite.housepartynew.Models.UserStatusData;
 import com.lite.housepartynew.R;
+import com.lite.housepartynew.utils.Constant;
 
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import io.agora.rtc.Constants;
 import io.agora.rtc.IRtcEngineEventHandler;
@@ -76,6 +94,25 @@ public class MainActivity extends AppCompatActivity {
 
     SessionInfo currentSessionInfo;
 
+    //multiple users feature
+    private final HashMap<Integer, SurfaceView> mUidsList = new HashMap<>();
+    private AgoraUser agoraUser;
+    private LinearLayout mAddFriendLinearLayout;
+    private EditText mSearchFriendEditText;
+    private RecyclerView mFriendListRecyclerView;
+    private GridVideoViewContainer mGridVideoViewContainer;
+    private List<String> DBFriend = new ArrayList<>();
+
+    public static final int LAYOUT_TYPE_DEFAULT = 0;
+    public int mLayoutType = LAYOUT_TYPE_DEFAULT;
+
+    private String userName="lul";
+    private boolean isMuted = false;
+
+
+    //private FriendListRecyclerViewAdapter mFriendListRecyclerViewAdapter;
+
+
     private final IRtcEngineEventHandler mRtcHandler = new IRtcEngineEventHandler() {
         @Override
         public void onJoinChannelSuccess(String channel, int uid, int elapsed) {
@@ -88,12 +125,12 @@ public class MainActivity extends AppCompatActivity {
                     currentSessionInfo.setUserCount(1);
 
                     Log.i("tag", "Join channel " + channel + " success, uid" + (uid));
-
                     Toast.makeText(MainActivity.this, "My UID : " + uid, Toast.LENGTH_SHORT).show();
-
                     //updateDatabase(uid);
 
-                    currentSessionInfo.setUserCount(1);
+                    //multipleUsers
+                    SurfaceView localView = mUidsList.remove(0);
+                    mUidsList.put(uid, localView);
 
                 }
             });
@@ -109,7 +146,8 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     Log.i("tag", "User offline, uid" + (uid));
-                    removeRemoteVideo();
+                    //removeRemoteVideo();
+                    onRemoteUserLeft(uid);
                 }
             });
         }
@@ -127,7 +165,6 @@ public class MainActivity extends AppCompatActivity {
 
 
                         setupRemoteVideo(uid);
-
                         //userCount = getUserCountFromDatabase();
 
                         Toast.makeText(MainActivity.this, "User count local "+currentSessionInfo.getUserCount(), Toast.LENGTH_SHORT).show();
@@ -141,7 +178,20 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //set fullscreen
         setContentView(R.layout.activity_main);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            final WindowInsetsController insetsController = getWindow().getInsetsController();
+            if (insetsController != null) {
+                insetsController.hide(WindowInsets.Type.statusBars());
+            }
+        } else {
+            getWindow().setFlags(
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN
+            );
+        }
 
         initUi();
 
@@ -152,16 +202,17 @@ public class MainActivity extends AppCompatActivity {
             initEngineAndJoinChannel();
 
         }
+
     }
 
     private void initUi() {
 
-        mLocalContainer = findViewById(R.id.local_video_view_container);
-        mRemoteContainer = findViewById(R.id.remote_video_view_container);
-
-        mCallBtn = findViewById(R.id.btn_call);
-        mMuteBtn = findViewById(R.id.btn_mute);
-        mSwitchCameraBtn = findViewById(R.id.btn_switch_camera);
+//        mLocalContainer = findViewById(R.id.local_video_view_container);
+//        mRemoteContainer = findViewById(R.id.remote_video_view_container);
+//
+//        mCallBtn = findViewById(R.id.btn_call);
+//        mMuteBtn = findViewById(R.id.btn_mute);
+//        mSwitchCameraBtn = findViewById(R.id.btn_switch_camera);
 
         channelName = getIntent().getStringExtra("channelName");
         //Toast.makeText(MainActivity.this, channelName, Toast.LENGTH_SHORT).show();
@@ -174,8 +225,39 @@ public class MainActivity extends AppCompatActivity {
 
         currentSessionInfo = new SessionInfo(0, channelName);
 
-        mRemoteContainer2 = findViewById(R.id.remote_video_view_container2);
-        mRemoteContainer3 = findViewById(R.id.remote_video_view_container3);
+        //mRemoteContainer2 = findViewById(R.id.remote_video_view_container2);
+        //mRemoteContainer3 = findViewById(R.id.remote_video_view_container3);
+
+
+        ///multiple users
+        agoraUser = new AgoraUser();
+        mCallBtn = findViewById(R.id.start_call_end_call_btn);
+        mMuteBtn = findViewById(R.id.audio_mute_audio_unmute_btn);
+        mSwitchCameraBtn = findViewById(R.id.switch_camera_btn);
+        mAddFriendLinearLayout = findViewById(R.id.layout_add_friends);
+        mGridVideoViewContainer = findViewById(R.id.grid_video_view_container);
+        mSearchFriendEditText = findViewById(R.id.et_search_friends);
+        mFriendListRecyclerView = findViewById(R.id.rv_friendList);
+        //mShowFriendLinearLayout = findViewById(R.id.layout_show_friends);
+        //mShowFriendListRecyclerView = findViewById(R.id.rv_show_friendList);
+
+        mGridVideoViewContainer.setItemEventHandler(new RecyclerItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+
+            }
+
+            @Override
+            public void onItemLongClick(View view, int position) {
+
+            }
+
+            @Override
+            public void onItemDoubleClick(View view, int position) {
+
+            }
+        });
+
     }
 
     private void initEngineAndJoinChannel() {
@@ -190,10 +272,12 @@ public class MainActivity extends AppCompatActivity {
         setupLocalVideo();
 
         //join channel
-        joinChanel();
+        joinChannel();
 
     }
 
+
+    //done
     private void initializeEngine() {
         try {
             mRtcEngine = RtcEngine.create(getBaseContext(), getString(R.string.agora_app_id), mRtcHandler);
@@ -218,64 +302,32 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    //done
     private void setupLocalVideo(){
-        mRtcEngine.enableVideo();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mRtcEngine.enableVideo();
+                mRtcEngine.enableInEarMonitoring(true);
+                mRtcEngine.setInEarMonitoringVolume(80);
 
-        mLocalView = RtcEngine.CreateRendererView(getBaseContext());
-        mLocalView.setZOrderMediaOverlay(true);
-        mLocalContainer.addView(mLocalView);
+                SurfaceView surfaceView = RtcEngine.CreateRendererView(getBaseContext());
+                mRtcEngine.setupLocalVideo(new VideoCanvas(surfaceView, VideoCanvas.RENDER_MODE_HIDDEN, 0));
+                surfaceView.setZOrderOnTop(false);
+                surfaceView.setZOrderMediaOverlay(false);
 
-        VideoCanvas localVideoCanvas = new VideoCanvas(mLocalView, VideoCanvas.RENDER_MODE_HIDDEN, 0);
-        mRtcEngine.setupLocalVideo(localVideoCanvas);
+                mUidsList.put(0, surfaceView);
+
+                mGridVideoViewContainer.initViewContainer(MainActivity.this, 0, mUidsList, false);
+            }
+        });
 
         //Toast.makeText(MainActivity.this, "Setup Local Video", Toast.LENGTH_SHORT).show();
 
     }
 
-
-
-    private void setupRemoteVideo(int uid){
-
-        int count = mRemoteContainer.getChildCount();
-
-        View view = null;
-
-        for (int i=0; i<count; i++){
-            View v = mRemoteContainer.getChildAt(i);
-            if (v.getTag() instanceof Integer && ((int) v.getTag()) == uid){
-                view = v;
-            }
-        }
-
-        if (view != null){
-            return;
-        }
-
-        if (currentSessionInfo.getUserCount()<3){
-            mRemoteView = RtcEngine.CreateRendererView(getBaseContext());
-            mRemoteContainer.addView(mRemoteView);
-            mRtcEngine.setupRemoteVideo(new VideoCanvas(mRemoteView, VideoCanvas.RENDER_MODE_HIDDEN, uid));
-            mRemoteView.setTag(uid);
-        }
-        else{
-            mRemoteView2=RtcEngine.CreateRendererView(getBaseContext());
-            mRemoteContainer2.addView(mRemoteView2);
-            mRtcEngine.setupRemoteVideo(new VideoCanvas(mRemoteView2, VideoCanvas.RENDER_MODE_HIDDEN, uid));
-            mRemoteView2.setTag(uid);
-        }
-    }
-
-    private void removeRemoteVideo() {
-
-        if (mRemoteView != null){
-            mRemoteContainer.removeView(mRemoteView);
-        }
-
-        mRemoteView = null;
-
-    }
-
-    private void joinChanel() {
+    //done
+    private void joinChannel() {
         String token = getString(R.string.agora_access_token);
         if (TextUtils.isEmpty(token)){
             token = null;
@@ -287,7 +339,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
+    //done
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull  int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -303,6 +355,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //done
     private boolean checkSelfPermission(String permission, int requestCode) {
         if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, REQUESTED_PERMISSIONS, requestCode);
@@ -311,18 +364,194 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    public void onLocalAudioMuteClicked(View view) {
 
-        mMuted = !mMuted;
-        mRtcEngine.muteLocalAudioStream(mMuted);
-        int res = mMuted?R.drawable.btn_mute : R.drawable.btn_unmute;
+    //done - firebase logic
+    private void onBigVideoViewDoubleClicked(View view, int position) {
+        if (mUidsList.size() < 2) {
+            return;
+        }
 
-        mMuteBtn.setImageResource(res);
+        final UserStatusData user = mGridVideoViewContainer.getItem(position);
+
+//        if (user.mUid != this.agoraUser.getAgoraUid()) {
+//
+//            chatSearchChildEventListener = new ChildEventListener() {
+//                @Override
+//                public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+//                    DBUser result = dataSnapshot.getValue(DBUser.class);
+//                    //startMessaging(result.getName());
+//
+//                    mRef.orderByChild("uid").startAt(user.mUid).endAt(user.mUid + "\uf8ff").removeEventListener(chatSearchChildEventListener);
+//
+//                }
+//
+//                @Override
+//                public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+//
+//                }
+//
+//                @Override
+//                public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+//
+//                }
+//
+//                @Override
+//                public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+//
+//                }
+//
+//                @Override
+//                public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//                }
+//            };
+//
+//            mRef.orderByChild("uid").startAt(user.mUid).endAt(user.mUid + "\uf8ff").addChildEventListener(chatSearchChildEventListener);
+//        }
     }
 
 
+    //done
+    private void onRemoteUserLeft(int uid) {
+        removeRemoteVideo(uid);
+    }
+
+
+    //done
+    private void removeRemoteVideo(final int uid) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Object target = mUidsList.remove(uid);
+                if (target == null) {
+                    return;
+                }
+                switchToDefaultVideoView();
+            }
+        });
+
+    }
+
+
+    //done
+    private void setupRemoteVideo(int uid){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                SurfaceView mRemoteView = RtcEngine.CreateRendererView(getApplicationContext());
+
+                mUidsList.put(uid, mRemoteView);
+                mRemoteView.setZOrderOnTop(true);
+                mRemoteView.setZOrderMediaOverlay(true);
+                mRtcEngine.setupRemoteVideo(new VideoCanvas(mRemoteView, VideoCanvas.RENDER_MODE_HIDDEN, uid));
+
+                switchToDefaultVideoView();
+            }
+        });
+
+    }
+
+
+    //done
+    private void switchToDefaultVideoView() {
+
+        mGridVideoViewContainer.initViewContainer(MainActivity.this, agoraUser.getAgoraUid(), mUidsList, false);
+
+        boolean setRemoteUserPriorityFlag = false;
+
+        mLayoutType = LAYOUT_TYPE_DEFAULT;
+
+        int sizeLimit = mUidsList.size();
+        if (sizeLimit > 5) {
+            sizeLimit = 5;
+        }
+
+        for (int i = 0; i < sizeLimit; i++) {
+            int uid = mGridVideoViewContainer.getItem(i).mUid;
+            if (agoraUser.getAgoraUid() != uid) {
+                if (!setRemoteUserPriorityFlag) {
+                    setRemoteUserPriorityFlag = true;
+                    mRtcEngine.setRemoteUserPriority(uid, Constants.USER_PRIORITY_HIGH);
+                } else {
+                    mRtcEngine.setRemoteUserPriority(uid, Constants.USER_PRIORITY_NORMAL);
+                }
+            }
+        }
+    }
+
+    //done
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (!mCallEnd){
+            leaveChannel();
+        }
+
+        RtcEngine.destroy();
+    }
+
+    private void leaveChannel() {
+        mRtcEngine.leaveChannel();
+    }
+
+    //implement later
+
+//    public void onLockRoomClick(View view) {
+//        if (isLocalCall) {
+//            //when the user is in his own room
+//            if (localState.equals(Constant.USER_STATE_LOCK)) {
+//                //set the room to public
+//                localState = Constant.USER_STATE_OPEN;
+//                mRef.child(this.userName).setValue(new DBUser(this.userName, agoraUser.getAgoraUid(), localState, DBFriend));
+//                showToast("Room set to public");
+//            }else {
+//                //set the room to private so that no one can join the room
+//                localState = Constant.USER_STATE_LOCK;
+//                mRef.child(this.userName).setValue(new DBUser(this.userName, agoraUser.getAgoraUid(), localState, DBFriend));
+//                showToast("Room set to private");
+//            }
+//        }else {
+//            //when user is joining other people's room
+//            //leave that room and come back to user's own room
+//            isLocalCall = true;
+//            finishCalling();
+//            channelName = userName;
+//            startCalling();
+//            localState = Constant.USER_STATE_OPEN;
+//            //update user's room state
+//            mRef.child(userName).setValue(new DBUser(userName, agoraUser.getAgoraUid(), localState, DBFriend));
+//        }
+//    }
+
+    //done
+    private void finishCalling() {
+        leaveChannel();
+        mUidsList.clear();
+    }
+
+    //done
+    private void startCalling() {
+        setupLocalVideo();
+        joinChannel();
+    }
+
+    //done  but check use
+    private String getUserName() {
+        return this.userName;
+    }
+
+    //done
     public void onSwitchCameraClicked(View view) {
         mRtcEngine.switchCamera();
+    }
+
+    //done
+    public void onLocalAudioMuteClicked(View view) {
+        isMuted = !isMuted;
+        mRtcEngine.muteLocalAudioStream(isMuted);
+        int res = isMuted ? R.drawable.btn_mute : R.drawable.btn_unmute;
+        mMuteBtn.setImageResource(res);
+
     }
 
     public void onCallClicked(View view) {
@@ -343,13 +572,13 @@ public class MainActivity extends AppCompatActivity {
 
     private void startCall() {
         setupLocalVideo();
-        joinChanel();
+        joinChannel();
     }
 
     private void endCall() {
 
         removeLocalVideo();
-        removeRemoteVideo();
+        //removeRemoteVideo();
         leaveChannel();
 
         startActivity(new Intent(MainActivity.this, JoinChannelActivity.class));
@@ -375,21 +604,175 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void leaveChannel() {
 
-        mRtcEngine.leaveChannel();
+    //later
 
+    /*
+    public void onAddFriendClick(View view) {
+        if (isShowingFriend) {
+            isShowingFriend = !isShowingFriend;
+            mShowFriendLinearLayout.setVisibility(isShowingFriend ? View.VISIBLE : View.GONE);
+        }
+        isAddingFriend = !isAddingFriend;
+        mAddFriendLinearLayout.setVisibility(isAddingFriend ? View.VISIBLE : View.GONE);
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (!mCallEnd){
-            leaveChannel();
+
+    public void onSearchButtonClick(View view) {
+        String searchFriendName = mSearchFriendEditText.getText().toString();
+        if (searchFriendName == null || searchFriendName.equals("")) {
+            showToast("Name can not be empty!");
+        }else {
+            searchFriends(searchFriendName);
+        }
+    }
+
+
+    later. maybe lite
+    private void searchFriends(final String searchFriendName) {
+        //search for a new friend in the database
+        searchFriendList.clear();
+        mFriendListRecyclerViewAdapter = new FriendListRecyclerViewAdapter(searchFriendList);
+        mFriendListRecyclerViewAdapter.setOnItemClickListener(new FriendListRecyclerViewAdapter.ClickListener() {
+            @Override
+            public void onItemClick(int position, View v) {
+                addFriend(searchFriendList.get(position).getName());
+                mSearchFriendEditText.setText("");
+                searchFriendList.clear();
+                mFriendListRecyclerView.setAdapter(mFriendListRecyclerViewAdapter);
+            }
+        });
+        RecyclerView.LayoutManager manager = new GridLayoutManager(getBaseContext(), 1);
+        mFriendListRecyclerView.setLayoutManager(manager);
+
+        mFriendListRecyclerView.setAdapter(mFriendListRecyclerViewAdapter);
+
+        childEventListener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                DBUser result = dataSnapshot.getValue(DBUser.class);
+
+                searchFriendList.add(result);
+                mRef.orderByChild("name").startAt(searchFriendName).endAt(searchFriendName + "\uf8ff").removeEventListener(childEventListener);
+
+                mFriendListRecyclerViewAdapter = new FriendListRecyclerViewAdapter(searchFriendList);
+                mFriendListRecyclerViewAdapter.setOnItemClickListener(new FriendListRecyclerViewAdapter.ClickListener() {
+                    @Override
+                    public void onItemClick(int position, View v) {
+                        addFriend(searchFriendList.get(position).getName());
+                        mSearchFriendEditText.setText("");
+                        searchFriendList.clear();
+                        mFriendListRecyclerView.setAdapter(mFriendListRecyclerViewAdapter);
+                    }
+                });
+                RecyclerView.LayoutManager manager = new GridLayoutManager(getBaseContext(), 1);
+                mFriendListRecyclerView.setLayoutManager(manager);
+
+                mFriendListRecyclerView.setAdapter(mFriendListRecyclerViewAdapter);
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+
+        mRef.orderByChild("name").startAt(searchFriendName).endAt(searchFriendName + "\uf8ff").addChildEventListener(childEventListener);
+    }
+
+    public void addFriend(String userName) {
+        DBFriend.add(userName);
+        mRef.child(this.userName).setValue(new DBUser(this.userName, agoraUser.getAgoraUid(), localState, DBFriend));
+    }
+
+    public void onShowFriendListClick(View view) {
+        if (isAddingFriend) {
+            isAddingFriend = !isAddingFriend;
+            mAddFriendLinearLayout.setVisibility(isAddingFriend ? View.VISIBLE : View.GONE);
         }
 
-        RtcEngine.destroy();
+        isShowingFriend = !isShowingFriend;
+        mShowFriendLinearLayout.setVisibility(isShowingFriend ? View.VISIBLE : View.GONE);
+
+        mShowFriendListRecyclerViewAdapter = new ShowFriendListRecyclerViewAdapter(DBFriend);
+        mShowFriendListRecyclerViewAdapter.setOnItemClickListener(new ShowFriendListRecyclerViewAdapter.ClickListener() {
+            @Override
+            public void onItemClick(final int position, View v) {
+
+                if (v.getId() == R.id.btn_join_friend) {
+                    joinFriendChildEventListener = new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                            DBUser result = dataSnapshot.getValue(DBUser.class);
+                            if (result.getState().equals(Constant.USER_STATE_OPEN)) {
+                                joinFriend(DBFriend.get(position));
+                                mShowFriendLinearLayout.setVisibility(View.GONE);
+                            }else {
+                                showToast(DBFriend.get(position) + "'s room is locked. You can message him to say hi!");
+                            }
+
+                            mRef.orderByChild("name").startAt(DBFriend.get(position)).endAt(DBFriend.get(position) + "\uf8ff").removeEventListener(joinFriendChildEventListener);
+                        }
+
+                        @Override
+                        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                        }
+
+                        @Override
+                        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                        }
+
+                        @Override
+                        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    };
+                    mRef.orderByChild("name").startAt(DBFriend.get(position)).endAt(DBFriend.get(position) + "\uf8ff").addChildEventListener(joinFriendChildEventListener);
+
+                }else if (v.getId() == R.id.btn_chat_friend){
+                    //startMessaging(DBFriend.get(position));
+                }
+            }
+        });
+        RecyclerView.LayoutManager manager = new LinearLayoutManager(this);
+        mShowFriendListRecyclerView.setLayoutManager(manager);
+        mShowFriendListRecyclerView.setAdapter(mShowFriendListRecyclerViewAdapter);
     }
+    */
+
+
+    /////implementSomehow
+//    public void joinFriend(String friendName){
+//        channelName = friendName;
+//        finishCalling();
+//        startCalling();
+//        //set the user's room state to private
+//        localState = Constant.USER_STATE_LOCK;
+//        mRef.child(userName).setValue(new DBUser(userName, agoraUser.getAgoraUid(), localState, DBFriend));
+//        isLocalCall = false;
+//    }
 
     private void updateDatabase(int uid){
 
