@@ -25,9 +25,7 @@
         android:layout_height="60dp"
         android:src="@drawable/btn_show_friends"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
-        android:onClick="onShowFriendListClick"
-        />
+        android:layout_marginTop="20dp" />
 
     <LinearLayout
         android:id="@+id/layout_show_friends"
@@ -61,9 +59,7 @@
         android:src="@drawable/btn_add_friends"
         android:layout_alignParentRight="true"
         android:layout_marginRight="20dp"
-        android:layout_marginTop="20dp"
-        android:onClick="onAddFriendClick"
-        />
+        android:layout_marginTop="20dp"/>
 
 
     <LinearLayout
@@ -98,7 +94,6 @@
             android:layout_height="wrap_content"
             android:text="Search"
             android:layout_marginLeft="200dp"
-            android:onClick="onSearchButtonClick"
             />
 
         <androidx.recyclerview.widget.RecyclerView
@@ -115,22 +110,33 @@
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="@dimen/control_bottom_margin">
 
+<!--        <ImageView-->
+<!--            android:id="@+id/start_call_end_call_btn"-->
+<!--            android:layout_width="@dimen/call_button_size"-->
+<!--            android:layout_height="@dimen/call_button_size"-->
+<!--            android:onClick="onLockRoomClick"-->
+<!--            android:layout_centerInParent="true"-->
+<!--            android:src="@drawable/ic_close_black_24dp"-->
+<!--            android:scaleType="centerCrop"-->
+<!--            android:visibility="gone"/>-->
+
         <ImageView
-            android:id="@+id/start_call_end_call_btn"
+            android:id="@+id/end_call_btn"
             android:layout_width="@dimen/call_button_size"
             android:layout_height="@dimen/call_button_size"
-            android:onClick="onLockRoomClick"
+            android:onClick="onEndCallClicked"
             android:layout_centerInParent="true"
-            android:src="@drawable/ic_close_black_24dp"
+            android:src="@drawable/btn_endcall"
             android:scaleType="centerCrop"/>
+
 
         <ImageView
             android:id="@+id/switch_camera_btn"
             android:layout_width="@dimen/other_button_size"
             android:layout_height="@dimen/other_button_size"
 
-            android:layout_toLeftOf="@id/start_call_end_call_btn"
-            android:layout_toStartOf="@id/start_call_end_call_btn"
+            android:layout_toLeftOf="@id/end_call_btn"
+            android:layout_toStartOf="@id/end_call_btn"
             android:layout_marginRight="@dimen/control_bottom_horizontal_margin"
 
             android:layout_centerVertical="true"
@@ -142,8 +148,8 @@
             android:id="@+id/audio_mute_audio_unmute_btn"
             android:layout_width="@dimen/other_button_size"
             android:layout_height="@dimen/other_button_size"
-            android:layout_toRightOf="@id/start_call_end_call_btn"
-            android:layout_toEndOf="@id/start_call_end_call_btn"
+            android:layout_toRightOf="@id/end_call_btn"
+            android:layout_toEndOf="@id/end_call_btn"
             android:layout_marginLeft="@dimen/control_bottom_horizontal_margin"
 
             android:layout_centerVertical="true"
