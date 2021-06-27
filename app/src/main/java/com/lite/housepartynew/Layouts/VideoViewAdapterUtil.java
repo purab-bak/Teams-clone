@@ -134,6 +134,7 @@ public class VideoViewAdapterUtil {
         removeNotExisted(users, uids, localUid);
     }
 
+
     public static void renderExtraData(Context context, UserStatusData user, VideoUserStatusHolder myHolder) {
         if (user.mStatus != null) {
             if ((user.mStatus & UserStatusData.VIDEO_MUTED) != 0) {

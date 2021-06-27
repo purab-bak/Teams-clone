@@ -1,3 +1,4 @@
+
 package com.lite.housepartynew.Activities;
 
 import androidx.annotation.NonNull;
@@ -109,9 +110,6 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean isLocalCall = true;
     private String localState = Constant.USER_STATE_OPEN;
-
-
-
 
 
     private final IRtcEngineEventHandler mRtcHandler = new IRtcEngineEventHandler() {
@@ -278,6 +276,7 @@ public class MainActivity extends AppCompatActivity {
                 mRtcEngine.setInEarMonitoringVolume(80);
 
                 SurfaceView surfaceView = RtcEngine.CreateRendererView(getBaseContext());
+
                 mRtcEngine.setupLocalVideo(new VideoCanvas(surfaceView, VideoCanvas.RENDER_MODE_HIDDEN, 0));
                 surfaceView.setZOrderOnTop(false);
                 surfaceView.setZOrderMediaOverlay(false);
