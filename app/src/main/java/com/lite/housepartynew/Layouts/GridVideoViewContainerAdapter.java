@@ -31,6 +31,8 @@ public class GridVideoViewContainerAdapter extends VideoViewAdapter {
             DisplayMetrics outMetrics = new DisplayMetrics();
             windowManager.getDefaultDisplay().getMetrics(outMetrics);
 
+
+            //maths to calculate dividers
             int count = uids.size();
             int DividerX = 1;
             int DividerY = 1;
@@ -42,8 +44,11 @@ public class GridVideoViewContainerAdapter extends VideoViewAdapter {
                 DividerY = (int) Math.ceil(count * 1.f / DividerX);
             }
 
-            int width = outMetrics.widthPixels;
-            int height = outMetrics.heightPixels;
+
+
+            //add logic for margin here to prevent scrolling
+            int width = outMetrics.widthPixels - 40;
+            int height = outMetrics.heightPixels - 40;
 
             if (width > height) {
                 mItemWidth = width / DividerY;
@@ -62,9 +67,7 @@ public class GridVideoViewContainerAdapter extends VideoViewAdapter {
     @Override
     public void notifyUiChanged(HashMap<Integer, SurfaceView> uids, int localUid, HashMap<Integer, Integer> status, HashMap<Integer, Integer> volume) {
         setLocalUid(localUid);
-
         VideoViewAdapterUtil.composeDataItem(mUsers, uids, localUid, status, volume, mVideoInfo);
-
         notifyDataSetChanged();
     }
 
@@ -90,12 +93,10 @@ public class GridVideoViewContainerAdapter extends VideoViewAdapter {
     @Override
     public long getItemId(int position) {
         UserStatusData user = mUsers.get(position);
-
         SurfaceView view = user.mView;
         if (view == null) {
             throw new NullPointerException("SurfaceView destroyed for user " + (user.mUid & 0xFFFFFFFFL) + " " + user.mStatus + " " + user.mVolume);
         }
-
         return (String.valueOf(user.mUid) + System.identityHashCode(view)).hashCode();
     }
 }
