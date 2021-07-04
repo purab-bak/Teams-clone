@@ -12,6 +12,18 @@
         android:layout_height="match_parent">
     </com.lite.housepartynew.Layouts.GridVideoViewContainer>
 
+
+    <ImageView
+        android:layout_marginTop="20dp"
+        android:id="@+id/start_call_end_call_btn"
+        android:layout_width="@dimen/call_button_size"
+        android:layout_height="@dimen/call_button_size"
+        android:onClick="onLockRoomClick"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/ic_close_black_24dp"
+        android:scaleType="centerCrop"
+        android:visibility="visible"/>
+
     <ViewStub
         android:id="@+id/small_video_view_dock"
         android:layout_width="match_parent"
@@ -23,9 +35,11 @@
     <ImageView
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:src="@drawable/btn_show_friends"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp" />
+        android:id="@+id/friendsButton"
+        android:layout_marginTop="20dp"
+        android:onClick="onShowFriendListClick"
+        android:src="@drawable/btn_show_friends" />
 
     <LinearLayout
         android:id="@+id/layout_show_friends"
@@ -56,10 +70,66 @@
     <ImageView
         android:layout_width="60dp"
         android:layout_height="60dp"
+        android:layout_marginStart="35dp"
+        android:layout_marginTop="20dp"
+        android:layout_toStartOf="@+id/start_call_end_call_btn"
+        android:layout_toEndOf="@+id/friendsButton"
+        android:onClick="onChatButtonCLicked"
+        android:src="@drawable/icon_chat" />
+
+    <LinearLayout
+        android:id="@+id/layout_show_chat"
+        android:layout_width="match_parent"
+        android:layout_marginHorizontal="20dp"
+        android:layout_height="400dp"
+        android:background="#F1F1F1"
+        android:layout_marginTop="120dp"
+        android:layout_centerHorizontal="true"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="Chat"
+            android:textSize="20dp"
+            android:textAlignment="center"
+            android:layout_marginTop="20dp"
+            />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:id="@+id/chat_recyclerView"
+            tools:listitem="@layout/item_message"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp">
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="message"
+                android:layout_weight="2"
+                android:id="@+id/chatMessageET" />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="send"
+                android:layout_weight="0.5"
+                android:id="@+id/sendMessageButton"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:src="@drawable/btn_add_friends"
         android:layout_alignParentRight="true"
         android:layout_marginRight="20dp"
-        android:layout_marginTop="20dp"/>
+        android:layout_marginTop="20dp"
+        android:onClick="onAddFriendClick"/>
 
 
     <LinearLayout
@@ -94,6 +164,7 @@
             android:layout_height="wrap_content"
             android:text="Search"
             android:layout_marginLeft="200dp"
+            android:onClick="onSearchButtonClick"
             />
 
         <androidx.recyclerview.widget.RecyclerView
@@ -109,16 +180,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="@dimen/control_bottom_margin">
-
-<!--        <ImageView-->
-<!--            android:id="@+id/start_call_end_call_btn"-->
-<!--            android:layout_width="@dimen/call_button_size"-->
-<!--            android:layout_height="@dimen/call_button_size"-->
-<!--            android:onClick="onLockRoomClick"-->
-<!--            android:layout_centerInParent="true"-->
-<!--            android:src="@drawable/ic_close_black_24dp"-->
-<!--            android:scaleType="centerCrop"-->
-<!--            android:visibility="gone"/>-->
 
         <ImageView
             android:id="@+id/end_call_btn"

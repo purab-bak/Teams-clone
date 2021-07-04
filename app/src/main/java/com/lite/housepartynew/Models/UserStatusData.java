@@ -2,6 +2,7 @@ package com.lite.housepartynew.Models;
 
 import android.view.SurfaceView;
 
+//used in VideoVideoAdapter->onBind
 public class UserStatusData {
     public static final int DEFAULT_STATUS = 0;
     public static final int VIDEO_MUTED = 1;

@@ -10,8 +10,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.lite.housepartynew.R;
 
+//used in VideoViewAdapter->onBind
 
 public class VideoUserStatusHolder extends RecyclerView.ViewHolder {
+
     public final RelativeLayout mMaskView;
 
     public final ImageView mAvatar;

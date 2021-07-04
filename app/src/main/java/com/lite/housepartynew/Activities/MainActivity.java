@@ -3,6 +3,7 @@ package com.lite.housepartynew.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -16,6 +17,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
@@ -24,6 +26,7 @@ import android.view.View;
 import android.view.WindowInsets;
 import android.view.WindowInsetsController;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -41,9 +44,14 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
+import com.lite.housepartynew.Adapters.FriendListRecyclerViewAdapter;
+import com.lite.housepartynew.Adapters.MessageAdapter;
+import com.lite.housepartynew.Adapters.ShowFriendListRecyclerViewAdapter;
 import com.lite.housepartynew.Layouts.GridVideoViewContainer;
 import com.lite.housepartynew.Layouts.RecyclerItemClickListener;
 import com.lite.housepartynew.Models.AgoraUser;
+import com.lite.housepartynew.Models.DBUser;
+import com.lite.housepartynew.Models.Message;
 import com.lite.housepartynew.Models.SessionInfo;
 import com.lite.housepartynew.Models.UserStatusData;
 import com.lite.housepartynew.R;
@@ -104,12 +112,46 @@ public class MainActivity extends AppCompatActivity {
     public static final int LAYOUT_TYPE_DEFAULT = 0;
     public int mLayoutType = LAYOUT_TYPE_DEFAULT;
 
-    private String userName="lul";
     private boolean isMuted = false;
     private boolean mIsLandscape = false;
 
     private boolean isLocalCall = true;
     private String localState = Constant.USER_STATE_OPEN;
+
+    ///database
+    DatabaseReference mRef;
+    private List<String> DBFriend = new ArrayList<>();
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+
+    private ChildEventListener childEventListener;
+    private ChildEventListener joinFriendChildEventListener;
+    private boolean isShowingFriend = false;
+    private boolean isAddingFriend = false;
+
+    private LinearLayout mAddFriendLinearLayout;
+    private LinearLayout mShowFriendLinearLayout;
+    private EditText mSearchFriendEditText;
+
+    private List<DBUser> searchFriendList = new ArrayList<>();
+    private FriendListRecyclerViewAdapter mFriendListRecyclerViewAdapter;
+
+    private RecyclerView mFriendListRecyclerView;
+    private ShowFriendListRecyclerViewAdapter mShowFriendListRecyclerViewAdapter;
+    private RecyclerView mShowFriendListRecyclerView;
+
+
+    ////chat
+
+    private LinearLayout mChatLinearLayout;
+    boolean isShowingChat = false;
+    MessageAdapter messageAdapter;
+    RecyclerView chatRV;
+    EditText messageEt;
+    Button sendMessageButton;
+    List<Message> messageList;
+    DatabaseReference messageRef;
+
+
 
 
     private final IRtcEngineEventHandler mRtcHandler = new IRtcEngineEventHandler() {
@@ -130,6 +172,8 @@ public class MainActivity extends AppCompatActivity {
                     //multipleUsers
 
                     //SurfaceView localView = mUidsList.remove(0);
+
+                    showToast("Channel Joined");
 
                     agoraUser.setAgoraUid(uid);
                     SurfaceView localView = mUidsList.remove(0);
@@ -180,6 +224,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        //always on
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
         //set fullscreen
         setContentView(R.layout.activity_main);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
@@ -194,7 +241,14 @@ public class MainActivity extends AppCompatActivity {
             );
         }
 
+        ActionBar ab = getSupportActionBar();
+        if (ab != null) {
+            ab.hide();
+        }
+
         initUi();
+
+        showToast("On Create");
 
         if (checkSelfPermission(REQUESTED_PERMISSIONS[0], PERMISSION_REQ_ID) &&
                 checkSelfPermission(REQUESTED_PERMISSIONS[1], PERMISSION_REQ_ID) &&
@@ -205,7 +259,22 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
+        getMessages();
+        sendMessageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (!TextUtils.isEmpty(messageEt.getText().toString())){
+                    sendMessage(messageEt.getText().toString());
+                }
+                else {
+                    showToast("Message cannot be empty");
+                }
+            }
+        });
+
     }
+
 
     private void initUi() {
 
@@ -225,6 +294,52 @@ public class MainActivity extends AppCompatActivity {
         mSwitchCameraBtn = findViewById(R.id.switch_camera_btn);
         mGridVideoViewContainer = findViewById(R.id.grid_video_view_container);
 
+        connectToFireDB(mCurrentUser.getUid());
+
+
+        mAddFriendLinearLayout = findViewById(R.id.layout_add_friends);
+        mShowFriendLinearLayout = findViewById(R.id.layout_show_friends);
+        mSearchFriendEditText = findViewById(R.id.et_search_friends);
+        mFriendListRecyclerView = findViewById(R.id.rv_friendList);
+        mShowFriendListRecyclerView = findViewById(R.id.rv_show_friendList);
+
+        //chat
+        mChatLinearLayout = findViewById(R.id.layout_show_chat);
+        messageEt = findViewById(R.id.chatMessageET);
+        sendMessageButton = findViewById(R.id.sendMessageButton);
+        chatRV = findViewById(R.id.chat_recyclerView);
+        messageList = new ArrayList<>();
+        messageRef = FirebaseDatabase.getInstance().getReference().child("messages-activeChannels").child(channelName).child("messages");
+
+    }
+
+    private void connectToFireDB(final String firebaseUid) {
+        mRef = database.getReference("Users");
+
+        //listen to the friend list in the database
+        mRef.push();
+        mRef.child(firebaseUid).child("friend").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                DBFriend = (List<String>) dataSnapshot.getValue();
+                if (DBFriend == null) {
+                    DBFriend = new ArrayList<>();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(MainActivity.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mRef.child(firebaseUid).setValue(new DBUser(firebaseUid, agoraUser.getAgoraUid(), localState, DBFriend));
+            }
+        }, 1500);
     }
 
     private void initEngineAndJoinChannel() {
@@ -278,15 +393,17 @@ public class MainActivity extends AppCompatActivity {
                 SurfaceView surfaceView = RtcEngine.CreateRendererView(getBaseContext());
 
                 mRtcEngine.setupLocalVideo(new VideoCanvas(surfaceView, VideoCanvas.RENDER_MODE_HIDDEN, 0));
+
+                // used to place overlays on top of an underlying media surface view
                 surfaceView.setZOrderOnTop(false);
                 surfaceView.setZOrderMediaOverlay(false);
 
                 mUidsList.put(0, surfaceView);
 
                 mGridVideoViewContainer.initViewContainer(MainActivity.this, 0, mUidsList, false);
+
             }
         });
-
     }
 
     //done
@@ -365,11 +482,10 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
     //done
     private void switchToDefaultVideoView() {
 
-        mGridVideoViewContainer.initViewContainer(MainActivity.this, agoraUser.getAgoraUid(), mUidsList, false);
+        mGridVideoViewContainer.initViewContainer(MainActivity.this, agoraUser.getAgoraUid(), mUidsList, mIsLandscape);
 
         boolean setRemoteUserPriorityFlag = false;
 
@@ -420,10 +536,10 @@ public class MainActivity extends AppCompatActivity {
         joinChannel();
     }
 
-    //done  but check use
-    private String getUserName() {
-        return this.userName;
-    }
+//    //done  but check use
+//    private String getUserName() {
+//        //return this.userName;
+//    }
 
     //done
     public void onSwitchCameraClicked(View view) {
@@ -493,6 +609,274 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void onLockRoomClick(View view) {
+        if (isLocalCall) {
+            //when the user is in his own room
+            if (localState.equals(Constant.USER_STATE_LOCK)) {
+                //set the room to public
+                localState = Constant.USER_STATE_OPEN;
+                mRef.child(mCurrentUser.getUid()).setValue(new DBUser(mCurrentUser.getUid(), agoraUser.getAgoraUid(), localState, DBFriend));
+                Toast.makeText(MainActivity.this, "set to Public room", Toast.LENGTH_SHORT).show();
+            }else {
+                //set the room to private so that no one can join the room
+                localState = Constant.USER_STATE_LOCK;
+                mRef.child(mCurrentUser.getUid()).setValue(new DBUser(mCurrentUser.getUid(), agoraUser.getAgoraUid(), localState, DBFriend));
+                Toast.makeText(MainActivity.this, " set to Private room", Toast.LENGTH_SHORT).show();
+
+            }
+        }else {
+            //when user is joining other people's room
+            //leave that room and come back to user's own room
+            isLocalCall = true;
+            finishCalling();
+            channelName = channelName;
+            startCalling();
+            localState = Constant.USER_STATE_OPEN;
+            //update user's room state
+            mRef.child(mCurrentUser.getUid()).setValue(new DBUser(mCurrentUser.getUid(), agoraUser.getAgoraUid(), localState, DBFriend));
+        }
+    }
+
+    public void onAddFriendClick(View view) {
+        if (isShowingFriend) {
+            isShowingFriend = !isShowingFriend;
+            mShowFriendLinearLayout.setVisibility(isShowingFriend ? View.VISIBLE : View.GONE);
+        }
+        isAddingFriend = !isAddingFriend;
+        mAddFriendLinearLayout.setVisibility(isAddingFriend ? View.VISIBLE : View.GONE);
+    }
+
+    public void onChatButtonCLicked(View view) {
+
+        isShowingChat = !isShowingChat;
+        mChatLinearLayout.setVisibility(isShowingChat ? View.VISIBLE : View.GONE);
+
+    }
+
+    public void onSearchButtonClick(View view) {
+        String searchFriendName = mSearchFriendEditText.getText().toString();
+        if (searchFriendName == null || searchFriendName.equals("")) {
+           Toast.makeText(MainActivity.this, "Name can not be empty!", Toast.LENGTH_SHORT).show();
+        }else {
+            searchFriends(searchFriendName);
+        }
+    }
+
+    private void searchFriends(final String searchFriendName) {
+        //search for a new friend in the database
+        searchFriendList.clear();
+        mFriendListRecyclerViewAdapter = new FriendListRecyclerViewAdapter(searchFriendList);
+        mFriendListRecyclerViewAdapter.setOnItemClickListener(new FriendListRecyclerViewAdapter.ClickListener() {
+            @Override
+            public void onItemClick(int position, View v) {
+                addFriend(searchFriendList.get(position).getName());
+                mSearchFriendEditText.setText("");
+                searchFriendList.clear();
+                mFriendListRecyclerView.setAdapter(mFriendListRecyclerViewAdapter);
+            }
+        });
+        RecyclerView.LayoutManager manager = new GridLayoutManager(getBaseContext(), 1);
+        mFriendListRecyclerView.setLayoutManager(manager);
+
+        mFriendListRecyclerView.setAdapter(mFriendListRecyclerViewAdapter);
+
+        childEventListener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                DBUser result = dataSnapshot.getValue(DBUser.class);
+
+                searchFriendList.add(result);
+                mRef.orderByChild("name").startAt(searchFriendName).endAt(searchFriendName + "\uf8ff").removeEventListener(childEventListener);
+
+                mFriendListRecyclerViewAdapter = new FriendListRecyclerViewAdapter(searchFriendList);
+                mFriendListRecyclerViewAdapter.setOnItemClickListener(new FriendListRecyclerViewAdapter.ClickListener() {
+                    @Override
+                    public void onItemClick(int position, View v) {
+                        addFriend(searchFriendList.get(position).getName());
+                        mSearchFriendEditText.setText("");
+                        searchFriendList.clear();
+                        mFriendListRecyclerView.setAdapter(mFriendListRecyclerViewAdapter);
+                    }
+                });
+                RecyclerView.LayoutManager manager = new GridLayoutManager(getBaseContext(), 1);
+                mFriendListRecyclerView.setLayoutManager(manager);
+
+                mFriendListRecyclerView.setAdapter(mFriendListRecyclerViewAdapter);
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+
+        mRef.orderByChild("name").startAt(searchFriendName).endAt(searchFriendName + "\uf8ff").addChildEventListener(childEventListener);
+    }
+
+    public void addFriend(String userName) {
+        DBFriend.add(userName);
+        mRef.child(mCurrentUser.getUid()).setValue(new DBUser(mCurrentUser.getUid(), agoraUser.getAgoraUid(), localState, DBFriend));
+    }
+
+    public void onShowFriendListClick(View view) {
+        if (isAddingFriend) {
+            isAddingFriend = !isAddingFriend;
+            mAddFriendLinearLayout.setVisibility(isAddingFriend ? View.VISIBLE : View.GONE);
+        }
+
+        isShowingFriend = !isShowingFriend;
+        mShowFriendLinearLayout.setVisibility(isShowingFriend ? View.VISIBLE : View.GONE);
+
+        mShowFriendListRecyclerViewAdapter = new ShowFriendListRecyclerViewAdapter(DBFriend);
+        mShowFriendListRecyclerViewAdapter.setOnItemClickListener(new ShowFriendListRecyclerViewAdapter.ClickListener() {
+            @Override
+            public void onItemClick(final int position, View v) {
+
+                if (v.getId() == R.id.btn_join_friend) {
+                    joinFriendChildEventListener = new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                            DBUser result = dataSnapshot.getValue(DBUser.class);
+                            if (result.getState().equals(Constant.USER_STATE_OPEN)) {
+                                joinFriend(DBFriend.get(position));
+                                mShowFriendLinearLayout.setVisibility(View.GONE);
+                            }else {
+                                showToast(DBFriend.get(position) + "'s room is locked. You can message him to say hi!");
+                            }
+
+                            mRef.orderByChild("name").startAt(DBFriend.get(position)).endAt(DBFriend.get(position) + "\uf8ff").removeEventListener(joinFriendChildEventListener);
+                        }
+
+                        @Override
+                        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                        }
+
+                        @Override
+                        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                        }
+
+                        @Override
+                        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    };
+                    mRef.orderByChild("name").startAt(DBFriend.get(position)).endAt(DBFriend.get(position) + "\uf8ff").addChildEventListener(joinFriendChildEventListener);
+
+                }else if (v.getId() == R.id.btn_chat_friend){
+                    //startMessaging(DBFriend.get(position));
+                }
+            }
+        });
+        RecyclerView.LayoutManager manager = new LinearLayoutManager(this);
+        mShowFriendListRecyclerView.setLayoutManager(manager);
+        mShowFriendListRecyclerView.setAdapter(mShowFriendListRecyclerViewAdapter);
+    }
+
+    public void joinFriend(String friendName){
+        channelName = friendName;
+        finishCalling();
+        startCalling();
+        //set the user's room state to private
+        localState = Constant.USER_STATE_LOCK;
+        mRef.child(mCurrentUser.getUid()).setValue(new DBUser(mCurrentUser.getUid(), agoraUser.getAgoraUid(), localState, DBFriend));
+        isLocalCall = false;
+    }
+
+
+
+    private void showToast(String s) {
+        Toast.makeText(MainActivity.this, s, Toast.LENGTH_SHORT).show();
+    }
+
+    private void getMessages(){
+
+        messageRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull @NotNull DataSnapshot snapshot, @Nullable @org.jetbrains.annotations.Nullable String previousChildName) {
+                Message message = snapshot.getValue(Message.class);
+                message.setKey(snapshot.getKey());
+                messageList.add(message);
+                displayMessages(messageList);
+
+                messageAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onChildChanged(@NonNull @NotNull DataSnapshot snapshot, @Nullable @org.jetbrains.annotations.Nullable String previousChildName) {
+                Message message = snapshot.getValue(Message.class);
+                message.setKey(snapshot.getKey());
+
+                List<Message> newMessages = new ArrayList<>();
+                for (Message m:messageList){
+
+                    if (m.getKey().equals(message.getKey())){
+                        newMessages.add(message);
+                    }
+                    else{
+                        newMessages.add(m);
+                    }
+                }
+                messageList = newMessages;
+                displayMessages(messageList);
+                messageAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull @NotNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull @NotNull DataSnapshot snapshot, @Nullable @org.jetbrains.annotations.Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+            }
+        });
+
+
+    }
+
+    private void displayMessages(List<Message> messageList) {
+        chatRV.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+        messageAdapter = new MessageAdapter(MainActivity.this, messageList);
+        chatRV.setAdapter(messageAdapter);
+    }
+
+    private void sendMessage(String messageText) {
+
+        Message message = new Message(messageText, mCurrentUser.getUid());
+        messageEt.setText("");
+        messageRef.push().setValue(message);
+
+    }
+
+
     private void updateDatabase(int uid){
 
         activeChannelsRef.child(channelName).child("users").child(mCurrentUser.getUid()).setValue(uid);
@@ -544,32 +928,4 @@ public class MainActivity extends AppCompatActivity {
         return userCount;
     }
 
-    //implement later
-
-//    public void onLockRoomClick(View view) {
-//        if (isLocalCall) {
-//            //when the user is in his own room
-//            if (localState.equals(Constant.USER_STATE_LOCK)) {
-//                //set the room to public
-//                localState = Constant.USER_STATE_OPEN;
-//                mRef.child(this.userName).setValue(new DBUser(this.userName, agoraUser.getAgoraUid(), localState, DBFriend));
-//                showToast("Room set to public");
-//            }else {
-//                //set the room to private so that no one can join the room
-//                localState = Constant.USER_STATE_LOCK;
-//                mRef.child(this.userName).setValue(new DBUser(this.userName, agoraUser.getAgoraUid(), localState, DBFriend));
-//                showToast("Room set to private");
-//            }
-//        }else {
-//            //when user is joining other people's room
-//            //leave that room and come back to user's own room
-//            isLocalCall = true;
-//            finishCalling();
-//            channelName = userName;
-//            startCalling();
-//            localState = Constant.USER_STATE_OPEN;
-//            //update user's room state
-//            mRef.child(userName).setValue(new DBUser(userName, agoraUser.getAgoraUid(), localState, DBFriend));
-//        }
-//    }
 }

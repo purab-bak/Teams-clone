@@ -2,10 +2,12 @@ package com.lite.housepartynew.Layouts;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewParent;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.lite.housepartynew.Models.UserStatusData;
 import com.lite.housepartynew.Models.VideoInfoData;
@@ -21,14 +23,17 @@ public class VideoViewAdapterUtil {
 
     private static final boolean DEBUG = false;
 
+    //called in GridVewAdapter->customizedInit
     public static void composeDataItem1(final ArrayList<UserStatusData> users, HashMap<Integer, SurfaceView> uids, int localUid) {
         for (HashMap.Entry<Integer, SurfaceView> entry : uids.entrySet()) {
             SurfaceView surfaceV = entry.getValue();
             surfaceV.setZOrderOnTop(false);
             surfaceV.setZOrderMediaOverlay(false);
+
             searchUidsAndAppend(users, entry, localUid, UserStatusData.DEFAULT_STATUS, UserStatusData.DEFAULT_VOLUME, null);
         }
 
+        //remove views
         removeNotExisted(users, uids, localUid);
     }
 
@@ -136,6 +141,11 @@ public class VideoViewAdapterUtil {
 
 
     public static void renderExtraData(Context context, UserStatusData user, VideoUserStatusHolder myHolder) {
+
+        Toast.makeText(context.getApplicationContext(), "rendering extra data", Toast.LENGTH_SHORT).show();
+        Toast.makeText(context.getApplicationContext(), user.toString(), Toast.LENGTH_SHORT).show();
+        Log.i("Extra data", user.toString());
+
         if (user.mStatus != null) {
             if ((user.mStatus & UserStatusData.VIDEO_MUTED) != 0) {
                 myHolder.mAvatar.setVisibility(View.VISIBLE);
