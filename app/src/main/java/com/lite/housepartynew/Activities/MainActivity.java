@@ -151,6 +151,9 @@ public class MainActivity extends AppCompatActivity {
     List<Message> messageList;
     DatabaseReference messageRef;
 
+    //disabling video
+    boolean isVideoEnabled = true;
+
 
     private final IRtcEngineEventHandler mRtcHandler = new IRtcEngineEventHandler() {
 
@@ -200,19 +203,22 @@ public class MainActivity extends AppCompatActivity {
         public void onRemoteVideoStateChanged(int uid, int state, int reason, int elapsed) {
             super.onRemoteVideoStateChanged(uid, state, reason, elapsed);
 
-            if (state == Constants.REMOTE_VIDEO_STATE_STARTING){
+            if (state == Constants.REMOTE_VIDEO_STATE_STARTING) {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         Log.i("tag", "RemoteVideo Starting, uid" + (uid));
-                        currentSessionInfo.setUserCount(currentSessionInfo.getUserCount()+1);
+                        currentSessionInfo.setUserCount(currentSessionInfo.getUserCount() + 1);
 
                         setupRemoteVideo(uid);
                         //userCount = getUserCountFromDatabase();
-
-                        Toast.makeText(MainActivity.this, "User count local "+currentSessionInfo.getUserCount(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "User count local " + currentSessionInfo.getUserCount(), Toast.LENGTH_SHORT).show();
                     }
                 });
+            }
+
+            if (state == Constants.REMOTE_VIDEO_STATE_REASON_LOCAL_MUTED){
+                //change here
             }
         }
     };
@@ -262,10 +268,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if (!TextUtils.isEmpty(messageEt.getText().toString())){
+                if (!TextUtils.isEmpty(messageEt.getText().toString())) {
                     sendMessage(messageEt.getText().toString());
-                }
-                else {
+                } else {
                     showToast("Message cannot be empty");
                 }
             }
@@ -361,7 +366,7 @@ public class MainActivity extends AppCompatActivity {
     private void initializeEngine() {
         try {
             mRtcEngine = RtcEngine.create(getBaseContext(), getString(R.string.agora_app_id), mRtcHandler);
-        }catch (Exception e){
+        } catch (Exception e) {
             Log.e(TAG, Log.getStackTraceString(e));
             throw new RuntimeException("Need to check rtc sdk init fatal error\n" + Log.getStackTraceString(e));
         }
@@ -380,7 +385,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     //done
-    private void setupLocalVideo(){
+    private void setupLocalVideo() {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -407,7 +412,7 @@ public class MainActivity extends AppCompatActivity {
     //done
     private void joinChannel() {
         String token = getString(R.string.agora_access_token);
-        if (TextUtils.isEmpty(token)){
+        if (TextUtils.isEmpty(token)) {
             token = null;
         }
 
@@ -417,12 +422,12 @@ public class MainActivity extends AppCompatActivity {
 
     //done
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull  int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        switch (requestCode){
-            case PERMISSION_REQ_ID:{
-                if (grantResults[0] != PackageManager.PERMISSION_GRANTED || grantResults[1] != PackageManager.PERMISSION_GRANTED){
+        switch (requestCode) {
+            case PERMISSION_REQ_ID: {
+                if (grantResults[0] != PackageManager.PERMISSION_GRANTED || grantResults[1] != PackageManager.PERMISSION_GRANTED) {
                     break;
                 }
                 initEngineAndJoinChannel();
@@ -463,7 +468,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     //done
-    private void setupRemoteVideo(int uid){
+    private void setupRemoteVideo(int uid) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -512,7 +517,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (!mCallEnd){
+        if (!mCallEnd) {
             leaveChannel();
         }
 
@@ -554,18 +559,17 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void onEndCallClicked(View view){
+    public void onEndCallClicked(View view) {
         endCall();
     }
 
     public void onCallClicked(View view) {
 
-        if (mCallEnd){
+        if (mCallEnd) {
             startCall();
             mCallEnd = false;
             mCallBtn.setImageResource(R.drawable.btn_endcall);
-        }
-        else {
+        } else {
             endCall();
             mCallEnd = true;
             mCallBtn.setImageResource(R.drawable.btn_startcall);
@@ -591,7 +595,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void removeLocalVideo() {
-        if (mLocalView != null){
+        if (mLocalView != null) {
             mLocalContainer.removeView(mLocalView);
         }
 
@@ -601,7 +605,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void showButtons(boolean show) {
 
-        int visibility = show? View.VISIBLE : View.GONE;
+        int visibility = show ? View.VISIBLE : View.GONE;
 
         mMuteBtn.setVisibility(visibility);
         mSwitchCameraBtn.setVisibility(visibility);
@@ -616,14 +620,14 @@ public class MainActivity extends AppCompatActivity {
                 localState = Constant.USER_STATE_OPEN;
                 mRef.child(mCurrentUser.getUid()).setValue(new DBUser(mCurrentUser.getUid(), agoraUser.getAgoraUid(), localState, DBFriend));
                 Toast.makeText(MainActivity.this, "set to Public room", Toast.LENGTH_SHORT).show();
-            }else {
+            } else {
                 //set the room to private so that no one can join the room
                 localState = Constant.USER_STATE_LOCK;
                 mRef.child(mCurrentUser.getUid()).setValue(new DBUser(mCurrentUser.getUid(), agoraUser.getAgoraUid(), localState, DBFriend));
                 Toast.makeText(MainActivity.this, " set to Private room", Toast.LENGTH_SHORT).show();
 
             }
-        }else {
+        } else {
             //when user is joining other people's room
             //leave that room and come back to user's own room
             isLocalCall = true;
@@ -645,6 +649,19 @@ public class MainActivity extends AppCompatActivity {
         mAddFriendLinearLayout.setVisibility(isAddingFriend ? View.VISIBLE : View.GONE);
     }
 
+
+    /**
+     * This method is pausing video. Checkkk!!!!
+     **/
+    public void onVideoButtonClicked(View view) {
+
+        //mRtcEngine.muteLocalVideoStream(isVideoEnabled);
+        mRtcEngine.enableLocalVideo(!isVideoEnabled);
+
+        isVideoEnabled = !isVideoEnabled;
+
+    }
+
     public void onChatButtonCLicked(View view) {
 
         isShowingChat = !isShowingChat;
@@ -655,8 +672,8 @@ public class MainActivity extends AppCompatActivity {
     public void onSearchButtonClick(View view) {
         String searchFriendName = mSearchFriendEditText.getText().toString();
         if (searchFriendName == null || searchFriendName.equals("")) {
-           Toast.makeText(MainActivity.this, "Name can not be empty!", Toast.LENGTH_SHORT).show();
-        }else {
+            Toast.makeText(MainActivity.this, "Name can not be empty!", Toast.LENGTH_SHORT).show();
+        } else {
             searchFriends(searchFriendName);
         }
     }
@@ -754,7 +771,7 @@ public class MainActivity extends AppCompatActivity {
                             if (result.getState().equals(Constant.USER_STATE_OPEN)) {
                                 joinFriend(DBFriend.get(position));
                                 mShowFriendLinearLayout.setVisibility(View.GONE);
-                            }else {
+                            } else {
                                 showToast(DBFriend.get(position) + "'s room is locked. You can message him to say hi!");
                             }
 
@@ -783,7 +800,7 @@ public class MainActivity extends AppCompatActivity {
                     };
                     mRef.orderByChild("name").startAt(DBFriend.get(position)).endAt(DBFriend.get(position) + "\uf8ff").addChildEventListener(joinFriendChildEventListener);
 
-                }else if (v.getId() == R.id.btn_chat_friend){
+                } else if (v.getId() == R.id.btn_chat_friend) {
                     //startMessaging(DBFriend.get(position));
                 }
             }
@@ -793,7 +810,7 @@ public class MainActivity extends AppCompatActivity {
         mShowFriendListRecyclerView.setAdapter(mShowFriendListRecyclerViewAdapter);
     }
 
-    public void joinFriend(String friendName){
+    public void joinFriend(String friendName) {
         channelName = friendName;
         finishCalling();
         startCalling();
@@ -804,12 +821,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
     private void showToast(String s) {
         Toast.makeText(MainActivity.this, s, Toast.LENGTH_SHORT).show();
     }
 
-    private void getMessages(){
+    private void getMessages() {
 
         messageRef.addChildEventListener(new ChildEventListener() {
             @Override
@@ -828,12 +844,11 @@ public class MainActivity extends AppCompatActivity {
                 message.setKey(snapshot.getKey());
 
                 List<Message> newMessages = new ArrayList<>();
-                for (Message m:messageList){
+                for (Message m : messageList) {
 
-                    if (m.getKey().equals(message.getKey())){
+                    if (m.getKey().equals(message.getKey())) {
                         newMessages.add(message);
-                    }
-                    else{
+                    } else {
                         newMessages.add(m);
                     }
                 }
@@ -876,7 +891,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void updateDatabase(int uid){
+    private void updateDatabase(int uid) {
 
         activeChannelsRef.child(channelName).child("users").child(mCurrentUser.getUid()).setValue(uid);
 
@@ -888,10 +903,9 @@ public class MainActivity extends AppCompatActivity {
             @NotNull
             @Override
             public Transaction.Result doTransaction(@NonNull @NotNull MutableData currentData) {
-                if (currentData.child("user-count").getValue() != null){
+                if (currentData.child("user-count").getValue() != null) {
                     userCount = Integer.parseInt(currentData.child("user-count").getValue().toString()) + 1;
-                }
-                else {
+                } else {
                     userCount = 1;
                 }
 
@@ -902,20 +916,20 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onComplete(@Nullable @org.jetbrains.annotations.Nullable DatabaseError error, boolean committed, @Nullable @org.jetbrains.annotations.Nullable DataSnapshot currentData) {
                 Toast.makeText(MainActivity.this, "Transaction complete", Toast.LENGTH_SHORT).show();
-                Toast.makeText(MainActivity.this, "user count txn compl: " +userCount, Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "user count txn compl: " + userCount, Toast.LENGTH_SHORT).show();
 
             }
         });
 
     }
 
-    private int getUserCountFromDatabase(){
+    private int getUserCountFromDatabase() {
 
         activeChannelsRef.child(channelName).child("user-count").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
                 userCount = Integer.parseInt(snapshot.getValue().toString());
-                Toast.makeText(MainActivity.this, "User count from function call : "+userCount, Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "User count from function call : " + userCount, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -926,5 +940,4 @@ public class MainActivity extends AppCompatActivity {
 
         return userCount;
     }
-
 }

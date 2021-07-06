@@ -47,8 +47,8 @@ public class GridVideoViewContainerAdapter extends VideoViewAdapter {
 
 
             //add logic for margin here to prevent scrolling
-            int width = outMetrics.widthPixels - 40;
-            int height = outMetrics.heightPixels - 40;
+            int width = outMetrics.widthPixels;
+            int height = outMetrics.heightPixels;
 
             if (width > height) {
                 mItemWidth = width / DividerY;

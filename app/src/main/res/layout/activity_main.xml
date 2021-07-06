@@ -67,16 +67,6 @@
 
     </LinearLayout>
 
-    <ImageView
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_marginStart="35dp"
-        android:layout_marginTop="20dp"
-        android:layout_toStartOf="@+id/start_call_end_call_btn"
-        android:layout_toEndOf="@+id/friendsButton"
-        android:onClick="onChatButtonCLicked"
-        android:src="@drawable/icon_chat" />
-
     <LinearLayout
         android:id="@+id/layout_show_chat"
         android:layout_width="match_parent"
@@ -217,6 +207,26 @@
             android:onClick="onLocalAudioMuteClicked"
             android:src="@drawable/btn_unmute"
             android:scaleType="centerCrop"/>
+
+        <ImageView
+            android:id="@+id/video_off_button"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerVertical="true"
+            android:onClick="onVideoButtonClicked"
+            android:src="@drawable/ic_video_on"
+            android:scaleType="centerCrop"
+            android:layout_margin="5dp"/>
+
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="5dp"
+            android:onClick="onChatButtonCLicked"
+            android:src="@drawable/icon_chat" />
+
 
     </RelativeLayout>
 
