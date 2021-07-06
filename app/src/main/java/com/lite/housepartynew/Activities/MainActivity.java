@@ -152,8 +152,6 @@ public class MainActivity extends AppCompatActivity {
     DatabaseReference messageRef;
 
 
-
-
     private final IRtcEngineEventHandler mRtcHandler = new IRtcEngineEventHandler() {
 
         @Override
@@ -477,6 +475,7 @@ public class MainActivity extends AppCompatActivity {
                 mRtcEngine.setupRemoteVideo(new VideoCanvas(mRemoteView, VideoCanvas.RENDER_MODE_HIDDEN, uid));
 
                 switchToDefaultVideoView();
+
             }
         });
 
@@ -870,7 +869,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void sendMessage(String messageText) {
 
-        Message message = new Message(messageText, mCurrentUser.getUid());
+        Message message = new Message(messageText, mCurrentUser.getDisplayName());
         messageEt.setText("");
         messageRef.push().setValue(message);
 
