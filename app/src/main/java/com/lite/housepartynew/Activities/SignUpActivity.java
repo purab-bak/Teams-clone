@@ -28,10 +28,15 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.lite.housepartynew.Models.User;
 import com.lite.housepartynew.R;
+
+import org.jetbrains.annotations.NotNull;
 
 import static android.widget.Toast.LENGTH_SHORT;
 
@@ -139,12 +144,15 @@ public class SignUpActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+
                             // Sign in success, update UI with the signed-in user's information
                             //Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            Toast.makeText(SignUpActivity.this, "Successfully signed in", LENGTH_SHORT).show();
+
+                            checkIfAlreadyRegistered(task.getResult().getUser());
+
                             startActivity(new Intent(SignUpActivity.this, JoinChannelActivity.class));
-                            finish();
+                            SignUpActivity.this.finish();
 
                         } else {
                             // If sign in fails, display a message to the user.
@@ -155,6 +163,32 @@ public class SignUpActivity extends AppCompatActivity {
                 });
     }
 
+    private void checkIfAlreadyRegistered(FirebaseUser user) {
+        userRef.child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                if (snapshot.exists()){
+                    //user already exists
+                    showToast("Welcome back +" + user.getDisplayName());
+                }
+                else {
+                    //register user
+                    uploadDetailsDatabase(user.getEmail(), user.getDisplayName());
+
+                    showToast("Hello new user");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void showToast(String s) {
+        Toast.makeText(SignUpActivity.this, s, LENGTH_SHORT).show();
+    }
 
 
     private void createUser(String email, String password, String name) {
@@ -181,6 +215,10 @@ public class SignUpActivity extends AppCompatActivity {
                                         }
                                     });
 
+
+                            startActivity(new Intent(SignUpActivity.this, JoinChannelActivity.class));
+                            finish();
+
                         }
                         else {
                             Toast.makeText(SignUpActivity.this, task.getException().getLocalizedMessage(), Toast.LENGTH_LONG).show();
@@ -191,6 +229,7 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void uploadDetailsDatabase(String email, String name) {
+
         User user = new User(mAuth.getUid(), name, email);
         userRef.child(mAuth.getUid()).setValue(user)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -201,9 +240,6 @@ public class SignUpActivity extends AppCompatActivity {
                 });
 
         //mapRef.child(mAuth.getUid()).setValue(email);
-
-        startActivity(new Intent(SignUpActivity.this, JoinChannelActivity.class));
-        finish();
     }
 
     private void init() {

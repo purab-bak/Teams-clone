@@ -19,13 +19,22 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.lite.housepartynew.Models.User;
 import com.lite.housepartynew.R;
+
+import org.jetbrains.annotations.NotNull;
 
 import static android.widget.Toast.LENGTH_SHORT;
 
@@ -42,7 +51,7 @@ public class LoginActivity extends AppCompatActivity {
     private GoogleSignInClient mGoogleSignInClient;
     private GoogleSignInOptions gso;
     private int RC_SIGN_IN = 1;
-
+    private DatabaseReference userRef;
 
 
     @Override
@@ -56,6 +65,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(LoginActivity.this, SignUpActivity.class));
+                finish();
             }
         });
 
@@ -139,6 +149,9 @@ public class LoginActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             //Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
+
+
+                            checkIfAlreadyRegistered(task.getResult().getUser());
                             Toast.makeText(LoginActivity.this, "Successfully signed in", LENGTH_SHORT).show();
                             startActivity(new Intent(LoginActivity.this, JoinChannelActivity.class));
                             finish();
@@ -150,6 +163,46 @@ public class LoginActivity extends AppCompatActivity {
 
                     }
                 });
+    }
+
+    private void checkIfAlreadyRegistered(FirebaseUser user) {
+        userRef.child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                if (snapshot.exists()){
+                    //user already exists
+                    showToast("Welcome back +" + user.getDisplayName());
+                }
+                else {
+                    //register user
+                    uploadDetailsDatabase(user.getEmail(), user.getDisplayName());
+
+                    showToast("Hello new user");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void showToast(String s) {
+        Toast.makeText(LoginActivity.this, s, LENGTH_SHORT).show();
+    }
+    private void uploadDetailsDatabase(String email, String name) {
+
+        User user = new User(mAuth.getUid(), name, email);
+        userRef.child(mAuth.getUid()).setValue(user)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Toast.makeText(LoginActivity.this, "Added to firebase", Toast.LENGTH_LONG).show();
+                    }
+                });
+
+        //mapRef.child(mAuth.getUid()).setValue(email);
     }
 
 
@@ -168,6 +221,8 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         googleSignInButton = findViewById(R.id.google_sign_in);
+
+        userRef = FirebaseDatabase.getInstance().getReference().child("users");
 
     }
 }
