@@ -45,7 +45,7 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
         initUI();
 
         window = this.getWindow();
-        window.setStatusBarColor(ContextCompat.getColor(getApplicationContext(), R.color.white));
+        //window.setStatusBarColor(ContextCompat.getColor(getApplicationContext(), R.color.white));
 
         navigationDrawer();
 

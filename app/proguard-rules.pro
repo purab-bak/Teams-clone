@@ -21,3 +21,5 @@
 #-renamesourcefileattribute SourceFile
 
 -keep class io.agora.**{*;}
+
+-keep class androidx.appcompat.widget.** { *; }

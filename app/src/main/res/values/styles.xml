@@ -3,9 +3,9 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/grey</item>
+        <item name="colorPrimaryDark">@color/black</item>
+        <item name="colorAccent">@color/darkGrey</item>
 
     </style>
 
@@ -29,19 +29,10 @@
 
     <style name="navigationTheme">
 
-        <item name="android:statusBarColor">@color/grey</item>
+        <item name="android:statusBarColor">@color/darkGrey</item>
         <item name="colorPrimary">@color/black</item>
         <item name="colorControlHighlight">@color/darkGrey</item>
 
-    </style>
-
-    <style name="bottomNav">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/black</item>
-        <item name="colorPrimaryDark">@color/black</item>
-        <item name="colorAccent">@color/grey</item>
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
     </style>
 
 </resources>

@@ -56,8 +56,7 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/ic_user"
-                    app:tint="@color/grey"/>
+                    android:src="@drawable/icon_user" />
             </androidx.cardview.widget.CardView>
         </androidx.cardview.widget.CardView>
 
