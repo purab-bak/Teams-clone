@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group
+        android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/nav_home"
+            android:title="Home"
+            android:icon="@drawable/password"/>
+
+    </group>
+
+    <item
+        android:title="Our Services">
+        <menu>
+            <item
+                android:id="@+id/nav_ved_kendra"
+                android:icon="@drawable/password"
+                android:title="Ved Kendra"/>
+            <item
+                android:id="@+id/nav_ved_mudra"
+                android:icon="@drawable/password"
+                android:title="Ved Mudra"/>
+            <item
+                android:id="@+id/nav_ved_chakra"
+                android:icon="@drawable/ic_email_white_24dp"
+                android:title="Ved Chakra"/>
+
+            <item
+                android:id="@+id/nav_ved_vastu"
+                android:icon="@drawable/ic_email_white_24dp"
+                android:title="Ved Vastu"/>
+
+        </menu>
+
+    </item>
+    <item
+        android:title="Profile">
+        <menu>
+
+            <item
+                android:id="@+id/nav_logout"
+                android:title="Logout"
+                android:icon="@drawable/password"/>
+
+
+        </menu>
+    </item>
+
+
+</menu>

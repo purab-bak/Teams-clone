@@ -37,6 +37,8 @@ public class JoinChannelActivity extends AppCompatActivity {
 
     String channelName;
 
+    Button openDashboard;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +58,13 @@ public class JoinChannelActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 signOutUser();
+            }
+        });
+
+        openDashboard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(JoinChannelActivity.this, DashboardActivity.class));
             }
         });
     }
@@ -90,6 +99,8 @@ public class JoinChannelActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         mCurrentUser = mAuth.getCurrentUser();
+
+        openDashboard = findViewById(R.id.openDashboardButton);
 
     }
 }
