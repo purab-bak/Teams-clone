@@ -141,4 +141,8 @@ public class EditProfileActivity extends AppCompatActivity {
             }
         }
     }
+
+    public void onBackClicked(View view) {
+        super.onBackPressed();
+    }
 }

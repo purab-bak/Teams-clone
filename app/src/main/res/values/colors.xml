@@ -24,9 +24,9 @@
 
     <color name="transparent_75_white">#ACFFFFFF</color>
 
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#D81B60</color>
+    <color name="colorPrimary">@color/darkGrey</color>
+    <color name="colorPrimaryDark">@color/black</color>
+    <color name="colorAccent">@color/grey</color>
 
     <color name="darkGrey">#3f3f3f</color>
 
