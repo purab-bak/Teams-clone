@@ -1,5 +1,6 @@
 package com.lite.housepartynew.Activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -19,6 +21,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
@@ -52,6 +55,8 @@ public class LoginActivity extends AppCompatActivity {
     private GoogleSignInOptions gso;
     private int RC_SIGN_IN = 1;
     private DatabaseReference userRef;
+
+    TextView forgotPasswordTV;
 
 
     @Override
@@ -105,6 +110,49 @@ public class LoginActivity extends AppCompatActivity {
 
                 }
                 signUpWithGoogle();
+            }
+        });
+
+        forgotPasswordTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                final EditText mResetEmail = new EditText(view.getContext());
+                AlertDialog.Builder passwordResetDialog = new AlertDialog.Builder(view.getContext());
+                passwordResetDialog.setTitle("Reset password");
+                passwordResetDialog.setMessage("Enter your email to receive reset link");
+                passwordResetDialog.setView(mResetEmail);
+
+                passwordResetDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //extract email and set reset link
+                        String mail = mResetEmail.getText().toString();
+                        mAuth.sendPasswordResetEmail(mail).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Toast.makeText(getApplicationContext(), "Reset password has been sent to your mail", LENGTH_SHORT).show();
+
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(getApplicationContext(), "Error resetting the password" + e.getMessage(), LENGTH_SHORT).show();
+                            }
+                        });
+
+                    }
+                });
+
+                passwordResetDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //close dialog
+                    }
+                });
+
+                passwordResetDialog.create().show();
+
             }
         });
     }
@@ -223,6 +271,8 @@ public class LoginActivity extends AppCompatActivity {
         googleSignInButton = findViewById(R.id.google_sign_in);
 
         userRef = FirebaseDatabase.getInstance().getReference().child("users");
+
+        forgotPasswordTV = findViewById(R.id.forgotPasswordTV);
 
     }
 }

@@ -30,4 +30,6 @@
 
     <color name="textInputLayout">#96ffffff</color>
 
+    <color name="cardColor">#ffffff</color>
+    <color name="textcardColor">#3f3f3f</color>
 </resources>

@@ -135,6 +135,14 @@
                 android:id="@+id/passwordET"/>
         </com.google.android.material.textfield.TextInputLayout>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:text="Forgot Password?"
+            android:fontFamily="@font/calibri"
+            android:layout_gravity="right"
+            android:id="@+id/forgotPasswordTV"/>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

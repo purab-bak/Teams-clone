@@ -17,7 +17,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.HousePartyNew">
-        <activity android:name=".Activities.JoinChannelActivity"></activity>
+        <activity android:name=".Activities.DashboardActivity"></activity>
+        <activity android:name=".Activities.JoinChannelActivity" />
         <activity android:name=".Activities.MainActivity" />
         <activity android:name=".Activities.SignUpActivity" />
         <activity android:name=".Activities.LoginActivity">
