@@ -3,6 +3,7 @@ package com.lite.housepartynew.Activities;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -77,23 +78,31 @@ public class LoginActivity extends AppCompatActivity {
         confirmBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 String email = emailET.getText().toString();
                 String password = passwordET.getText().toString();
 
-                mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()){
-                            Toast.makeText(LoginActivity.this, "Logged in", Toast.LENGTH_LONG).show();
-                            
-                            startActivity(new Intent(LoginActivity.this, JoinChannelActivity.class));
-                        }
-                        else {
-                            Toast.makeText(LoginActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                if (!TextUtils.isEmpty(email) || !TextUtils.isEmpty(password)){
+                    mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()){
+                                Toast.makeText(LoginActivity.this, "Logged in", Toast.LENGTH_LONG).show();
 
+                                startActivity(new Intent(LoginActivity.this, JoinChannelActivity.class));
+                            }
+                            else {
+                                Toast.makeText(LoginActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
+
+                            }
                         }
-                    }
-                });
+                    });
+                }
+                else {
+                    showToast("Fields cannot be empty");
+                }
+
+
             }
         });
 

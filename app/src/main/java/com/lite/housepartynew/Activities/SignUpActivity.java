@@ -80,12 +80,10 @@ public class SignUpActivity extends AppCompatActivity {
                 String password = passwordET.getText().toString();
                 String name = fullNameET.getText().toString();
 
-                if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password) || TextUtils.isEmpty(name)){
-                    Toast.makeText(SignUpActivity.this, "Fields cannot be empty", Toast.LENGTH_SHORT).show();
-                }
-                else {
+                if (isAllFilledAndVerified()){
                     createUser(email, password, name);
                 }
+
             }
         });
 
@@ -241,6 +239,25 @@ public class SignUpActivity extends AppCompatActivity {
 
         //mapRef.child(mAuth.getUid()).setValue(email);
     }
+
+    private boolean isAllFilledAndVerified() {
+        String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+        if (fullNameET.getText().toString().isEmpty()) {
+            Toast.makeText(getApplicationContext(), "Enter your name", Toast.LENGTH_SHORT).show();
+            return false;
+        } else if (emailET.getText().toString().isEmpty()) {
+            Toast.makeText(getApplicationContext(), "Enter Email", Toast.LENGTH_SHORT).show();
+            return false;
+        }else if (passwordET.getText().toString().isEmpty()) {
+            Toast.makeText(getApplicationContext(), "Enter password", Toast.LENGTH_SHORT).show();
+            return false;
+        } else if (!emailET.getText().toString().trim().matches(emailPattern)) {
+            Toast.makeText(getApplicationContext(), "Invalid email address", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+
 
     private void init() {
 
