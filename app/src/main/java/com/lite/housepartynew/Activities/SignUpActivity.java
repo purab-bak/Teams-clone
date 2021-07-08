@@ -149,7 +149,7 @@ public class SignUpActivity extends AppCompatActivity {
 
                             checkIfAlreadyRegistered(task.getResult().getUser());
 
-                            startActivity(new Intent(SignUpActivity.this, JoinChannelActivity.class));
+                            startActivity(new Intent(SignUpActivity.this, DashboardActivity.class));
                             SignUpActivity.this.finish();
 
                         } else {
@@ -214,7 +214,7 @@ public class SignUpActivity extends AppCompatActivity {
                                     });
 
 
-                            startActivity(new Intent(SignUpActivity.this, JoinChannelActivity.class));
+                            startActivity(new Intent(SignUpActivity.this, DashboardActivity.class));
                             finish();
 
                         }

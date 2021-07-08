@@ -89,7 +89,7 @@ public class LoginActivity extends AppCompatActivity {
                             if (task.isSuccessful()){
                                 Toast.makeText(LoginActivity.this, "Logged in", Toast.LENGTH_LONG).show();
 
-                                startActivity(new Intent(LoginActivity.this, JoinChannelActivity.class));
+                                startActivity(new Intent(LoginActivity.this, DashboardActivity.class));
                             }
                             else {
                                 Toast.makeText(LoginActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
@@ -210,7 +210,7 @@ public class LoginActivity extends AppCompatActivity {
 
                             checkIfAlreadyRegistered(task.getResult().getUser());
                             Toast.makeText(LoginActivity.this, "Successfully signed in", LENGTH_SHORT).show();
-                            startActivity(new Intent(LoginActivity.this, JoinChannelActivity.class));
+                            startActivity(new Intent(LoginActivity.this, DashboardActivity.class));
                             finish();
 
                         } else {
@@ -259,9 +259,9 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 });
 
+
         //mapRef.child(mAuth.getUid()).setValue(email);
     }
-
 
     private void init() {
 
@@ -273,14 +273,12 @@ public class LoginActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
         if (mAuth.getCurrentUser()!=null){
-            startActivity(new Intent(LoginActivity.this, JoinChannelActivity.class));
+            startActivity(new Intent(LoginActivity.this, DashboardActivity.class));
             finish();
         }
 
         googleSignInButton = findViewById(R.id.google_sign_in);
-
         userRef = FirebaseDatabase.getInstance().getReference().child("users");
-
         forgotPasswordTV = findViewById(R.id.forgotPasswordTV);
 
     }

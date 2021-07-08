@@ -582,7 +582,7 @@ public class MainActivity extends AppCompatActivity {
         //removeRemoteVideo();
         leaveChannel();
 
-        startActivity(new Intent(MainActivity.this, JoinChannelActivity.class));
+        startActivity(new Intent(MainActivity.this, DashboardActivity.class));
         finish();
 
     }
