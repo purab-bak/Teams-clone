@@ -7,31 +7,28 @@
         <item
             android:id="@+id/nav_home"
             android:title="Home"
-            android:icon="@drawable/password"/>
+            android:enabled="true"
+            android:icon="@drawable/iconfinder_home" />
+
+        <item
+            android:id="@+id/menu_none"
+            android:title=""
+            android:visible="false"/>
 
     </group>
 
     <item
-        android:title="Our Services">
+        android:title="Services">
         <menu>
             <item
-                android:id="@+id/nav_ved_kendra"
-                android:icon="@drawable/password"
-                android:title="Ved Kendra"/>
+                android:id="@+id/nav_join_channel"
+                android:icon="@drawable/ic_join_meet"
+                android:title="Join a meeting"
+                android:iconTint="@color/black"/>
             <item
-                android:id="@+id/nav_ved_mudra"
-                android:icon="@drawable/password"
-                android:title="Ved Mudra"/>
-            <item
-                android:id="@+id/nav_ved_chakra"
-                android:icon="@drawable/ic_email_white_24dp"
-                android:title="Ved Chakra"/>
-
-            <item
-                android:id="@+id/nav_ved_vastu"
-                android:icon="@drawable/ic_email_white_24dp"
-                android:title="Ved Vastu"/>
-
+                android:id="@+id/nav_start_meeting"
+                android:icon="@drawable/ic_start_meeting"
+                android:title="Start a meeting"/>
         </menu>
 
     </item>
@@ -40,10 +37,14 @@
         <menu>
 
             <item
+                android:id="@+id/nav_editProfle"
+                android:title="Edit Profile"
+                android:icon="@drawable/ic_user"/>
+
+            <item
                 android:id="@+id/nav_logout"
                 android:title="Logout"
-                android:icon="@drawable/password"/>
-
+                android:icon="@drawable/icon_logout"/>
 
         </menu>
     </item>

@@ -28,6 +28,8 @@
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
 
+    <color name="darkGrey">#3f3f3f</color>
+
     <color name="textInputLayout">#96ffffff</color>
 
     <color name="cardColor">#ffffff</color>
