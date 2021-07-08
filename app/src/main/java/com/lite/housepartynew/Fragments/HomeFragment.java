@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -42,10 +43,16 @@ public class HomeFragment extends Fragment {
         profileImage = view.findViewById(R.id.userProfileIcon);
         userFullName = view.findViewById(R.id.user_full_name);
 
-        if (mCurrentUser.getPhotoUrl() != null) {
-            Glide.with(getContext()).load(mCurrentUser.getPhotoUrl()).into(profileImage);
+        try {
+            if (mCurrentUser.getPhotoUrl() != null) {
+                Glide.with(getContext()).load(mCurrentUser.getPhotoUrl()).into(profileImage);
+            }
+            userFullName.setText(mCurrentUser.getDisplayName());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
         }
-        userFullName.setText(mCurrentUser.getDisplayName());
 
         return view;
     }

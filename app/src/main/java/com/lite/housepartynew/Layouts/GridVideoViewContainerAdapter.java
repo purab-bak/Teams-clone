@@ -6,7 +6,6 @@ import android.util.DisplayMetrics;
 import android.view.SurfaceView;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.WindowMetrics;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -27,6 +26,8 @@ public class GridVideoViewContainerAdapter extends VideoViewAdapter {
         VideoViewAdapterUtil.composeDataItem1(mUsers, uids, mLocalUid); // local uid
 
         if (force || mItemWidth == 0 || mItemHeight == 0) {
+
+            //check if error
             WindowManager windowManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
             DisplayMetrics outMetrics = new DisplayMetrics();
             windowManager.getDefaultDisplay().getMetrics(outMetrics);

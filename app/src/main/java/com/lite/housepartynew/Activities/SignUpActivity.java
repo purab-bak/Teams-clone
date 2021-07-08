@@ -256,5 +256,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         googleSignUpButton = findViewById(R.id.google_sign_in);
 
+
+
     }
 }

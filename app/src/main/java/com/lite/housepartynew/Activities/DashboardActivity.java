@@ -2,7 +2,6 @@ package com.lite.housepartynew.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
@@ -18,7 +17,6 @@ import android.widget.RelativeLayout;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
-import com.lite.housepartynew.Fragments.EditProfileFragment;
 import com.lite.housepartynew.Fragments.HomeFragment;
 import com.lite.housepartynew.R;
 
@@ -97,9 +95,14 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
         }
 
         if (item.getItemId()==R.id.nav_editProfle){
-            selectedFragment = new EditProfileFragment();
-            navigationView.setCheckedItem(R.id.menu_none);
-            navigationView.setCheckedItem(R.id.nav_editProfle);
+
+
+            Intent intent = new Intent(getApplicationContext(), EditProfileActivity.class);
+            startActivity(intent);
+
+           // selectedFragment = new EditProfileFragment();
+            //navigationView.setCheckedItem(R.id.menu_none);
+            //navigationView.setCheckedItem(R.id.nav_editProfle);
 
         }
 
