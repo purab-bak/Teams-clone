@@ -16,6 +16,8 @@ import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.lite.housepartynew.Adapters.EmailListAdapter;
 import com.lite.housepartynew.R;
 
@@ -42,6 +44,8 @@ public class ReminderActivity extends AppCompatActivity {
     EmailListAdapter adapter;
     Button addEmailButton;
     EditText recipientEmailET;
+
+    DatabaseReference scheduledMeetingsRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +77,7 @@ public class ReminderActivity extends AppCompatActivity {
                     intent.putExtra(Intent.EXTRA_EMAIL, emailIntent.toString());
 
                     if (intent.resolveActivity(getPackageManager()) != null){
+                       // updateToDatabase();
                         startActivity(intent);
                     }
                     else {
@@ -139,6 +144,8 @@ public class ReminderActivity extends AppCompatActivity {
         adapter = new EmailListAdapter(ReminderActivity.this, emailIdsList);
 
         emailListRV.setAdapter(adapter);
+
+        scheduledMeetingsRef = FirebaseDatabase.getInstance().getReference().child("scheduled-meetings");
 
     }
 
