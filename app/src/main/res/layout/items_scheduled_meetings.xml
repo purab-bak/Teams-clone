@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="4dp"
+    android:elevation="10dp"
+    android:padding="8dp"
+    app:cardCornerRadius="8dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="15dp">
+
+        <TextView
+            android:id="@+id/meetingTitleHolder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Meeting Title : "
+            android:textSize="16sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginVertical="8dp"
+            android:background="@color/lightGrey" />
+
+        <TextView
+            android:id="@+id/meetingIdHolder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:text="Meeting id : " />
+
+        <TextView
+            android:id="@+id/meetingHostHolder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:text="Host : " />
+
+
+        <TextView
+            android:id="@+id/meetingDescHolder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:text="Desc : " />
+
+
+        <TextView
+            android:id="@+id/meetingDateHolder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:text="Date : " />
+
+        <TextView
+            android:id="@+id/meetingTimeHolder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:text="Time : " />
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

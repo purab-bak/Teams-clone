@@ -2,6 +2,9 @@ package com.lite.housepartynew.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.LinearSmoothScroller;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.view.View;
@@ -17,9 +20,14 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.lite.housepartynew.Adapters.ScheduledMeetingsAdapter;
+import com.lite.housepartynew.Models.Meeting;
 import com.lite.housepartynew.R;
 
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ScheduledMeetingsActivity extends AppCompatActivity {
 
@@ -27,6 +35,13 @@ public class ScheduledMeetingsActivity extends AppCompatActivity {
     FirebaseFirestore firestoreDb;
 
     TextView tempTv;
+
+    //RV
+
+    RecyclerView meetingsRV;
+    ScheduledMeetingsAdapter adapter;
+
+    List<Meeting> meetingsList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +58,10 @@ public class ScheduledMeetingsActivity extends AppCompatActivity {
                     public void onComplete(@NonNull @NotNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                               tempTv.append(document.getId() + " => " + document.getData());
+                                tempTv.append(document.getId() + " => " + document.getData());
+                                Meeting meeting = document.toObject(Meeting.class);
+                                meetingsList.add(meeting);
+                                adapter.notifyDataSetChanged();
                             }
                         } else {
                             tempTv.append("Error getting documents.");
@@ -58,6 +76,18 @@ public class ScheduledMeetingsActivity extends AppCompatActivity {
         firestoreDb = FirebaseFirestore.getInstance();
 
         tempTv = findViewById(R.id.tempTv);
+
+        meetingsList = new ArrayList<>();
+        meetingsRV = findViewById(R.id.meetingsRV);
+
+        Meeting meeting = new Meeting("a", "a", "a", null, "a", "a");
+        meetingsList.add(meeting);
+
+        adapter = new ScheduledMeetingsAdapter(ScheduledMeetingsActivity.this, meetingsList);
+
+        meetingsRV.setLayoutManager(new LinearLayoutManager(this));
+        meetingsRV.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
     }
 
     public void onBackClicked(View view) {

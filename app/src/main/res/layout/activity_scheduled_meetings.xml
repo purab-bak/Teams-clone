@@ -48,4 +48,11 @@
         android:padding="20dp"
         android:layout_below="@id/appBarLayout"
         android:id="@+id/tempTv"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tempTv"
+        android:id="@+id/meetingsRV"
+        tools:listitem="@layout/items_scheduled_meetings"/>
 </RelativeLayout>
