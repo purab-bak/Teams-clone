@@ -71,6 +71,27 @@
             android:layout_height="wrap_content"
             android:text="Add Event"
             android:id="@+id/addEventButton"/>
+
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Email IDs"
+            android:id="@+id/recipientEmailET"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="add email"
+            android:id="@+id/addEmailButton"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/emailListRV"
+            tools:listitem="@layout/item_email"
+            tools:itemCount="3"/>
+
 <!--        <EditText
             android:layout_width="200dp"
             android:layout_height="wrap_content"

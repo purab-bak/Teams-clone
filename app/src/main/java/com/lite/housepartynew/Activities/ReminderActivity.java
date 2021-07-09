@@ -1,6 +1,8 @@
 package com.lite.housepartynew.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -14,22 +16,32 @@ import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.lite.housepartynew.Adapters.EmailListAdapter;
 import com.lite.housepartynew.R;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 public class ReminderActivity extends AppCompatActivity {
 
     EditText eventNameEt, eventLocationEt, eventDescEt;
     Button addEventBtn;
 
+
 //    Button btnDatePicker, btnTimePicker;
 //    EditText txtDate, txtTime;
 //    private int mYear, mMonth, mDay, mHour, mMinute;
 //    String sDate1="";
+
+    List<String> emailIdsList;
+    RecyclerView emailListRV;
+    EmailListAdapter adapter;
+    Button addEmailButton;
+    EditText recipientEmailET;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,16 +53,24 @@ public class ReminderActivity extends AppCompatActivity {
         addEventBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                StringBuilder emailIntent = new StringBuilder();
+
+                for (String s : emailIdsList){
+                    emailIntent.append(s+", ");
+                }
+
                 if (!eventNameEt.getText().toString().isEmpty() &&
                         !eventDescEt.getText().toString().isEmpty() &&
-                        !eventLocationEt.getText().toString().isEmpty()) {
+                        !eventLocationEt.getText().toString().isEmpty() && !emailIntent.toString().isEmpty()) {
 
                     Intent intent = new Intent(Intent.ACTION_INSERT);
                     intent.setData(CalendarContract.Events.CONTENT_URI);
                     intent.putExtra(CalendarContract.Events.TITLE, eventNameEt.getText().toString());
                     intent.putExtra(CalendarContract.Events.EVENT_LOCATION, eventLocationEt.getText().toString());
                     intent.putExtra(CalendarContract.Events.DESCRIPTION, eventDescEt.getText().toString());
-
+                    intent.putExtra(CalendarContract.Events.ALL_DAY, true);
+                    intent.putExtra(Intent.EXTRA_EMAIL, emailIntent.toString());
 
                     if (intent.resolveActivity(getPackageManager()) != null){
                         startActivity(intent);
@@ -66,6 +86,31 @@ public class ReminderActivity extends AppCompatActivity {
                 }
             }
         });
+
+        addEmailButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+
+                if (!recipientEmailET.getText().toString().isEmpty()){
+
+                    if (!recipientEmailET.getText().toString().trim().matches(emailPattern)) {
+                        Toast.makeText(getApplicationContext(), "Invalid email address", Toast.LENGTH_SHORT).show();
+                    }
+                    else {
+                        showToast("adding to the list");
+                        emailIdsList.add(recipientEmailET.getText().toString());
+                        recipientEmailET.setText("");
+                    }
+                }
+                else{
+                    showToast("Email can't be empty");
+                }
+            }
+        });
+
 
     }
 
@@ -84,6 +129,16 @@ public class ReminderActivity extends AppCompatActivity {
 //        btnTimePicker=(Button)findViewById(R.id.btn_time);
 //        txtDate=(EditText)findViewById(R.id.in_date);
 //        txtTime=(EditText)findViewById(R.id.in_time);
+
+        addEmailButton = findViewById(R.id.addEmailButton);
+        recipientEmailET = findViewById(R.id.recipientEmailET);
+        emailIdsList = new ArrayList<>();
+        emailListRV = findViewById(R.id.emailListRV);
+        emailListRV.setLayoutManager(new LinearLayoutManager(this));
+
+        adapter = new EmailListAdapter(ReminderActivity.this, emailIdsList);
+
+        emailListRV.setAdapter(adapter);
 
     }
 
