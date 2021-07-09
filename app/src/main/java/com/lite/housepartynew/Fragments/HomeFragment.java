@@ -16,11 +16,13 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.lite.housepartynew.Activities.ReminderActivity;
 import com.lite.housepartynew.R;
 
 
@@ -32,6 +34,8 @@ public class HomeFragment extends Fragment {
 
     TextView userFullName;
 
+    CardView remindMeCV;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -42,6 +46,7 @@ public class HomeFragment extends Fragment {
 
         profileImage = view.findViewById(R.id.userProfileIcon);
         userFullName = view.findViewById(R.id.user_full_name);
+        remindMeCV = view.findViewById(R.id.remindMeCardView);
 
         try {
             if (mCurrentUser.getPhotoUrl() != null) {
@@ -53,6 +58,13 @@ public class HomeFragment extends Fragment {
             e.printStackTrace();
 
         }
+
+        remindMeCV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getContext(), ReminderActivity.class));
+            }
+        });
 
         return view;
     }
