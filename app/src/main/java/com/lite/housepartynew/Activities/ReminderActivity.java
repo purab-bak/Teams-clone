@@ -36,6 +36,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -211,6 +212,12 @@ public class ReminderActivity extends AppCompatActivity {
             }
 
             Meeting meeting = new Meeting(mCurrentUser.getEmail(),eventNameEt.getText().toString(),uniqueMeetingId, emailIdsList, String.valueOf(epoch), eventDescEt.getText().toString());
+
+            for (String s : emailIdsList){
+                firestoreDb.collection(s).document(uniqueMeetingId).set(meeting);
+            }
+
+            firestoreDb.collection(mCurrentUser.getEmail()).document(uniqueMeetingId).set(meeting);
 
             firestoreDb.collection("meetings").document(uniqueMeetingId).set(meeting)
                     .addOnSuccessListener(new OnSuccessListener<Void>() {

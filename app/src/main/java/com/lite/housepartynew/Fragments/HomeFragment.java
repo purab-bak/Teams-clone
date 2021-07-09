@@ -23,6 +23,7 @@ import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.lite.housepartynew.Activities.ReminderActivity;
+import com.lite.housepartynew.Activities.ScheduledMeetingsActivity;
 import com.lite.housepartynew.R;
 
 
@@ -34,7 +35,7 @@ public class HomeFragment extends Fragment {
 
     TextView userFullName;
 
-    CardView remindMeCV;
+    CardView remindMeCV, scheduledMeetingsCV;
 
     @Nullable
     @Override
@@ -47,6 +48,7 @@ public class HomeFragment extends Fragment {
         profileImage = view.findViewById(R.id.userProfileIcon);
         userFullName = view.findViewById(R.id.user_full_name);
         remindMeCV = view.findViewById(R.id.remindMeCardView);
+        scheduledMeetingsCV = view.findViewById(R.id.scheduledMeetingsCV);
 
         try {
             if (mCurrentUser.getPhotoUrl() != null) {
@@ -63,6 +65,13 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getContext(), ReminderActivity.class));
+            }
+        });
+
+        scheduledMeetingsCV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getContext(), ScheduledMeetingsActivity.class));
             }
         });
 

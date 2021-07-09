@@ -19,7 +19,8 @@
         android:roundIcon="@drawable/round_logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.HousePartyNew">
-        <activity android:name=".Activities.ReminderActivity"></activity>
+        <activity android:name=".Activities.ScheduledMeetingsActivity"></activity>
+        <activity android:name=".Activities.ReminderActivity" />
         <activity android:name=".Activities.SplashScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -32,7 +33,7 @@
         <activity android:name=".Activities.JoinChannelActivity" />
         <activity android:name=".Activities.MainActivity" />
         <activity android:name=".Activities.SignUpActivity" />
-        <activity android:name=".Activities.LoginActivity"></activity>
+        <activity android:name=".Activities.LoginActivity" />
     </application>
 
 </manifest>

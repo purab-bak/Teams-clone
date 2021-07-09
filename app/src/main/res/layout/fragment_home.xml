@@ -89,7 +89,8 @@
             android:layout_marginBottom="16dp"
             android:background="@color/cardColor"
             app:cardCornerRadius="8dp"
-            app:cardElevation="6dp">
+            app:cardElevation="6dp"
+            android:id="@+id/scheduledMeetingsCV">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -103,12 +104,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:background="@drawable/ic_profile"/>
+                    android:background="@drawable/ic__scheduled_meetings"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Personal Data"
+                    android:text="Scheduled Meetings"
                     android:layout_marginTop="8dp"
                     android:fontFamily="@font/calibri"
                     android:textColor="@color/textcardColor"
@@ -149,7 +150,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Remind me"
+                    android:text="Schedule a meeting"
                     android:textColor="@color/textcardColor"
                     android:textSize="14sp"
                     android:layout_marginTop="8dp"
