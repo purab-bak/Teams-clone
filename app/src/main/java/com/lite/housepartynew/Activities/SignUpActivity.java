@@ -33,6 +33,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.lite.housepartynew.Models.User;
 import com.lite.housepartynew.R;
 
@@ -49,6 +50,8 @@ public class SignUpActivity extends AppCompatActivity {
     FirebaseUser mUser;
 
     DatabaseReference userRef, mapRef;
+
+    FirebaseFirestore firestoreDb;
 
     //google signup
 
@@ -237,6 +240,15 @@ public class SignUpActivity extends AppCompatActivity {
                     }
                 });
 
+        firestoreDb.collection("users").document(email).set(user)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Toast.makeText(SignUpActivity.this, "Added to Firestore", Toast.LENGTH_LONG).show();
+
+                    }
+                });
+
         //mapRef.child(mAuth.getUid()).setValue(email);
     }
 
@@ -272,6 +284,7 @@ public class SignUpActivity extends AppCompatActivity {
         //mapRef = FirebaseDatabase.getInstance().getReference().child("email-uid-map");
 
         googleSignUpButton = findViewById(R.id.google_sign_in);
+        firestoreDb = FirebaseFirestore.getInstance();
 
 
 

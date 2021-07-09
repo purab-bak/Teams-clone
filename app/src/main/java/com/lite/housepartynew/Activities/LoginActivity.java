@@ -35,6 +35,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.lite.housepartynew.Models.User;
 import com.lite.housepartynew.R;
 
@@ -259,6 +260,14 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 });
 
+        FirebaseFirestore.getInstance().collection("users").document(email).set(user)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Toast.makeText(LoginActivity.this, "Added to Firestore", Toast.LENGTH_LONG).show();
+
+                    }
+                });
 
         //mapRef.child(mAuth.getUid()).setValue(email);
     }
