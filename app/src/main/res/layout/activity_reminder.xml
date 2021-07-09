@@ -11,23 +11,23 @@
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
         android:layout_alignParentTop="true"
+        android:layout_marginBottom="20dp"
         android:background="@color/colorPrimary"
         android:elevation="4dp"
         android:orientation="horizontal"
         android:paddingLeft="14dp"
         android:paddingRight="14dp"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginBottom="20dp">
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
             android:id="@+id/menu_icon_dashboard_new"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:onClick="onBackClicked"
             android:padding="5dp"
             android:src="@drawable/ic_baseline_arrow_back_24"
-            app:tint="@color/grey"
-            android:onClick="onBackClicked"/>
+            app:tint="@color/grey" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -46,82 +46,108 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_below="@id/appBarLayout"
+        android:orientation="vertical"
         android:padding="20dp">
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Event Name"
-            android:id="@+id/eventNameEt"/>
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/calendarSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:checked="false"
+            android:text="Add event to Google Calendar" />
 
         <EditText
+            android:id="@+id/eventNameEt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Description"
-            android:id="@+id/eventDescEt"/>
+            android:hint="Event Name" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <EditText
+                android:id="@+id/meetingIDEt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="Meeting ID"
+                android:enabled="false"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="GenerateUniqueID"
+                android:textStyle="bold"
+                android:id="@+id/uniqueIDTV"/>
+
+        </LinearLayout>
+
+
+        <EditText
+            android:id="@+id/eventDescEt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Description" />
 
         <Button
+            android:id="@+id/addEventButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Add Event"
-            android:id="@+id/addEventButton"/>
+            android:text="Add Event" />
 
 
         <EditText
+            android:id="@+id/recipientEmailET"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Email IDs"
-            android:id="@+id/recipientEmailET"/>
+            android:hint="Email IDs" />
 
         <Button
+            android:id="@+id/addEmailButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="add email"
-            android:id="@+id/addEmailButton"/>
+            android:text="add email" />
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/emailListRV"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/emailListRV"
-            tools:listitem="@layout/item_email"
-            tools:itemCount="3"/>
+            tools:itemCount="3"
+            tools:listitem="@layout/item_email" />
 
-        <EditText
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
+        <TextView
             android:id="@+id/in_date"
-            android:layout_marginTop="10dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="SELECT DATE"
-            android:id="@+id/btn_date"
-            android:layout_alignBottom="@+id/in_date"
-            android:layout_toRightOf="@+id/in_date"
-            android:layout_toEndOf="@+id/in_date" />
-
-        <EditText
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:id="@+id/in_time"
-            android:layout_below="@+id/in_date"
+            android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="10dp" />
 
         <Button
+            android:id="@+id/btn_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="SELECT TIME"
+            android:layout_alignBottom="@+id/in_date"
+            android:layout_toEndOf="@+id/in_date"
+            android:layout_toRightOf="@+id/in_date"
+            android:text="SELECT DATE" />
+
+        <TextView
+            android:id="@+id/in_time"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/in_date"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true" />
+
+        <Button
             android:id="@+id/btn_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/btn_date"
+            android:layout_alignStart="@+id/btn_date"
             android:layout_alignLeft="@+id/btn_date"
-            android:layout_alignStart="@+id/btn_date" />
+            android:text="SELECT TIME" />
 
     </LinearLayout>
 

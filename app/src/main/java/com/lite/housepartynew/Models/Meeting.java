@@ -5,6 +5,7 @@ import java.util.List;
 public class Meeting {
 
     String hostEmail;
+    String meetingTitle;
     String meetingId;
     List<String> participantsEmailList;
     String timeUTC;
@@ -13,8 +14,9 @@ public class Meeting {
     public Meeting() {
     }
 
-    public Meeting(String hostEmail, String meetingId, List<String> participantsEmailList, String timeUTC, String description) {
+    public Meeting(String hostEmail, String meetingTitle, String meetingId, List<String> participantsEmailList, String timeUTC, String description) {
         this.hostEmail = hostEmail;
+        this.meetingTitle = meetingTitle;
         this.meetingId = meetingId;
         this.participantsEmailList = participantsEmailList;
         this.timeUTC = timeUTC;
@@ -27,6 +29,14 @@ public class Meeting {
 
     public void setHostEmail(String hostEmail) {
         this.hostEmail = hostEmail;
+    }
+
+    public String getMeetingTitle() {
+        return meetingTitle;
+    }
+
+    public void setMeetingTitle(String meetingTitle) {
+        this.meetingTitle = meetingTitle;
     }
 
     public String getMeetingId() {

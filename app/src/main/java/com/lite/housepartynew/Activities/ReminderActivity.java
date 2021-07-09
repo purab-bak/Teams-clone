@@ -8,15 +8,20 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.CalendarContract;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -32,6 +37,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 public class ReminderActivity extends AppCompatActivity {
 
@@ -40,7 +46,7 @@ public class ReminderActivity extends AppCompatActivity {
 
 
     Button btnDatePicker, btnTimePicker;
-    EditText txtDate, txtTime;
+    TextView txtDate, txtTime;
     private int mYear, mMonth, mDay, mHour, mMinute;
     String sDate1 = "";
 
@@ -58,6 +64,17 @@ public class ReminderActivity extends AppCompatActivity {
 
     String date, time;
 
+    SwitchMaterial calendarSwitch;
+
+    boolean addToCalendar = false;
+
+    long epoch;
+
+    String uniqueMeetingId="";
+
+    EditText meetingIDEt;
+    TextView generateUniqueButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,7 +85,13 @@ public class ReminderActivity extends AppCompatActivity {
         addEventBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addEvent();
+
+                if (uniqueMeetingId.isEmpty()){
+                    showToast("Add a meetingID");
+                }
+                else {
+                   addEvent();
+                }
             }
         });
 
@@ -96,6 +119,31 @@ public class ReminderActivity extends AppCompatActivity {
                 } else {
                     pickTime();
                 }
+            }
+        });
+
+        calendarSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+
+                addToCalendar = isChecked;
+                showToast(String.valueOf(addToCalendar));
+            }
+        });
+
+        generateUniqueButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                String currentTimestamp = String.valueOf(System.currentTimeMillis());
+
+                Random random = new Random();
+
+                char randomizedCharacter1 = (char) (random.nextInt(26) + 'a');
+                char randomizedCharacter2 = (char) (random.nextInt(26) + 'a');
+
+                uniqueMeetingId =String.valueOf(randomizedCharacter1) + String.valueOf(randomizedCharacter2)+currentTimestamp.substring(currentTimestamp.length() - 4);
+                meetingIDEt.setText(uniqueMeetingId);
             }
         });
 
@@ -136,8 +184,16 @@ public class ReminderActivity extends AppCompatActivity {
                 Date date1 = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").parse(sDate1);
                 txtDate.setText(date1.toString());
 
-                long epoch = date1.getTime();
+                epoch = date1.getTime();
                 txtDate.setText(String.valueOf(epoch));
+
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+
+            if (addToCalendar) {
 
                 Intent intent = new Intent(Intent.ACTION_INSERT);
                 intent.setData(CalendarContract.Events.CONTENT_URI);
@@ -147,41 +203,37 @@ public class ReminderActivity extends AppCompatActivity {
                 intent.putExtra(Intent.EXTRA_EMAIL, emailIntent.toString());
 
                 if (intent.resolveActivity(getPackageManager()) != null) {
-                    //updateToDatabase();
+                    startActivity(intent);
 
-                    Meeting meeting = new Meeting(mCurrentUser.getEmail(), eventNameEt.getText().toString(), emailIdsList, String.valueOf(epoch), eventDescEt.getText().toString());
-
-                    firestoreDb.collection("meetings").document(eventNameEt.getText().toString()).set(meeting)
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void unused) {
-
-                                    showToast("Meeting created! Added to database");
-                                    startActivity(intent);
-
-                                }
-                            });
-
-                    gotoDashboard();
                 } else {
                     showToast("There is no app that supports this action");
                 }
-
-            } catch (ParseException e) {
-                e.printStackTrace();
             }
 
+            Meeting meeting = new Meeting(mCurrentUser.getEmail(),eventNameEt.getText().toString(),uniqueMeetingId, emailIdsList, String.valueOf(epoch), eventDescEt.getText().toString());
+
+            firestoreDb.collection("meetings").document(uniqueMeetingId).set(meeting)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void unused) {
+
+                            showToast("Meeting created! Added to database");
+
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Intent i = new Intent(ReminderActivity.this, DashboardActivity.class);
+                                    startActivity(i);
+                                    finish();
+                                }
+                            }, 5000);
+
+                        }
+                    });
 
         } else {
             showToast("Fields cannot be empty");
         }
-    }
-
-    private void gotoDashboard() {
-
-        startActivity(new Intent(ReminderActivity.this, DashboardActivity.class));
-        finish();
-
     }
 
     private void pickTime() {
@@ -248,8 +300,8 @@ public class ReminderActivity extends AppCompatActivity {
 
         btnDatePicker = (Button) findViewById(R.id.btn_date);
         btnTimePicker = (Button) findViewById(R.id.btn_time);
-        txtDate = (EditText) findViewById(R.id.in_date);
-        txtTime = (EditText) findViewById(R.id.in_time);
+        txtDate =  findViewById(R.id.in_date);
+        txtTime =  findViewById(R.id.in_time);
 
         addEmailButton = findViewById(R.id.addEmailButton);
         recipientEmailET = findViewById(R.id.recipientEmailET);
@@ -266,6 +318,11 @@ public class ReminderActivity extends AppCompatActivity {
         mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
 
         firestoreDb = FirebaseFirestore.getInstance();
+
+        calendarSwitch = findViewById(R.id.calendarSwitch);
+
+        meetingIDEt = findViewById(R.id.meetingIDEt);
+        generateUniqueButton = findViewById(R.id.uniqueIDTV);
 
     }
 
