@@ -29,6 +29,7 @@
     <color name="colorAccent">@color/grey</color>
 
     <color name="darkGrey">#3f3f3f</color>
+    <color name="lightGrey">#909090</color>
 
     <color name="textInputLayout">#96ffffff</color>
 
