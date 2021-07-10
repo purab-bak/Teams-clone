@@ -25,6 +25,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.lite.housepartynew.Activities.CreateInstantMeetingActivity;
 import com.lite.housepartynew.Activities.JoinChannelActivity;
 import com.lite.housepartynew.Activities.MyNotesActivity;
+import com.lite.housepartynew.Activities.PreviousMeetingsActivity;
 import com.lite.housepartynew.Activities.ReminderActivity;
 import com.lite.housepartynew.Activities.ScheduledMeetingsActivity;
 import com.lite.housepartynew.R;
@@ -99,7 +100,7 @@ public class HomeFragment extends Fragment {
         previousMeetingsCV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "Working on it!", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(getContext(), PreviousMeetingsActivity.class));
             }
         });
 
