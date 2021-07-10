@@ -60,7 +60,6 @@
         android:layout_below="@id/channelNameTV"
         android:padding="10dp"
         android:id="@+id/chatRV"
-        tools:listitem="@layout/item_chat_other"
         android:layout_above="@id/ll"/>
 
     <LinearLayout

@@ -1,14 +1,19 @@
 package com.lite.housepartynew.Adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.lite.housepartynew.Models.Message;
 import com.lite.housepartynew.R;
 
@@ -18,12 +23,17 @@ import java.util.List;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageAdapterViewHolder> {
 
+
     Context context;
     List<Message> messageList;
+
+    String currentUserName;
 
     public MessageAdapter(Context context, List<Message> messageList) {
         this.context = context;
         this.messageList = messageList;
+        currentUserName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+
     }
 
     @NonNull
@@ -34,10 +44,24 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageA
         return new MessageAdapterViewHolder(view);
     }
 
+
+
     @Override
     public void onBindViewHolder(@NonNull @NotNull MessageAdapterViewHolder holder, int position) {
 
         Message message = messageList.get(position);
+
+        if (message.getName().equals(currentUserName)){
+            holder.messageLayout.setBackgroundColor(Color.DKGRAY);
+
+            holder.senderNameTV.setTextColor(Color.WHITE);
+            holder.messageTV.setTextColor(Color.WHITE);
+
+
+            holder.senderNameTV.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_END);
+            holder.messageTV.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_END);
+        }
+
 
         holder.senderNameTV.setText(message.getName());
         holder.messageTV.setText(message.getMessage());
@@ -52,11 +76,15 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageA
     public class MessageAdapterViewHolder extends RecyclerView.ViewHolder {
 
         TextView senderNameTV, messageTV;
+
+        LinearLayout messageLayout;
+
         public MessageAdapterViewHolder(@NonNull @NotNull View itemView) {
             super(itemView);
 
             senderNameTV = itemView.findViewById(R.id.senderNameItem);
             messageTV = itemView.findViewById(R.id.messageItem);
+            messageLayout = itemView.findViewById(R.id.messageLayout);
 
         }
     }
