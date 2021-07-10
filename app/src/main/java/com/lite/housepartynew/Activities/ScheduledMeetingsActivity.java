@@ -80,8 +80,8 @@ public class ScheduledMeetingsActivity extends AppCompatActivity {
         meetingsList = new ArrayList<>();
         meetingsRV = findViewById(R.id.meetingsRV);
 
-        Meeting meeting = new Meeting("a", "a", "a", null, "a", "a");
-        meetingsList.add(meeting);
+        //Meeting meeting = new Meeting("a", "a", "a", null, "a", "a");
+        //meetingsList.add(meeting);
 
         adapter = new ScheduledMeetingsAdapter(ScheduledMeetingsActivity.this, meetingsList);
 

@@ -45,7 +45,6 @@ public class ReminderActivity extends AppCompatActivity {
     EditText eventNameEt, eventDescEt;
     Button addEventBtn;
 
-
     Button btnDatePicker, btnTimePicker;
     TextView txtDate, txtTime;
     private int mYear, mMonth, mDay, mHour, mMinute;

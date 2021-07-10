@@ -19,7 +19,8 @@
         android:roundIcon="@drawable/round_logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.HousePartyNew">
-        <activity android:name=".Activities.ScheduledMeetingsActivity"></activity>
+        <activity android:name=".Activities.ChatActivity"></activity>
+        <activity android:name=".Activities.ScheduledMeetingsActivity" />
         <activity android:name=".Activities.ReminderActivity" />
         <activity android:name=".Activities.SplashScreenActivity">
             <intent-filter>
