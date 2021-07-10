@@ -66,6 +66,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageA
         holder.senderNameTV.setText(message.getName());
         holder.messageTV.setText(message.getMessage());
 
+        String date = new java.text.SimpleDateFormat("dd/MM/yyyy hh:mm a").format(new java.util.Date (message.getEpoch()));
+        holder.dateEt.setText(date);
+
+
     }
 
     @Override
@@ -75,7 +79,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageA
 
     public class MessageAdapterViewHolder extends RecyclerView.ViewHolder {
 
-        TextView senderNameTV, messageTV;
+        TextView senderNameTV, messageTV, dateEt;
 
         LinearLayout messageLayout;
 
@@ -85,6 +89,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageA
             senderNameTV = itemView.findViewById(R.id.senderNameItem);
             messageTV = itemView.findViewById(R.id.messageItem);
             messageLayout = itemView.findViewById(R.id.messageLayout);
+            dateEt = itemView.findViewById(R.id.messageDateEt);
 
         }
     }

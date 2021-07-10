@@ -6,9 +6,20 @@ public class Message {
 
     String message, name, key;
 
-    public Message(String message, String name) {
+    long epoch;
+
+    public Message(String message, String name, long epoch) {
         this.message = message;
         this.name = name;
+        this.epoch = epoch;
+    }
+
+    public long getEpoch() {
+        return epoch;
+    }
+
+    public void setEpoch(long epoch) {
+        this.epoch = epoch;
     }
 
     public String getMessage() {
