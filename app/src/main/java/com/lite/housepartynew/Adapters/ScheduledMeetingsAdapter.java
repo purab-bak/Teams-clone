@@ -67,11 +67,20 @@ public class ScheduledMeetingsAdapter extends RecyclerView.Adapter<ScheduledMeet
 
         holder.host.append(" " +meeting.getHostEmail());
         holder.desc.append(" " + meeting.getDescription());
-        for (String s: meeting.getParticipantsEmailList()){
-            participants += " " + s + "\n";
+
+        if (meeting.getParticipantsEmailList() != null){
+            for (String s: meeting.getParticipantsEmailList()){
+                participants += " " + s + "\n";
+
+            }
+            holder.participantsTv.setText(participants);
+
+        }
+        else {
+            holder.participantsTv.setText("Cant show participant list for instant meetings");
         }
 
-        holder.participantsTv.setText(participants);
+
 
         final boolean isExpanded = position==mExpandedPosition;
         holder.participantsLL.setVisibility(isExpanded?View.VISIBLE:View.GONE);

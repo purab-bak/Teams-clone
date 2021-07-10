@@ -30,14 +30,12 @@ import org.jetbrains.annotations.NotNull;
 public class JoinChannelActivity extends AppCompatActivity {
 
     EditText channelNameEt;
-    Button joinBtn, logoutBtn;
+    Button joinBtn;
 
     FirebaseAuth mAuth;
     FirebaseUser mCurrentUser;
 
     String channelName;
-
-    Button openDashboard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,26 +51,6 @@ public class JoinChannelActivity extends AppCompatActivity {
             }
         });
 
-
-        logoutBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                signOutUser();
-            }
-        });
-
-        openDashboard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(JoinChannelActivity.this, DashboardActivity.class));
-            }
-        });
-    }
-
-    private void signOutUser() {
-        mAuth.signOut();
-        startActivity(new Intent(JoinChannelActivity.this, LoginActivity.class));
-        finish();
     }
 
     private void gotoMainActivity() {
@@ -95,12 +73,12 @@ public class JoinChannelActivity extends AppCompatActivity {
 
         joinBtn = findViewById(R.id.joinBtn);
         channelNameEt = findViewById(R.id.channelNameEt);
-        logoutBtn = findViewById(R.id.logoutBtn);
-
         mAuth = FirebaseAuth.getInstance();
         mCurrentUser = mAuth.getCurrentUser();
 
-        openDashboard = findViewById(R.id.openDashboardButton);
+    }
 
+    public void onBackClicked(View view) {
+        super.onBackPressed();
     }
 }

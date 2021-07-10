@@ -90,6 +90,86 @@
             android:background="@color/cardColor"
             app:cardCornerRadius="8dp"
             app:cardElevation="6dp"
+            android:id="@+id/instantMeetingCV">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:layout_margin="16dp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/ic_start"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Instant meeting"
+                    android:textColor="@color/textcardColor"
+                    android:textSize="14sp"
+                    android:layout_marginTop="8dp"
+                    android:fontFamily="@font/calibri"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="16dp"
+            android:background="@color/cardColor"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="6dp"
+            android:id="@+id/joinMeetingCV">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:layout_margin="16dp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/ic_meeding_large"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Join a meeting"
+                    android:layout_marginTop="8dp"
+                    android:textColor="@color/textcardColor"
+                    android:textSize="14sp"
+                    android:fontFamily="@font/calibri"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="16dp"
+            android:background="@color/cardColor"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="6dp"
             android:id="@+id/scheduledMeetingsCV">
 
             <LinearLayout
@@ -109,7 +189,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Scheduled Meetings"
+                    android:text="My Meetings"
                     android:layout_marginTop="8dp"
                     android:fontFamily="@font/calibri"
                     android:textColor="@color/textcardColor"
@@ -170,7 +250,8 @@
             android:layout_marginBottom="16dp"
             android:background="@color/cardColor"
             app:cardCornerRadius="8dp"
-            app:cardElevation="6dp">
+            app:cardElevation="6dp"
+            android:id="@+id/meetingsHistoryCV">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -184,12 +265,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:background="@drawable/ic_gpa_reult"/>
+                    android:background="@drawable/ic_previous"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Study Result"
+                    android:text="Meetings History"
                     android:textColor="@color/textcardColor"
                     android:textSize="14sp"
                     android:layout_marginTop="8dp"
@@ -209,7 +290,8 @@
             android:layout_marginBottom="16dp"
             android:background="@color/cardColor"
             app:cardCornerRadius="8dp"
-            app:cardElevation="6dp">
+            app:cardElevation="6dp"
+            android:id="@+id/myNotesCV">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -223,90 +305,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:background="@drawable/ic_attendance_recap"/>
+                    android:background="@drawable/ic_notes"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Attendance Recap"
-                    android:layout_marginTop="8dp"
-                    android:textColor="@color/textcardColor"
-                    android:textSize="14sp"
-                    android:fontFamily="@font/calibri"
-                    android:textStyle="bold"/>
-            </LinearLayout>
-
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_rowWeight="1"
-            android:layout_columnWeight="1"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginBottom="16dp"
-            android:background="@color/cardColor"
-            app:cardCornerRadius="8dp"
-            app:cardElevation="6dp">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal|center_vertical"
-                android:layout_margin="16dp"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:background="@drawable/ic_course_book"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Course Booking"
-                    android:textColor="@color/textcardColor"
-                    android:textSize="14sp"
-                    android:layout_marginTop="8dp"
-                    android:fontFamily="@font/calibri"
-                    android:textStyle="bold"/>
-            </LinearLayout>
-
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_rowWeight="1"
-            android:layout_columnWeight="1"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginBottom="16dp"
-            android:background="@color/cardColor"
-            app:cardCornerRadius="8dp"
-            app:cardElevation="6dp">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal|center_vertical"
-                android:layout_margin="16dp"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:background="@drawable/ic_course_plan"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Course Plan"
+                    android:text="My notes"
                     android:layout_marginTop="8dp"
                     android:textColor="@color/textcardColor"
                     android:textSize="14sp"

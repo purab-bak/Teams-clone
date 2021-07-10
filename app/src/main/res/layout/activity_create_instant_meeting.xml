@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activities.JoinChannelActivity"
+    tools:context=".Activities.CreateInstantMeetingActivity"
     android:orientation="vertical">
 
     <LinearLayout
@@ -39,7 +39,7 @@
             android:layout_weight="1"
             android:fontFamily="@font/calibri"
             android:gravity="center"
-            android:text="Join Meeting"
+            android:text="Start Insant Meeting"
             android:textColor="@color/grey"
             android:textSize="25dp" />
     </LinearLayout>
@@ -47,14 +47,14 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter channel name"
-        android:id="@+id/channelNameEt"/>
+        android:hint="Create meeting code"
+        android:id="@+id/meetingCode"/>
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="join"
-        android:id="@+id/joinBtn"/>
+        android:text="Start"
+        android:id="@+id/startBtn"/>
 
 
 </LinearLayout>

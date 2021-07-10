@@ -1,82 +1,56 @@
-package com.lite.housepartynew.Fragments;
+package com.lite.housepartynew.Activities;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
-import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.lite.housepartynew.Activities.DashboardActivity;
-import com.lite.housepartynew.Activities.JoinChannelActivity;
-import com.lite.housepartynew.Activities.MainActivity;
-import com.lite.housepartynew.Activities.ReminderActivity;
 import com.lite.housepartynew.Models.Meeting;
 import com.lite.housepartynew.R;
 
+public class CreateInstantMeetingActivity extends AppCompatActivity {
 
-public class JoinChannelFragment extends Fragment {
-
-    EditText channelNameEt;
-    Button joinBtn, logoutBtn;
+    EditText meetingCodeEt;
+    Button startBtn;
 
     FirebaseAuth mAuth;
     FirebaseUser mCurrentUser;
 
     String channelName;
 
-    Button openDashboard;
-
     FirebaseFirestore firestoreDb;
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_create_instant_meeting);
 
-        View view = inflater.inflate(R.layout.fragment_join_channel, container, false);
-        
-        init(view);
+        initUi();
 
-        joinBtn.setOnClickListener(new View.OnClickListener() {
+        startBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                gotoMainActivity();
+            public void onClick(View v) {
+                channelName = meetingCodeEt.getText().toString().trim();
+
+
+                if (TextUtils.isEmpty(channelName)){
+                    Toast.makeText(CreateInstantMeetingActivity.this, "Cannot be empty", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    checkIfMeetingExists();
+                }
             }
         });
-
-
-        return view;
-    }
-
-    private void gotoMainActivity() {
-
-        channelName = channelNameEt.getText().toString().trim();
-
-
-        if (TextUtils.isEmpty(channelName)){
-            Toast.makeText(getContext(), "Cannot be empty", Toast.LENGTH_SHORT).show();
-        }
-        else{
-
-            checkIfMeetingExists();
-
-        }
     }
 
     private void checkIfMeetingExists() {
@@ -92,7 +66,6 @@ public class JoinChannelFragment extends Fragment {
                 }
             }
         });
-
 
     }
 
@@ -112,7 +85,7 @@ public class JoinChannelFragment extends Fragment {
                         showToast("Meeting created! Added to database");
 
 
-                        Intent intent = new Intent(getContext(), MainActivity.class);
+                        Intent intent = new Intent(CreateInstantMeetingActivity.this, MainActivity.class);
                         intent.putExtra("channelName", channelName);
                         startActivity(intent);
 
@@ -121,17 +94,21 @@ public class JoinChannelFragment extends Fragment {
     }
 
     private void showToast(String s) {
-        Toast.makeText(getContext(), s, Toast.LENGTH_SHORT).show();
+        Toast.makeText(CreateInstantMeetingActivity.this, s, Toast.LENGTH_SHORT).show();
     }
 
-    private void init(View view) {
-        joinBtn = view.findViewById(R.id.joinBtn);
-        channelNameEt = view.findViewById(R.id.channelNameEt);
+
+    private void initUi() {
+        meetingCodeEt = findViewById(R.id.meetingCode);
+        startBtn = findViewById(R.id.startBtn);
+
         mAuth = FirebaseAuth.getInstance();
         mCurrentUser = mAuth.getCurrentUser();
 
         firestoreDb = FirebaseFirestore.getInstance();
     }
+
+    public void onBackClicked(View view) {
+        super.onBackPressed();
+    }
 }
-
-

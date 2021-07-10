@@ -22,6 +22,8 @@ import androidx.fragment.app.Fragment;
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.lite.housepartynew.Activities.CreateInstantMeetingActivity;
+import com.lite.housepartynew.Activities.JoinChannelActivity;
 import com.lite.housepartynew.Activities.ReminderActivity;
 import com.lite.housepartynew.Activities.ScheduledMeetingsActivity;
 import com.lite.housepartynew.R;
@@ -35,7 +37,7 @@ public class HomeFragment extends Fragment {
 
     TextView userFullName;
 
-    CardView remindMeCV, scheduledMeetingsCV;
+    CardView remindMeCV, scheduledMeetingsCV, startInstantMeetingCV, joinMeetingCV, myNotesCV, previousMeetingsCV;
 
     @Nullable
     @Override
@@ -49,6 +51,10 @@ public class HomeFragment extends Fragment {
         userFullName = view.findViewById(R.id.user_full_name);
         remindMeCV = view.findViewById(R.id.remindMeCardView);
         scheduledMeetingsCV = view.findViewById(R.id.scheduledMeetingsCV);
+        startInstantMeetingCV = view.findViewById(R.id.instantMeetingCV);
+        joinMeetingCV = view.findViewById(R.id.joinMeetingCV);
+        myNotesCV = view.findViewById(R.id.myNotesCV);
+        previousMeetingsCV = view.findViewById(R.id.meetingsHistoryCV);
 
         try {
             if (mCurrentUser.getPhotoUrl() != null) {
@@ -72,6 +78,20 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(getContext(), ScheduledMeetingsActivity.class));
+            }
+        });
+
+        joinMeetingCV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getContext(), JoinChannelActivity.class));
+            }
+        });
+
+        startInstantMeetingCV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getContext(), CreateInstantMeetingActivity.class));
             }
         });
 
