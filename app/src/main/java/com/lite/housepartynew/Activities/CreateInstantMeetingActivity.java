@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -17,6 +18,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.lite.housepartynew.Models.Meeting;
 import com.lite.housepartynew.R;
+
+import java.util.Random;
 
 public class CreateInstantMeetingActivity extends AppCompatActivity {
 
@@ -30,6 +33,11 @@ public class CreateInstantMeetingActivity extends AppCompatActivity {
 
     FirebaseFirestore firestoreDb;
 
+    EditText meetingTitleEt;
+    TextView generateUniqueButton;
+
+    String title = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,14 +49,31 @@ public class CreateInstantMeetingActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 channelName = meetingCodeEt.getText().toString().trim();
+                title = meetingTitleEt.getText().toString();
 
 
-                if (TextUtils.isEmpty(channelName)){
+                if (TextUtils.isEmpty(channelName) || TextUtils.isEmpty(title)){
                     Toast.makeText(CreateInstantMeetingActivity.this, "Cannot be empty", Toast.LENGTH_SHORT).show();
                 }
                 else{
                     checkIfMeetingExists();
                 }
+            }
+        });
+
+        generateUniqueButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String currentTimestamp = String.valueOf(System.currentTimeMillis());
+
+                Random random = new Random();
+
+                char randomizedCharacter1 = (char) (random.nextInt(26) + 'a');
+                char randomizedCharacter2 = (char) (random.nextInt(26) + 'a');
+
+                channelName =String.valueOf(randomizedCharacter1) + String.valueOf(randomizedCharacter2)+currentTimestamp.substring(currentTimestamp.length() - 5);
+                meetingCodeEt.setText(channelName);
             }
         });
     }
@@ -73,7 +98,7 @@ public class CreateInstantMeetingActivity extends AppCompatActivity {
 
         long epoch = System.currentTimeMillis();
 
-        Meeting meeting = new Meeting("instant","instant",channelName, null, String.valueOf(epoch), "instant");
+        Meeting meeting = new Meeting(mCurrentUser.getEmail(),title,channelName, null, String.valueOf(epoch), "instant");
 
         firestoreDb.collection(mCurrentUser.getEmail()).document(channelName).set(meeting);
 
@@ -106,6 +131,9 @@ public class CreateInstantMeetingActivity extends AppCompatActivity {
         mCurrentUser = mAuth.getCurrentUser();
 
         firestoreDb = FirebaseFirestore.getInstance();
+
+        meetingTitleEt = findViewById(R.id.meetingTitleET);
+        generateUniqueButton = findViewById(R.id.uniqueIDTV);
     }
 
     public void onBackClicked(View view) {

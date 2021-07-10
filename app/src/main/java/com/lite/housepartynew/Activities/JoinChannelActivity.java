@@ -83,36 +83,29 @@ public class JoinChannelActivity extends AppCompatActivity {
                     showToast("No such meeting exists!");
                 }
                 else {
-                    saveMeetingDetailsToFirestore();
+                    //copy meeting details
+
+                    Meeting meeting = documentSnapshot.toObject(Meeting.class);
+                    showToast(meeting.getHostEmail());
+
+                    firestoreDb.collection(mCurrentUser.getEmail()).document(channelName).set(meeting)
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void unused) {
+
+                                    showToast("Joining meeting!");
+
+
+                                    Intent intent = new Intent(JoinChannelActivity.this, MainActivity.class);
+                                    intent.putExtra("channelName", channelName);
+                                    startActivity(intent);
+
+                                }
+                            });
                 }
             }
         });
     }
-
-    private void saveMeetingDetailsToFirestore() {
-
-        long epoch = System.currentTimeMillis();
-
-        Meeting meeting = new Meeting("instant","instant",channelName, null, String.valueOf(epoch), "instant");
-
-        firestoreDb.collection(mCurrentUser.getEmail()).document(channelName).set(meeting);
-
-        firestoreDb.collection("meetings").document(channelName).set(meeting)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-
-                        showToast("Joining meeting!");
-
-
-                        Intent intent = new Intent(JoinChannelActivity.this, MainActivity.class);
-                        intent.putExtra("channelName", channelName);
-                        startActivity(intent);
-
-                    }
-                });
-    }
-
 
     private void showToast(String s) {
         Toast.makeText(JoinChannelActivity.this, s, Toast.LENGTH_SHORT).show();
