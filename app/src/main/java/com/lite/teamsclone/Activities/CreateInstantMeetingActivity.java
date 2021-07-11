@@ -106,7 +106,6 @@ public class CreateInstantMeetingActivity extends AppCompatActivity {
                     errorTv.setText("Meeting already exists");
                 }
                 else {
-                    showToast("DNE");
                     saveMeetingDetailsToFirestore();
                 }
             }
@@ -128,7 +127,7 @@ public class CreateInstantMeetingActivity extends AppCompatActivity {
                     public void onSuccess(Void unused) {
 
                         errorTv.setTextColor(Color.GREEN);
-                        errorTv.startAnimation(shakeError());
+                        errorTv.startAnimation(animation());
                         errorTv.setText("Starting meeting!");
 
                         Intent intent = new Intent(CreateInstantMeetingActivity.this, MainActivity.class);

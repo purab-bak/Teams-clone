@@ -3,14 +3,21 @@ package com.lite.teamsclone.Activities;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.CycleInterpolator;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -20,8 +27,8 @@ import com.lite.teamsclone.R;
 
 public class JoinChannelActivity extends AppCompatActivity {
 
-    EditText channelNameEt;
-    Button joinBtn;
+    TextInputEditText channelNameEt;
+    ExtendedFloatingActionButton joinBtn;
 
     FirebaseAuth mAuth;
     FirebaseUser mCurrentUser;
@@ -29,6 +36,8 @@ public class JoinChannelActivity extends AppCompatActivity {
     String channelName;
 
     FirebaseFirestore firestoreDb;
+
+    TextView errorTv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,8 +61,8 @@ public class JoinChannelActivity extends AppCompatActivity {
 
 
         if (TextUtils.isEmpty(channelName)){
-            Toast.makeText(JoinChannelActivity.this, "Cannot be empty", Toast.LENGTH_SHORT).show();
-        }
+            errorTv.startAnimation(shakeError());
+            errorTv.setText("Meeting ID cannot be empty");        }
         else{
 
             checkIfMeetingExists();
@@ -67,20 +76,23 @@ public class JoinChannelActivity extends AppCompatActivity {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 if (!documentSnapshot.exists()){
-                    showToast("No such meeting exists!");
+                    errorTv.startAnimation(shakeError());
+                    errorTv.setText("Uh oh! No such meeting exists");
                 }
                 else {
                     //copy meeting details
 
                     Meeting meeting = documentSnapshot.toObject(Meeting.class);
-                    showToast(meeting.getHostEmail());
+                    //showToast(meeting.getHostEmail());
 
                     firestoreDb.collection(mCurrentUser.getEmail()).document(channelName).set(meeting)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void unused) {
 
-                                    showToast("Joining meeting!");
+                                    errorTv.setTextColor(Color.GREEN);
+                                    errorTv.startAnimation(animation());
+                                    errorTv.setText("Joining meeting!");
 
 
                                     Intent intent = new Intent(JoinChannelActivity.this, MainActivity.class);
@@ -106,9 +118,25 @@ public class JoinChannelActivity extends AppCompatActivity {
         mCurrentUser = mAuth.getCurrentUser();
         firestoreDb = FirebaseFirestore.getInstance();
 
+        errorTv = findViewById(R.id.errorTV);
+
+
     }
 
     public void onBackClicked(View view) {
         super.onBackPressed();
+    }
+
+    private TranslateAnimation shakeError() {
+        TranslateAnimation shake = new TranslateAnimation(0, 10, 0, 0);
+        shake.setDuration(500);
+        shake.setInterpolator(new CycleInterpolator(7));
+        return shake;
+    }
+
+    private AlphaAnimation animation(){
+        AlphaAnimation greenAnim = new AlphaAnimation(0.3f, 1.0f);
+        greenAnim.setDuration(500);
+        return greenAnim;
     }
 }
