@@ -35,4 +35,6 @@
 
     <color name="cardColor">#ffffff</color>
     <color name="textcardColor">#3f3f3f</color>
+
+    <color name="redError">#FF6347</color>
 </resources>

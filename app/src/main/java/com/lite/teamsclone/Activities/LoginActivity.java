@@ -2,9 +2,13 @@ package com.lite.teamsclone.Activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.CycleInterpolator;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -24,6 +28,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -59,6 +64,9 @@ public class LoginActivity extends AppCompatActivity {
 
     TextView forgotPasswordTV;
 
+    TextInputLayout emailTil, passwordTil;
+
+    TextView errorTv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,33 +83,56 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+
         confirmBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
+                errorTv.setText("");
+
+                String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+
                 String email = emailET.getText().toString();
                 String password = passwordET.getText().toString();
 
-                if (!TextUtils.isEmpty(email) || !TextUtils.isEmpty(password)){
-                    mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()){
-                                Toast.makeText(LoginActivity.this, "Logged in", Toast.LENGTH_LONG).show();
+                if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password)){
 
-                                startActivity(new Intent(LoginActivity.this, DashboardActivity.class));
-                            }
-                            else {
-                                Toast.makeText(LoginActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                    if (email.matches(emailPattern)){
+                        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()){
+                                    Toast.makeText(LoginActivity.this, "Logged in", Toast.LENGTH_LONG).show();
 
+                                    startActivity(new Intent(LoginActivity.this, DashboardActivity.class));
+                                }
+                                else {
+
+
+                                    errorTv.setText(task.getException().getMessage());
+                                    errorTv.startAnimation(shakeError());
+
+                                }
                             }
-                        }
-                    });
+                        });
+                    }
+                    else {
+                        errorTv.setText("Invalid email");
+                        errorTv.startAnimation(shakeError());
+                    }
                 }
                 else {
-                    showToast("Fields cannot be empty");
-                }
 
+                    if (email.isEmpty()){
+                        errorTv.setText("email cannot be empty");
+                        errorTv.startAnimation(shakeError());
+                    }
+                    else if (password.isEmpty()){
+                        errorTv.setText("password cannot be empty");
+                        errorTv.startAnimation(shakeError());
+                    }
+
+                }
 
             }
         });
@@ -127,7 +158,9 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 final EditText mResetEmail = new EditText(view.getContext());
+
                 AlertDialog.Builder passwordResetDialog = new AlertDialog.Builder(view.getContext());
+
                 passwordResetDialog.setTitle("Reset password");
                 passwordResetDialog.setMessage("Enter your email to receive reset link");
                 passwordResetDialog.setView(mResetEmail);
@@ -137,18 +170,30 @@ public class LoginActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         //extract email and set reset link
                         String mail = mResetEmail.getText().toString();
-                        mAuth.sendPasswordResetEmail(mail).addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                Toast.makeText(getApplicationContext(), "Reset password has been sent to your mail", LENGTH_SHORT).show();
 
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(getApplicationContext(), "Error resetting the password" + e.getMessage(), LENGTH_SHORT).show();
-                            }
-                        });
+                        if (!mail.isEmpty()){
+                            mAuth.sendPasswordResetEmail(mail).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+
+                                    errorTv.startAnimation(animation());
+                                    errorTv.setText("Reset link has been sent to your mail");
+
+
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    errorTv.setText("Error resetting the password " + e.getMessage());
+                                    errorTv.startAnimation(shakeError());
+                                }
+                            });
+                        }
+                        else {
+                            errorTv.setText("Email cannot be empty");
+                            errorTv.startAnimation(shakeError());
+                        }
+
 
                     }
                 });
@@ -185,13 +230,12 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(),"Signing in...",LENGTH_SHORT).show();
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = task.getResult(ApiException.class);
-                //Log.d(TAG, "firebaseAuthWithGoogle:" + account.getId());
                 firebaseAuthWithGoogle(account.getIdToken());
             } catch (ApiException e) {
                 // Google Sign In failed, update UI appropriately
-                //Log.w(TAG, "Google sign in failed", e);
-                Toast.makeText(getApplicationContext(), "Sign in failed! ", LENGTH_SHORT).show();
-                // ...
+
+                errorTv.setText("Sign in failed!" + e.getMessage());
+                errorTv.startAnimation(shakeError());
             }
         }
     }
@@ -215,7 +259,10 @@ public class LoginActivity extends AppCompatActivity {
 
                         } else {
                             // If sign in fails, display a message to the user.
-                            Toast.makeText(LoginActivity.this, task.getException().getMessage(), LENGTH_SHORT).show();
+
+                            errorTv.setText("Sign in failed!" + task.getException().getMessage());
+                            errorTv.startAnimation(shakeError());
+                            //Toast.makeText(LoginActivity.this, task.getException().getMessage(), LENGTH_SHORT).show();
                         }
 
                     }
@@ -228,13 +275,13 @@ public class LoginActivity extends AppCompatActivity {
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
                 if (snapshot.exists()){
                     //user already exists
-                    showToast("Welcome back +" + user.getDisplayName());
+                    showToast("Welcome back! " + user.getDisplayName());
                 }
                 else {
                     //register user
                     uploadDetailsDatabase(user.getEmail(), user.getDisplayName());
 
-                    showToast("Hello new user");
+                    showToast("Hello " + user.getDisplayName());
                 }
             }
 
@@ -267,8 +314,6 @@ public class LoginActivity extends AppCompatActivity {
 
                     }
                 });
-
-        //mapRef.child(mAuth.getUid()).setValue(email);
     }
 
     private void init() {
@@ -277,6 +322,8 @@ public class LoginActivity extends AppCompatActivity {
         passwordET = findViewById(R.id.passwordET);
         confirmBtn = findViewById(R.id.confirmLoginBtn);
         gotoSignupTV = findViewById(R.id.gotoSignUpTV);
+        emailTil = findViewById(R.id.emailTIL);
+        passwordTil = findViewById(R.id.passwordTIL);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -289,5 +336,20 @@ public class LoginActivity extends AppCompatActivity {
         userRef = FirebaseDatabase.getInstance().getReference().child("users");
         forgotPasswordTV = findViewById(R.id.forgotPasswordTV);
 
+        errorTv = findViewById(R.id.errorTV);
+
+    }
+
+    private TranslateAnimation shakeError() {
+        TranslateAnimation shake = new TranslateAnimation(0, 10, 0, 0);
+        shake.setDuration(500);
+        shake.setInterpolator(new CycleInterpolator(7));
+        return shake;
+    }
+
+    private AlphaAnimation animation(){
+        AlphaAnimation greenAnim = new AlphaAnimation(0.3f, 1.0f);
+        greenAnim.setDuration(500);
+        return greenAnim;
     }
 }

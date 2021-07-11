@@ -25,6 +25,15 @@
         android:paddingLeft="32dp"
         android:paddingRight="32dp">
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/errorTV"
+            android:fontFamily="@font/calibri"
+            android:textAlignment="center"
+            android:textColor="@color/redError"
+            android:textStyle="italic|bold"/>
+
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
@@ -36,7 +45,8 @@
             app:boxStrokeWidthFocused="0dp"
             app:endIconMode="custom"
             app:endIconDrawable="@drawable/ic_email_white_24dp"
-            app:endIconTint="@color/lightGrey">
+            app:endIconTint="@color/lightGrey"
+            android:id="@+id/emailTIL">
 
             <EditText
                 android:drawableTint="@color/lightGrey"
@@ -61,7 +71,8 @@
             app:boxStrokeWidth="0dp"
             app:boxStrokeWidthFocused="0dp"
             app:endIconMode="password_toggle"
-            app:endIconTint="@color/lightGrey">
+            app:endIconTint="@color/lightGrey"
+            android:id="@+id/passwordTIL">
 
             <EditText
                 android:id="@+id/passwordET"
