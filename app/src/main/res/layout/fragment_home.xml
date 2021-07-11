@@ -13,7 +13,6 @@
         app:layout_constraintTop_toTopOf="parent"
         android:id="@+id/bg_top_header">
 
-
         <TextView
             android:id="@+id/welcome_text"
             android:layout_width="wrap_content"
@@ -104,7 +103,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:background="@drawable/ic_start"/>
+                    android:background="@drawable/ic_new_play"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -144,7 +143,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:background="@drawable/ic_meeding_large"/>
+                    android:background="@drawable/ic_join"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -224,7 +223,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:background="@drawable/ic_calendar"
+                    android:background="@drawable/ic_baseline_calendar_today_24"
                     app:tint="@color/darkGrey"/>
 
                 <TextView
@@ -265,7 +264,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:background="@drawable/ic_previous"/>
+                    android:background="@drawable/ic_history_new"/>
 
                 <TextView
                     android:layout_width="wrap_content"

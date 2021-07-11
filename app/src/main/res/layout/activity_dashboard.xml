@@ -39,9 +39,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:padding="10dp"
+                android:padding="5dp"
                 android:src="@drawable/ic_side_menu"
-                app:tint="@color/grey"/>
+                app:tint="@color/grey"
+                android:elevation="5dp"/>
 
             <ImageView
                 android:padding="4dp"
