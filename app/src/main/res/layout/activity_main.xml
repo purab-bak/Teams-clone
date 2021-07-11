@@ -24,6 +24,54 @@
         android:scaleType="centerCrop"
         android:visibility="visible"/>
 
+
+    <ImageView
+        android:layout_marginTop="20dp"
+        android:id="@+id/notes_vc_activity"
+        android:layout_width="@dimen/call_button_size"
+        android:layout_height="@dimen/call_button_size"
+        android:onClick="onNotesButtonCLicked"
+        android:src="@drawable/ic_notes"
+        android:scaleType="centerCrop"
+        android:visibility="visible" />
+
+    <LinearLayout
+        android:id="@+id/add_note_layout"
+        android:layout_width="match_parent"
+        android:layout_marginHorizontal="20dp"
+        android:layout_height="wrap_content"
+        android:background="#F1F1F1"
+        android:layout_marginTop="120dp"
+        android:layout_centerHorizontal="true"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:alpha="0.75">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="MyNotes"
+            android:textSize="20dp"
+            android:textAlignment="center"
+            android:layout_marginTop="20dp"
+            />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/notesET"
+            android:hint="Add personal notes"
+            android:gravity="center"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Save"
+            android:layout_gravity="center"
+            android:id="@+id/notesSaveBtn"/>
+
+    </LinearLayout>
+
     <ViewStub
         android:id="@+id/small_video_view_dock"
         android:layout_width="match_parent"

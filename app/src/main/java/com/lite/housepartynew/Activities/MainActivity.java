@@ -33,6 +33,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -51,6 +52,7 @@ import com.lite.housepartynew.Layouts.RecyclerItemClickListener;
 import com.lite.housepartynew.Models.AgoraUser;
 import com.lite.housepartynew.Models.DBUser;
 import com.lite.housepartynew.Models.Message;
+import com.lite.housepartynew.Models.Note;
 import com.lite.housepartynew.Models.SessionInfo;
 import com.lite.housepartynew.Models.UserStatusData;
 import com.lite.housepartynew.R;
@@ -135,6 +137,13 @@ public class MainActivity extends AppCompatActivity {
 
     //disabling video
     boolean isVideoEnabled = true;
+
+    //Notes
+    private LinearLayout notesLayout;
+    boolean isShowingNotes = false;
+    EditText notesTextEt;
+    Button saveNotesButton;
+    DatabaseReference notesRef;
 
 
     private final IRtcEngineEventHandler mRtcHandler = new IRtcEngineEventHandler() {
@@ -252,6 +261,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        getNotes();
+        saveNotesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!TextUtils.isEmpty(notesTextEt.getText().toString())) {
+                    saveNote(notesTextEt.getText().toString());
+                } else {
+                    showToast("Note cannot be empty");
+                }
+            }
+        });
+
     }
 
 
@@ -280,6 +301,12 @@ public class MainActivity extends AppCompatActivity {
         chatRV = findViewById(R.id.chat_recyclerView);
         messageList = new ArrayList<>();
         messageRef = FirebaseDatabase.getInstance().getReference().child("messages-activeChannels").child(channelName).child("messages");
+
+        //notes
+        notesLayout = findViewById(R.id.add_note_layout);
+        notesTextEt = findViewById(R.id.notesET);
+        saveNotesButton = findViewById(R.id.notesSaveBtn);
+        notesRef = FirebaseDatabase.getInstance().getReference().child("user-notes").child(mCurrentUser.getUid()).child(channelName);
 
     }
 
@@ -588,6 +615,45 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void onNotesButtonCLicked(View view) {
+
+        isShowingNotes = ! isShowingNotes;
+        notesLayout.setVisibility(isShowingNotes? View.VISIBLE : View.GONE);
+
+    }
+
+    private void getNotes(){
+
+        notesRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+
+                if (snapshot.exists()){
+
+                    Note savedNote = snapshot.getValue(Note.class);
+                    notesTextEt.setText(savedNote.getBody());
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+            }
+        });
+    }
+
+
+    private void saveNote(String noteBody) {
+
+        Note note = new Note(channelName, noteBody, channelName, System.currentTimeMillis());
+
+        notesRef.setValue(note);
+
+    }
+
+
     private void showToast(String s) {
         Toast.makeText(MainActivity.this, s, Toast.LENGTH_SHORT).show();
     }
@@ -709,4 +775,6 @@ public class MainActivity extends AppCompatActivity {
 
         return userCount;
     }
+
+
 }
