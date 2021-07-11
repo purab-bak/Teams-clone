@@ -32,6 +32,7 @@
         <activity android:name="com.lite.teamsclone.Activities.ScheduledMeetingsActivity"
             android:screenOrientation="portrait"/>
         <activity android:name="com.lite.teamsclone.Activities.ReminderActivity"
+            android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait"/>
         <activity android:name="com.lite.teamsclone.Activities.SplashScreenActivity"
             android:screenOrientation="portrait">
@@ -48,6 +49,7 @@
         <activity android:name="com.lite.teamsclone.Activities.JoinChannelActivity"
             android:screenOrientation="portrait"/>
         <activity android:name="com.lite.teamsclone.Activities.MainActivity"
+            android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait"/>
         <activity android:name="com.lite.teamsclone.Activities.SignUpActivity"
             android:screenOrientation="portrait"/>

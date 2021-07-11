@@ -3,6 +3,7 @@ package com.lite.teamsclone.Activities;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -11,6 +12,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.CalendarContract;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.CycleInterpolator;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
@@ -20,7 +24,10 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.switchmaterial.SwitchMaterial;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -40,19 +47,18 @@ import java.util.Random;
 
 public class ReminderActivity extends AppCompatActivity {
 
-    EditText eventNameEt, eventDescEt;
-    Button addEventBtn;
+    TextInputEditText eventNameEt, eventDescEt, meetingIDEt, recipientEmailET;
+    ExtendedFloatingActionButton addEventBtn;
 
-    Button btnDatePicker, btnTimePicker;
-    TextView txtDate, txtTime;
+    ExtendedFloatingActionButton btnDatePicker, btnTimePicker;
+
     private int mYear, mMonth, mDay, mHour, mMinute;
     String sDate1 = "";
 
     List<String> emailIdsList;
     RecyclerView emailListRV;
     EmailListAdapter adapter;
-    Button addEmailButton;
-    EditText recipientEmailET;
+    FloatingActionButton addEmailButton;
 
     DatabaseReference scheduledMeetingsRef;
 
@@ -69,9 +75,9 @@ public class ReminderActivity extends AppCompatActivity {
     long epoch;
 
     String uniqueMeetingId="";
-
-    EditText meetingIDEt;
     TextView generateUniqueButton;
+
+    TextView errorTv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +91,10 @@ public class ReminderActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 if (uniqueMeetingId.isEmpty()){
-                    showToast("Add a meetingID");
+
+                    errorTv.setText("Add a meeting ID");
+                    errorTv.startAnimation(shakeError());
+
                 }
                 else {
                    addEvent();
@@ -113,7 +122,8 @@ public class ReminderActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 if (sDate1.isEmpty()) {
-                    showToast("Select a date first");
+                    errorTv.setText("Select a date fist!");
+                    errorTv.startAnimation(shakeError());
                 } else {
                     pickTime();
                 }
@@ -125,7 +135,7 @@ public class ReminderActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
 
                 addToCalendar = isChecked;
-                showToast(String.valueOf(addToCalendar));
+                //showToast(String.valueOf(addToCalendar));
             }
         });
 
@@ -155,14 +165,16 @@ public class ReminderActivity extends AppCompatActivity {
         if (!recipientEmailET.getText().toString().isEmpty()) {
 
             if (!recipientEmailET.getText().toString().trim().matches(emailPattern)) {
-                Toast.makeText(getApplicationContext(), "Invalid email address", Toast.LENGTH_SHORT).show();
+                errorTv.setText("Invalid email address");
+                errorTv.startAnimation(shakeError());
             } else {
                 showToast("adding to the list");
                 emailIdsList.add(recipientEmailET.getText().toString());
                 recipientEmailET.setText("");
             }
         } else {
-            showToast("Email can't be empty");
+            errorTv.setText("Email can't be empty");
+            errorTv.startAnimation(shakeError());
         }
     }
 
@@ -180,10 +192,11 @@ public class ReminderActivity extends AppCompatActivity {
 
             try {
                 Date date1 = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").parse(sDate1);
-                txtDate.setText(date1.toString());
+
+                //txtDate.setText(date1.toString());
 
                 epoch = date1.getTime();
-                txtDate.setText(String.valueOf(epoch));
+                //txtDate.setText(String.valueOf(epoch));
 
 
             } catch (ParseException e) {
@@ -204,7 +217,8 @@ public class ReminderActivity extends AppCompatActivity {
                     startActivity(intent);
 
                 } else {
-                    showToast("There is no app that supports this action");
+                    errorTv.setText("There is no app that supports this action");
+                    errorTv.startAnimation(shakeError());
                 }
             }
 
@@ -236,7 +250,8 @@ public class ReminderActivity extends AppCompatActivity {
                     });
 
         } else {
-            showToast("Fields cannot be empty");
+            errorTv.setText("Fields cannot be empty!");
+            errorTv.startAnimation(shakeError());
         }
     }
 
@@ -257,7 +272,7 @@ public class ReminderActivity extends AppCompatActivity {
                     public void onTimeSet(TimePicker view, int hourOfDay,
                                           int minute) {
 
-                        txtTime.setText(hourOfDay + ":" + minute);
+                        btnTimePicker.setText(hourOfDay + ":" + minute);
 
                         //HH:mm:ss
 
@@ -285,7 +300,7 @@ public class ReminderActivity extends AppCompatActivity {
                     public void onDateSet(DatePicker view, int year,
                                           int monthOfYear, int dayOfMonth) {
 
-                        txtDate.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
+                        btnDatePicker.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
                         sDate1 = dayOfMonth + "-" + (monthOfYear + 1) + "-" + year + " ";
                     }
                 }, mYear, mMonth, mDay);
@@ -302,25 +317,22 @@ public class ReminderActivity extends AppCompatActivity {
         eventDescEt = findViewById(R.id.eventDescEt);
         addEventBtn = findViewById(R.id.addEventButton);
 
-        btnDatePicker = (Button) findViewById(R.id.btn_date);
-        btnTimePicker = (Button) findViewById(R.id.btn_time);
-        txtDate =  findViewById(R.id.in_date);
-        txtTime =  findViewById(R.id.in_time);
-
         addEmailButton = findViewById(R.id.addEmailButton);
         recipientEmailET = findViewById(R.id.recipientEmailET);
         emailIdsList = new ArrayList<>();
         emailListRV = findViewById(R.id.emailListRV);
         emailListRV.setLayoutManager(new LinearLayoutManager(this));
 
+        btnDatePicker = findViewById(R.id.dateBtn);
+        btnTimePicker = findViewById(R.id.timeBtn);
+
+
         adapter = new EmailListAdapter(ReminderActivity.this, emailIdsList);
 
         emailListRV.setAdapter(adapter);
 
         scheduledMeetingsRef = FirebaseDatabase.getInstance().getReference().child("scheduled-meetings");
-
         mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
-
         firestoreDb = FirebaseFirestore.getInstance();
 
         calendarSwitch = findViewById(R.id.calendarSwitch);
@@ -328,40 +340,25 @@ public class ReminderActivity extends AppCompatActivity {
         meetingIDEt = findViewById(R.id.meetingIDEt);
         generateUniqueButton = findViewById(R.id.uniqueIDTV);
 
+        errorTv = findViewById(R.id.errorTV);
+
     }
 
     public void onBackClicked(View view) {
         super.onBackPressed();
     }
 
-//    /**Date time not working**/
-//    {
-//        try {
-//            Date date1=new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").parse(sDate1);
-//            txtDate.setText(date1.toString());
-//
-//            long epoch = date1.getTime();
-//            txtDate.setText(String.valueOf(epoch));
-//
-//            Intent intent = new Intent(Intent.ACTION_INSERT);
-//            intent.setData(CalendarContract.Events.CONTENT_URI);
-//            intent.putExtra(CalendarContract.Events.TITLE, eventNameEt.getText().toString());
-//            intent.putExtra(CalendarContract.Events.EVENT_LOCATION, eventLocationEt.getText().toString());
-//            intent.putExtra(CalendarContract.Events.DESCRIPTION, eventDescEt.getText().toString());
-//            intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, String.valueOf(epoch));
-//            intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, String.valueOf(epoch+200));
-//
-//            if (intent.resolveActivity(getPackageManager()) != null){
-//                startActivity(intent);
-//            }
-//            else {
-//                showToast("There is no app that supports this action");
-//            }
-//
-//
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-//    }
+    private TranslateAnimation shakeError() {
+        TranslateAnimation shake = new TranslateAnimation(0, 10, 0, 0);
+        shake.setDuration(500);
+        shake.setInterpolator(new CycleInterpolator(7));
+        return shake;
+    }
+
+    private AlphaAnimation animation(){
+        AlphaAnimation greenAnim = new AlphaAnimation(0.3f, 1.0f);
+        greenAnim.setDuration(500);
+        return greenAnim;
+    }
 
 }

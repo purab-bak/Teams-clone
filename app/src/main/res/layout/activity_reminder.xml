@@ -11,7 +11,6 @@
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
         android:layout_alignParentTop="true"
-        android:layout_marginBottom="20dp"
         android:background="@color/colorPrimary"
         android:elevation="4dp"
         android:orientation="horizontal"
@@ -43,69 +42,171 @@
 
     </LinearLayout>
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/errorTV"
+        android:textSize="16sp"
+        android:layout_marginTop="20dp"
+        android:layout_marginHorizontal="5dp"
+        android:layout_below="@id/appBarLayout"
+        android:fontFamily="@font/calibri"
+        android:textAlignment="center"
+        android:textColor="@color/redError"
+        android:textStyle="italic|bold"/>
+
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/appBarLayout"
+        android:layout_below="@id/errorTV"
         android:orientation="vertical"
         android:padding="20dp">
 
         <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/calendarSwitch"
             android:layout_width="wrap_content"
+            android:fontFamily="@font/calibri"
             android:layout_height="match_parent"
             android:checked="false"
             android:text="Add event to Google Calendar" />
 
-        <EditText
-            android:id="@+id/eventNameEt"
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_marginVertical="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Event Name" />
+            android:hint="Event Title"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/calibri"
+                android:id="@+id/eventNameEt"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <EditText
-                android:id="@+id/meetingIDEt"
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/lasla"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:hint="Meeting ID"
-                android:enabled="false"/>
+                android:layout_weight="2"
+                android:layout_marginVertical="10dp"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/calibri"
+                    android:id="@+id/meetingIDEt"
+                    android:enabled="false"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
             <TextView
+                android:layout_gravity="center"
+                android:id="@+id/uniqueIDTV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="GenerateUniqueID"
-                android:textStyle="bold"
-                android:id="@+id/uniqueIDTV"/>
+                android:text="Generate ID"
+                android:fontFamily="@font/calibri"
+                android:padding="10dp"
+                android:textSize="16dp"
+                android:textStyle="bold" />
 
         </LinearLayout>
 
-
-        <EditText
-            android:id="@+id/eventDescEt"
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_marginVertical="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Description" />
+            android:hint="Event Description"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
-        <Button
-            android:id="@+id/addEventButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Add Event" />
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/calibri"
+                android:id="@+id/eventDescEt" />
 
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <EditText
-            android:id="@+id/recipientEmailET"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Email IDs" />
+            android:paddingHorizontal="20dp">
 
-        <Button
-            android:id="@+id/addEmailButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="add email" />
+            <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+                android:layout_weight="1"
+                android:id="@+id/dateBtn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="5dp"
+                android:elevation="5dp"
+                android:text="Date"
+                android:gravity="center"
+                android:textColor="@color/grey"
+                app:icon="@drawable/ic_new_play"
+                app:iconTint="@color/grey"
+                android:layout_marginRight="10dp"/>
+            <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+                android:layout_weight="1"
+                android:id="@+id/timeBtn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="5dp"
+                android:elevation="5dp"
+                android:text="Time"
+                android:textColor="@color/grey"
+                app:icon="@drawable/ic_new_play"
+                app:iconTint="@color/grey"
+                android:layout_marginLeft="10dp"
+                android:gravity="center"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="Particpants Email IDs"
+                android:layout_weight="2"
+                android:layout_marginVertical="10dp"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/calibri"
+                    android:id="@+id/recipientEmailET"
+                    android:maxLines="1"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/addEmailButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:fabSize="mini"
+                android:layout_gravity="center"
+                app:srcCompat="@drawable/btn_add_friends"
+                android:tint="@color/grey"
+                android:layout_margin="5dp"/>
+
+
+        </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/emailListRV"
@@ -114,42 +215,22 @@
             tools:itemCount="3"
             tools:listitem="@layout/item_email" />
 
-        <TextView
-            android:id="@+id/in_date"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="10dp" />
-
-        <Button
-            android:id="@+id/btn_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/in_date"
-            android:layout_toEndOf="@+id/in_date"
-            android:layout_toRightOf="@+id/in_date"
-            android:text="SELECT DATE" />
-
-        <TextView
-            android:id="@+id/in_time"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/in_date"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true" />
-
-        <Button
-            android:id="@+id/btn_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/btn_date"
-            android:layout_alignStart="@+id/btn_date"
-            android:layout_alignLeft="@+id/btn_date"
-            android:text="SELECT TIME" />
-
     </LinearLayout>
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/addEventButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" android:layout_marginTop="10dp"
+        android:layout_marginBottom="5dp"
+        android:elevation="5dp"
+        android:text="Schedule"
+        android:textColor="@color/grey"
+        app:icon="@drawable/btn_add_friends"
+        app:iconTint="@color/grey"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="10dp"
+        app:elevation="5dp"/>
 
 
 </RelativeLayout>
