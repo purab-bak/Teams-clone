@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.CalendarContract;
@@ -66,7 +67,7 @@ public class ReminderActivity extends AppCompatActivity {
 
     FirebaseFirestore firestoreDb;
 
-    String date, time;
+    String date, time = "";
 
     SwitchMaterial calendarSwitch;
 
@@ -74,7 +75,7 @@ public class ReminderActivity extends AppCompatActivity {
 
     long epoch;
 
-    String uniqueMeetingId="";
+    String uniqueMeetingId = "";
     TextView generateUniqueButton;
 
     TextView errorTv;
@@ -90,14 +91,13 @@ public class ReminderActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if (uniqueMeetingId.isEmpty()){
+                if (uniqueMeetingId.isEmpty()) {
 
                     errorTv.setText("Add a meeting ID");
                     errorTv.startAnimation(shakeError());
 
-                }
-                else {
-                   addEvent();
+                } else {
+                    addEvent();
                 }
             }
         });
@@ -105,8 +105,8 @@ public class ReminderActivity extends AppCompatActivity {
         addEmailButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 addEmailToRV();
+                adapter.notifyDataSetChanged();
             }
         });
 
@@ -150,7 +150,7 @@ public class ReminderActivity extends AppCompatActivity {
                 char randomizedCharacter1 = (char) (random.nextInt(26) + 'a');
                 char randomizedCharacter2 = (char) (random.nextInt(26) + 'a');
 
-                uniqueMeetingId =String.valueOf(randomizedCharacter1) + String.valueOf(randomizedCharacter2)+currentTimestamp.substring(currentTimestamp.length() - 4);
+                uniqueMeetingId = String.valueOf(randomizedCharacter1) + String.valueOf(randomizedCharacter2) + currentTimestamp.substring(currentTimestamp.length() - 4);
                 meetingIDEt.setText(uniqueMeetingId);
             }
         });
@@ -188,16 +188,12 @@ public class ReminderActivity extends AppCompatActivity {
 
         if (!eventNameEt.getText().toString().isEmpty() &&
                 !eventDescEt.getText().toString().isEmpty() &&
-                !emailIntent.toString().isEmpty() && !time.isEmpty()) {
+                !emailIntent.toString().isEmpty() &&
+                !time.isEmpty()) {
 
             try {
                 Date date1 = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").parse(sDate1);
-
-                //txtDate.setText(date1.toString());
-
                 epoch = date1.getTime();
-                //txtDate.setText(String.valueOf(epoch));
-
 
             } catch (ParseException e) {
                 e.printStackTrace();
@@ -222,9 +218,9 @@ public class ReminderActivity extends AppCompatActivity {
                 }
             }
 
-            Meeting meeting = new Meeting(mCurrentUser.getEmail(),eventNameEt.getText().toString(),uniqueMeetingId, emailIdsList, String.valueOf(epoch), eventDescEt.getText().toString());
+            Meeting meeting = new Meeting(mCurrentUser.getEmail(), eventNameEt.getText().toString(), uniqueMeetingId, emailIdsList, String.valueOf(epoch), eventDescEt.getText().toString());
 
-            for (String s : emailIdsList){
+            for (String s : emailIdsList) {
                 firestoreDb.collection(s).document(uniqueMeetingId).set(meeting);
             }
 
@@ -235,7 +231,9 @@ public class ReminderActivity extends AppCompatActivity {
                         @Override
                         public void onSuccess(Void unused) {
 
-                            showToast("Meeting created! Added to database");
+                            errorTv.setTextColor(Color.GREEN);
+                            errorTv.setText("Meeting created! Added to database");
+                            errorTv.startAnimation(animation());
 
                             new Handler().postDelayed(new Runnable() {
                                 @Override
@@ -355,7 +353,7 @@ public class ReminderActivity extends AppCompatActivity {
         return shake;
     }
 
-    private AlphaAnimation animation(){
+    private AlphaAnimation animation() {
         AlphaAnimation greenAnim = new AlphaAnimation(0.3f, 1.0f);
         greenAnim.setDuration(500);
         return greenAnim;
