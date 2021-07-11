@@ -1,6 +1,8 @@
 package com.lite.housepartynew.Models;
 
-public class Note {
+import java.io.Serializable;
+
+public class Note implements Serializable {
 
     String title, body, noteId;
 

@@ -29,12 +29,31 @@ public class AddNoteActivity extends AppCompatActivity {
 
     String title, body;
 
+    Note noteIntent;
+
+    String noteId;
+    private String toastMessage;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_note);
 
         initUI();
+
+        if (noteIntent != null){
+            notesTitleEt.setText(noteIntent.getTitle());
+            notesBodyEt.setText(noteIntent.getBody());
+
+            noteId = noteIntent.getNoteId();
+
+            toastMessage = "Note Edited!";
+        }
+        else {
+            noteId = notesRef.push().getKey();
+            toastMessage = "Note Added!";
+
+        }
 
         epoch = System.currentTimeMillis();
 
@@ -59,15 +78,13 @@ public class AddNoteActivity extends AppCompatActivity {
 
     private void saveToDatabase() {
 
-        String noteId = notesRef.push().getKey();
-
         Note note = new Note(title, body, noteId, epoch);
 
         notesRef.child(noteId).setValue(note)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
-                        showToast("Note added successfully!");
+                        showToast(toastMessage);
                         startActivity(new Intent(AddNoteActivity.this, MyNotesActivity.class));
                         finish();
                     }
@@ -87,6 +104,8 @@ public class AddNoteActivity extends AppCompatActivity {
         confirmFAB = findViewById(R.id.confirmFAB);
         mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
         notesRef = FirebaseDatabase.getInstance().getReference().child("user-notes").child(mCurrentUser.getUid());
+
+        noteIntent = (Note) getIntent().getSerializableExtra("noteIntent");
 
     }
 
