@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.lite.housepartynew">
+    package="com.lite.teamsclone">
 
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -19,26 +19,40 @@
         android:roundIcon="@drawable/round_logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.HousePartyNew">
-        <activity android:name=".Activities.AddNoteActivity"></activity>
-        <activity android:name=".Activities.PreviousMeetingsActivity" />
-        <activity android:name=".Activities.MyNotesActivity" />
-        <activity android:name=".Activities.CreateInstantMeetingActivity" />
-        <activity android:name=".Activities.ChatActivity" />
-        <activity android:name=".Activities.ScheduledMeetingsActivity" />
-        <activity android:name=".Activities.ReminderActivity" />
-        <activity android:name=".Activities.SplashScreenActivity">
+        <activity android:name="com.lite.teamsclone.Activities.AddNoteActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name="com.lite.teamsclone.Activities.PreviousMeetingsActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name="com.lite.teamsclone.Activities.MyNotesActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name="com.lite.teamsclone.Activities.CreateInstantMeetingActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name="com.lite.teamsclone.Activities.ChatActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name="com.lite.teamsclone.Activities.ScheduledMeetingsActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name="com.lite.teamsclone.Activities.ReminderActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name="com.lite.teamsclone.Activities.SplashScreenActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.EditProfileActivity" />
-        <activity android:name=".Activities.DashboardActivity" />
-        <activity android:name=".Activities.JoinChannelActivity" />
-        <activity android:name=".Activities.MainActivity" />
-        <activity android:name=".Activities.SignUpActivity" />
-        <activity android:name=".Activities.LoginActivity" />
+        <activity android:name="com.lite.teamsclone.Activities.EditProfileActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name="com.lite.teamsclone.Activities.DashboardActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name="com.lite.teamsclone.Activities.JoinChannelActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name="com.lite.teamsclone.Activities.MainActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name="com.lite.teamsclone.Activities.SignUpActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name="com.lite.teamsclone.Activities.LoginActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

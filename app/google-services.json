@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "986346753834",
+    "firebase_url": "https://houseparty-new-default-rtdb.firebaseio.com",
     "project_id": "houseparty-new",
     "storage_bucket": "houseparty-new.appspot.com"
   },
@@ -13,6 +14,59 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "986346753834-atbcb98g7u4gkk13olbn6os7qdg6lmrp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lite.housepartynew",
+            "certificate_hash": "7cac2e619f88d00720f43b6afeb40236a28ce7b2"
+          }
+        },
+        {
+          "client_id": "986346753834-ors0vpv1ntlomhjoediqalpsr22qolmr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lite.housepartynew",
+            "certificate_hash": "989f56bdf42cf074f3500d6dab9acc7e572f2708"
+          }
+        },
+        {
+          "client_id": "986346753834-tbtrh2vg5kftberhoihbt7rgc4v87j53.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZIIJCObdsMBbrPXfNoR9vbg3C_X9HU58"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "986346753834-tbtrh2vg5kftberhoihbt7rgc4v87j53.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:986346753834:android:c9a6a70a354ffdc2045853",
+        "android_client_info": {
+          "package_name": "com.lite.teamsclone"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "986346753834-7eqbon5mamk1najjgocs2akv475vjbuv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lite.teamsclone",
+            "certificate_hash": "7cac2e619f88d00720f43b6afeb40236a28ce7b2"
+          }
+        },
         {
           "client_id": "986346753834-tbtrh2vg5kftberhoihbt7rgc4v87j53.apps.googleusercontent.com",
           "client_type": 3

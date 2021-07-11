@@ -6,11 +6,11 @@
     android:layout_height="match_parent"
     tools:context=".Activities.MainActivity">
 
-    <com.lite.housepartynew.Layouts.GridVideoViewContainer
+    <com.lite.teamsclone.Layouts.GridVideoViewContainer
         android:id="@+id/grid_video_view_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    </com.lite.housepartynew.Layouts.GridVideoViewContainer>
+    </com.lite.teamsclone.Layouts.GridVideoViewContainer>
 
 
     <ImageView
