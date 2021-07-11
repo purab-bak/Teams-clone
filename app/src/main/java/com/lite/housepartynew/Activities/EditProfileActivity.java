@@ -21,6 +21,9 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.lite.housepartynew.R;
 
 import java.io.File;
@@ -37,7 +40,9 @@ public class EditProfileActivity extends AppCompatActivity {
 
     private Uri filePath;
 
+    private StorageReference reference= FirebaseStorage.getInstance().getReference();
 
+    String imageURL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,20 +76,37 @@ public class EditProfileActivity extends AppCompatActivity {
 
                 if (filePath != null){
 
-                    UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                            .setDisplayName(nameEt.getText().toString())
-                            .setPhotoUri(filePath)
-                            .build();
+                    StorageReference fileref = reference.child(mCurrentUser.getUid());
+                    fileref.putFile(filePath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
-                    mCurrentUser.updateProfile(profileUpdates)
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            fileref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                 @Override
-                                public void onSuccess(Void unused) {
-                                    Toast.makeText(EditProfileActivity.this, "Details updated", Toast.LENGTH_SHORT).show();
-                                    startActivity(new Intent(EditProfileActivity.this, DashboardActivity.class));
-                                    finish();
+                                public void onSuccess(Uri uri) {
+                                    imageURL=uri.toString();
+
+                                    UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                            .setDisplayName(nameEt.getText().toString())
+                                            .setPhotoUri(Uri.parse(imageURL))
+                                            .build();
+
+                                    mCurrentUser.updateProfile(profileUpdates)
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void unused) {
+                                                    Toast.makeText(EditProfileActivity.this, "Details updated", Toast.LENGTH_SHORT).show();
+                                                    startActivity(new Intent(EditProfileActivity.this, DashboardActivity.class));
+                                                    finish();
+                                                }
+                                            });
                                 }
                             });
+
+                        }
+                    });
+
+
                 }
                 else {
 
