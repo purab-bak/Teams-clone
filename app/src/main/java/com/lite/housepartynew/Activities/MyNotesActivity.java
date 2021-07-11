@@ -2,6 +2,7 @@ package com.lite.housepartynew.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
@@ -19,5 +20,9 @@ public class MyNotesActivity extends AppCompatActivity {
 
     public void onBackClicked(View view) {
         super.onBackPressed();
+    }
+
+    public void onAddNoteClicked(View view) {
+        startActivity(new Intent(MyNotesActivity.this, AddNoteActivity.class));
     }
 }

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activities.MyNotesActivity">
+    tools:context=".Activities.AddNoteActivity">
 
     <LinearLayout
         android:id="@+id/appBarLayout"
@@ -37,45 +37,43 @@
             android:layout_weight="1"
             android:fontFamily="@font/calibri"
             android:gravity="center"
-            android:text="My Notes"
+            android:text="Add a note"
             android:textColor="@color/grey"
             android:textSize="25dp" />
 
     </LinearLayout>
 
-    <SearchView
-        android:id="@+id/search_notes"
+    <EditText
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:fontFamily="@font/gotham"
+        android:hint="Note Title"
+        android:textColor="@color/darkGrey"
+        android:textSize="18dp"
         android:layout_below="@id/appBarLayout"
-        android:layout_height="45dp"
-        android:background="@drawable/background_search"
-        android:iconifiedByDefault="false"
-        android:paddingTop="5dp"
-        android:paddingRight="20dp"
-        android:paddingBottom="5dp"
-        android:queryBackground="@android:color/white"
-        android:queryHint="Search in notes"
-        android:layout_margin="10dp"/>
+        android:textStyle="bold"
+        android:id="@+id/noteTitleEt" />
 
-    <androidx.recyclerview.widget.RecyclerView
+    <EditText
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/search_notes"
-        android:padding="10dp"/>
+        android:layout_height="wrap_content"
+        android:layout_below="@id/noteTitleEt"
+        android:hint="Notes body"
+        android:textSize="16dp"
+        android:lines="5"
+        android:id="@+id/noteBodyEt"/>
 
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/addNoteFAB"
-        app:icon="@drawable/btn_add_friends"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
+        android:layout_below="@id/noteBodyEt"
         android:layout_margin="10dp"
-        android:elevation="5dp"
-        android:text="Add Note"
-        android:onClick="onAddNoteClicked"
-        app:iconTint="@color/grey"
-        android:textColor="@color/grey" />
+        android:id="@+id/confirmFAB"
+        android:src="@drawable/ic_baseline_check_24"
+        app:tint="@color/grey"/>
+
+
 
 
 </RelativeLayout>
