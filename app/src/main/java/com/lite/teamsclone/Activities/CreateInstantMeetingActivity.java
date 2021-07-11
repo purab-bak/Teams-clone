@@ -3,15 +3,22 @@ package com.lite.teamsclone.Activities;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.CycleInterpolator;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -23,8 +30,8 @@ import java.util.Random;
 
 public class CreateInstantMeetingActivity extends AppCompatActivity {
 
-    EditText meetingCodeEt;
-    Button startBtn;
+    TextInputEditText meetingCodeEt;
+    ExtendedFloatingActionButton startBtn;
 
     FirebaseAuth mAuth;
     FirebaseUser mCurrentUser;
@@ -33,10 +40,14 @@ public class CreateInstantMeetingActivity extends AppCompatActivity {
 
     FirebaseFirestore firestoreDb;
 
-    EditText meetingTitleEt;
+    TextInputEditText meetingTitleEt;
     TextView generateUniqueButton;
 
     String title = "";
+
+    TextView errorTv;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,8 +63,15 @@ public class CreateInstantMeetingActivity extends AppCompatActivity {
                 title = meetingTitleEt.getText().toString();
 
 
-                if (TextUtils.isEmpty(channelName) || TextUtils.isEmpty(title)){
-                    Toast.makeText(CreateInstantMeetingActivity.this, "Cannot be empty", Toast.LENGTH_SHORT).show();
+                if (TextUtils.isEmpty(title)){
+
+                    errorTv.startAnimation(shakeError());
+                    errorTv.setText("title cannot be empty");
+
+                }
+                else if (TextUtils.isEmpty(channelName)){
+                    errorTv.startAnimation(shakeError());
+                    errorTv.setText("ID cannot be empty");
                 }
                 else{
                     checkIfMeetingExists();
@@ -83,7 +101,9 @@ public class CreateInstantMeetingActivity extends AppCompatActivity {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 if (documentSnapshot.exists()){
-                    showToast("Meeting ID already used");
+
+                    errorTv.startAnimation(shakeError());
+                    errorTv.setText("Meeting already exists");
                 }
                 else {
                     showToast("DNE");
@@ -107,8 +127,9 @@ public class CreateInstantMeetingActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(Void unused) {
 
-                        showToast("Meeting created! Added to database");
-
+                        errorTv.setTextColor(Color.GREEN);
+                        errorTv.startAnimation(shakeError());
+                        errorTv.setText("Starting meeting!");
 
                         Intent intent = new Intent(CreateInstantMeetingActivity.this, MainActivity.class);
                         intent.putExtra("channelName", channelName);
@@ -134,9 +155,25 @@ public class CreateInstantMeetingActivity extends AppCompatActivity {
 
         meetingTitleEt = findViewById(R.id.meetingTitleET);
         generateUniqueButton = findViewById(R.id.uniqueIDTV);
+
+        errorTv = findViewById(R.id.errorTV);
     }
 
     public void onBackClicked(View view) {
         super.onBackPressed();
     }
+
+    private TranslateAnimation shakeError() {
+        TranslateAnimation shake = new TranslateAnimation(0, 10, 0, 0);
+        shake.setDuration(500);
+        shake.setInterpolator(new CycleInterpolator(7));
+        return shake;
+    }
+
+    private AlphaAnimation animation(){
+        AlphaAnimation greenAnim = new AlphaAnimation(0.3f, 1.0f);
+        greenAnim.setDuration(500);
+        return greenAnim;
+    }
+
 }

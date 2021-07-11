@@ -106,13 +106,6 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
 
         }
 
-        if (item.getItemId() == R.id.nav_join_channel){
-//            selectedFragment = new JoinChannelFragment();
-//            navigationView.setCheckedItem(R.id.menu_none);
-//            navigationView.setCheckedItem(R.id.nav_join_channel);
-
-        }
-
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_dashboard, selectedFragment).commit();
 
         drawerLayout.closeDrawer(GravityCompat.START);
