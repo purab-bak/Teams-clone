@@ -9,6 +9,8 @@ import com.lite.housepartynew.R;
 
 public class MyNotesActivity extends AppCompatActivity {
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

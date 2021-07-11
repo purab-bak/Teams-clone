@@ -30,42 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="60dp"
         android:inflatedId="@id/small_video_view_dock"
-        android:layout="@layout/small_video_view_dock" />
-
-    <ImageView
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_marginLeft="20dp"
-        android:id="@+id/friendsButton"
-        android:layout_marginTop="20dp"
-        android:onClick="onShowFriendListClick"
-        android:src="@drawable/btn_show_friends" />
-
-    <LinearLayout
-        android:id="@+id/layout_show_friends"
-        android:layout_width="300dp"
-        android:layout_height="400dp"
-        android:background="#F1F1F1"
-        android:layout_marginTop="120dp"
-        android:layout_centerHorizontal="true"
-        android:orientation="vertical"
-        android:visibility="gone">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:text="Agora Houseparty"
-            android:textSize="20dp"
-            android:layout_marginLeft="70dp"
-            android:layout_marginTop="20dp"
-            />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_show_friendList"
-            android:layout_width="match_parent"
-            android:layout_height="320dp"/>
-
-    </LinearLayout>
+        android:layout="@layout/small_video_view_dock"/>
 
     <LinearLayout
         android:id="@+id/layout_show_chat"
@@ -110,58 +75,6 @@
                 android:layout_weight="0.5"
                 android:id="@+id/sendMessageButton"/>
         </LinearLayout>
-
-    </LinearLayout>
-
-    <ImageView
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:src="@drawable/btn_add_friends"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="20dp"
-        android:onClick="onAddFriendClick"/>
-
-
-    <LinearLayout
-        android:id="@+id/layout_add_friends"
-        android:layout_width="300dp"
-        android:layout_height="400dp"
-        android:background="#F1F1F1"
-        android:layout_marginTop="120dp"
-        android:layout_centerHorizontal="true"
-        android:orientation="vertical"
-        android:visibility="gone">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:text="Bring Friends Here"
-            android:textSize="20dp"
-            android:layout_marginLeft="60dp"
-            android:layout_marginTop="20dp"
-            />
-
-        <EditText
-            android:id="@+id/et_search_friends"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:hint="Search by Name"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            />
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Search"
-            android:layout_marginLeft="200dp"
-            android:onClick="onSearchButtonClick"
-            />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_friendList"
-            android:layout_width="match_parent"
-            android:layout_height="230dp"/>
 
     </LinearLayout>
 
