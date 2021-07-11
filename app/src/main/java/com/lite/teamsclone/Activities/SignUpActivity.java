@@ -3,6 +3,9 @@ package com.lite.teamsclone.Activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.CycleInterpolator;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -58,6 +61,7 @@ public class SignUpActivity extends AppCompatActivity {
     private GoogleSignInClient mGoogleSignInClient;
     private GoogleSignInOptions gso;
     private int RC_SIGN_IN = 1;
+    private TextView errorTv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,7 +134,10 @@ public class SignUpActivity extends AppCompatActivity {
             } catch (ApiException e) {
                 // Google Sign In failed, update UI appropriately
                 //Log.w(TAG, "Google sign in failed", e);
-                Toast.makeText(getApplicationContext(), "Sign in failed! ", LENGTH_SHORT).show();
+
+                errorTv.setText("Sign in failed! " + e.getMessage());
+                errorTv.startAnimation(shakeError());
+                //Toast.makeText(getApplicationContext(), "Sign in failed! ", LENGTH_SHORT).show();
                 // ...
             }
         }
@@ -155,7 +162,8 @@ public class SignUpActivity extends AppCompatActivity {
 
                         } else {
                             // If sign in fails, display a message to the user.
-                            Toast.makeText(SignUpActivity.this, task.getException().getMessage(), LENGTH_SHORT).show();
+                            errorTv.setText(task.getException().getMessage());
+                            errorTv.startAnimation(shakeError());
                         }
 
                     }
@@ -199,7 +207,7 @@ public class SignUpActivity extends AppCompatActivity {
                         if (task.isSuccessful()){
 
                             uploadDetailsDatabase(email, name);
-                            Toast.makeText(SignUpActivity.this, task.getResult().toString(), Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(SignUpActivity.this, task.getResult().toString(), Toast.LENGTH_SHORT).show();
 
                             UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                                     .setDisplayName(name)
@@ -220,7 +228,9 @@ public class SignUpActivity extends AppCompatActivity {
 
                         }
                         else {
-                            Toast.makeText(SignUpActivity.this, task.getException().getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                            errorTv.setText(task.getException().getMessage());
+                            errorTv.startAnimation(shakeError());
+                            //Toast.makeText(SignUpActivity.this, task.getException().getLocalizedMessage(), Toast.LENGTH_LONG).show();
                         }
 
                     }
@@ -234,7 +244,7 @@ public class SignUpActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
-                        Toast.makeText(SignUpActivity.this, "Added to firebase", Toast.LENGTH_LONG).show();
+                        //Toast.makeText(SignUpActivity.this, "Added to firebase", Toast.LENGTH_LONG).show();
                     }
                 });
 
@@ -242,7 +252,7 @@ public class SignUpActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
-                        Toast.makeText(SignUpActivity.this, "Added to Firestore", Toast.LENGTH_LONG).show();
+                        //Toast.makeText(SignUpActivity.this, "Added to Firestore", Toast.LENGTH_LONG).show();
 
                     }
                 });
@@ -253,16 +263,20 @@ public class SignUpActivity extends AppCompatActivity {
     private boolean isAllFilledAndVerified() {
         String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
         if (fullNameET.getText().toString().isEmpty()) {
-            Toast.makeText(getApplicationContext(), "Enter your name", Toast.LENGTH_SHORT).show();
+            errorTv.setText("Enter your name");
+            errorTv.startAnimation(shakeError());
             return false;
         } else if (emailET.getText().toString().isEmpty()) {
-            Toast.makeText(getApplicationContext(), "Enter Email", Toast.LENGTH_SHORT).show();
+            errorTv.setText("Enter your email");
+            errorTv.startAnimation(shakeError());
             return false;
         }else if (passwordET.getText().toString().isEmpty()) {
-            Toast.makeText(getApplicationContext(), "Enter password", Toast.LENGTH_SHORT).show();
+            errorTv.setText("Enter a password");
+            errorTv.startAnimation(shakeError());
             return false;
         } else if (!emailET.getText().toString().trim().matches(emailPattern)) {
-            Toast.makeText(getApplicationContext(), "Invalid email address", Toast.LENGTH_SHORT).show();
+            errorTv.setText("Invalid email");
+            errorTv.startAnimation(shakeError());
             return false;
         }
         return true;
@@ -284,7 +298,21 @@ public class SignUpActivity extends AppCompatActivity {
         googleSignUpButton = findViewById(R.id.google_sign_in);
         firestoreDb = FirebaseFirestore.getInstance();
 
-
+        errorTv = findViewById(R.id.errorTV);
 
     }
+
+    private TranslateAnimation shakeError() {
+        TranslateAnimation shake = new TranslateAnimation(0, 10, 0, 0);
+        shake.setDuration(500);
+        shake.setInterpolator(new CycleInterpolator(7));
+        return shake;
+    }
+
+    private AlphaAnimation animation(){
+        AlphaAnimation greenAnim = new AlphaAnimation(0.3f, 1.0f);
+        greenAnim.setDuration(500);
+        return greenAnim;
+    }
+
 }
