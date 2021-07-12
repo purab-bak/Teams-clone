@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
         android:layout_alignParentTop="true"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="10dp"
         android:background="@color/colorPrimary"
         android:elevation="4dp"
         android:orientation="horizontal"
@@ -43,37 +43,101 @@
 
     </LinearLayout>
 
-    <EditText
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:fontFamily="@font/gotham"
-        android:hint="Note Title"
-        android:textColor="@color/darkGrey"
-        android:textSize="18dp"
+        android:id="@+id/errorTV"
+        android:textSize="16sp"
+        android:layout_marginTop="20dp"
+        android:layout_marginHorizontal="20dp"
         android:layout_below="@id/appBarLayout"
-        android:textStyle="bold"
-        android:id="@+id/noteTitleEt" />
+        android:fontFamily="@font/calibri"
+        android:textAlignment="center"
+        android:textColor="@color/redError"
+        android:textStyle="italic|bold"/>
 
-    <EditText
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/noteTitleEt"
-        android:hint="Notes body"
-        android:textSize="16dp"
-        android:lines="5"
-        android:id="@+id/noteBodyEt"/>
+        android:layout_below="@id/errorTV"
+        android:padding="20dp">
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/noteBodyEt"
-        android:layout_margin="10dp"
-        android:id="@+id/confirmFAB"
-        android:src="@drawable/ic_baseline_check_24"
-        app:tint="@color/grey"/>
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/lasla"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Note Title"
+            app:endIconMode="clear_text"
+            android:layout_weight="2"
+            android:layout_marginVertical="10dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:fontFamily="@font/calibri"
+                android:id="@+id/noteTitleEt"
+                android:textStyle="bold"
+                android:enabled="true"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_below="@id/lasla"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Note Body"
+            android:layout_marginVertical="10dp"
+            android:id="@+id/bodtTiL"
+            app:endIconMode="clear_text"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:gravity="top"
+                android:lines="10"
+                android:textSize="16sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/calibri"
+                android:id="@+id/noteBodyEt"
+                android:enabled="true"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/bodtTiL"
+            android:layout_alignParentEnd="true">
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/bodtTiL"
+                android:id="@+id/deleteFAB"
+                android:src="@drawable/ic_baseline_delete_24"
+                app:tint="@color/grey"
+                android:layout_marginHorizontal="10dp"
+                android:enabled="false"
+                />
+
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:layout_alignParentEnd="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/bodtTiL"
+                android:id="@+id/confirmFAB"
+                android:src="@drawable/ic_baseline_check_24"
+                app:tint="@color/grey"
+                />
+
+
+        </LinearLayout>
 
 
 
+    </RelativeLayout>
 
 </RelativeLayout>

@@ -6,11 +6,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.CycleInterpolator;
+import android.view.animation.TranslateAnimation;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -20,8 +25,8 @@ import com.lite.teamsclone.R;
 
 public class AddNoteActivity extends AppCompatActivity {
 
-    EditText notesTitleEt, notesBodyEt;
-    FloatingActionButton confirmFAB;
+    TextInputEditText notesTitleEt, notesBodyEt;
+    FloatingActionButton confirmFAB, deleteFAB;
 
     FirebaseUser mCurrentUser;
     DatabaseReference notesRef;
@@ -34,6 +39,9 @@ public class AddNoteActivity extends AppCompatActivity {
     String noteId;
     private String toastMessage;
 
+    TextView errorTv;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +50,7 @@ public class AddNoteActivity extends AppCompatActivity {
         initUI();
 
         if (noteIntent != null){
+            deleteFAB.setEnabled(true);
             notesTitleEt.setText(noteIntent.getTitle());
             notesBodyEt.setText(noteIntent.getBody());
 
@@ -69,11 +78,38 @@ public class AddNoteActivity extends AppCompatActivity {
                     saveToDatabase();
                 }
                 else {
-                    showToast("Cannot be empty");
+                    if (title.isEmpty()){
+                        errorTv.setText("Title cannot be empty");
+                        errorTv.startAnimation(shakeError());
+                    }
+                    else{
+                        errorTv.setText("Body cannot be empty");
+                        errorTv.startAnimation(shakeError());
+                    }
                 }
 
             }
         });
+
+        deleteFAB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteNote();
+            }
+        });
+    }
+
+    private void deleteNote() {
+
+        notesRef.child(noteId).removeValue()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        showToast("Removed!");
+                        startActivity(new Intent(AddNoteActivity.this, MyNotesActivity.class));
+                        finish();
+                    }
+                });
     }
 
     private void saveToDatabase() {
@@ -107,9 +143,25 @@ public class AddNoteActivity extends AppCompatActivity {
 
         noteIntent = (Note) getIntent().getSerializableExtra("noteIntent");
 
+        deleteFAB = findViewById(R.id.deleteFAB);
+        errorTv = findViewById(R.id.errorTV);
+
     }
 
     public void onBackClicked(View view) {
         super.onBackPressed();
+    }
+
+    private TranslateAnimation shakeError() {
+        TranslateAnimation shake = new TranslateAnimation(0, 10, 0, 0);
+        shake.setDuration(500);
+        shake.setInterpolator(new CycleInterpolator(7));
+        return shake;
+    }
+
+    private AlphaAnimation animation() {
+        AlphaAnimation greenAnim = new AlphaAnimation(0.3f, 1.0f);
+        greenAnim.setDuration(500);
+        return greenAnim;
     }
 }
