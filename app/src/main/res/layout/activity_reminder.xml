@@ -198,7 +198,7 @@
                 app:fabSize="mini"
                 android:layout_gravity="center"
                 app:srcCompat="@drawable/btn_add_friends"
-                android:tint="@color/grey"
+                app:tint="@color/grey"
                 android:layout_margin="5dp"/>
 
 

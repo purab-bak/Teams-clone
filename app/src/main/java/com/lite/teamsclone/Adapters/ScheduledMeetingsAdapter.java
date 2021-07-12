@@ -69,6 +69,7 @@ public class ScheduledMeetingsAdapter extends RecyclerView.Adapter<ScheduledMeet
         holder.host.setText(meeting.getHostEmail());
         holder.desc.setText(meeting.getDescription());
 
+
         if (meeting.getParticipantsEmailList() != null){
             for (String s: meeting.getParticipantsEmailList()){
                 participants += " " + s + "\n";
@@ -76,9 +77,20 @@ public class ScheduledMeetingsAdapter extends RecyclerView.Adapter<ScheduledMeet
             }
             holder.participantsTv.setText(participants);
 
+            if (epoch<System.currentTimeMillis()){
+                holder.meetingCV.setCardBackgroundColor(context.getColor(R.color.green));
+            }
+            else {
+                holder.meetingCV.setCardBackgroundColor(context.getColor(R.color.orangeCard));
+
+            }
+
+
         }
         else {
             holder.participantsLL.setVisibility(View.GONE);
+            holder.meetingCV.setCardBackgroundColor(context.getColor(R.color.darkGrey));
+
         }
 
 

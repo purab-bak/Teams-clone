@@ -61,14 +61,14 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="25dp"
                 android:layout_height="25dp"
-                app:cardBackgroundColor="@color/orangeCard"
+                app:cardBackgroundColor="@color/green"
                 app:cardCornerRadius="15dp"/>
 
             <TextView
                 android:layout_marginLeft="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Previous Scheduled meetings"
+                android:text="Previous scheduled meetings"
                 android:layout_gravity="center"/>
         </LinearLayout>
 
