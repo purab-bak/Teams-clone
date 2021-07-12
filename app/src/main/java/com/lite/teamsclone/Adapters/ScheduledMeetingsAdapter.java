@@ -1,13 +1,17 @@
 package com.lite.teamsclone.Adapters;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -142,6 +146,45 @@ public class ScheduledMeetingsAdapter extends RecyclerView.Adapter<ScheduledMeet
             }
         });
 
+        holder.notesBtn.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                showToast("Add a note!");
+                return true;
+            }
+        });
+
+        holder.chatBtn.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                showToast("Open meeting chat!");
+                return true;
+            }
+        });
+
+        holder.joinBtn.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                showToast("Join the meeting!");
+                return true;
+            }
+        });
+
+        holder.copyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText("Meeting Code", meeting.getMeetingId());
+                showToast("Meeting code copied to clipboard!");
+                clipboard.setPrimaryClip(clip);
+            }
+        });
+
+    }
+
+    private void showToast(String s) {
+
+        Toast.makeText(context, s, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -163,6 +206,8 @@ public class ScheduledMeetingsAdapter extends RecyclerView.Adapter<ScheduledMeet
 
         RelativeLayout collapseLayout;
 
+        ImageView copyButton;
+
         public ScheduledMeetingsViewHolder(@NonNull @NotNull View itemView) {
 
             super(itemView);
@@ -181,6 +226,7 @@ public class ScheduledMeetingsAdapter extends RecyclerView.Adapter<ScheduledMeet
 
             collapseLayout = itemView.findViewById(R.id.collapseLayout);
             notesBtn = itemView.findViewById(R.id.notesButtonHolder);
+            copyButton = itemView.findViewById(R.id.copyButton);
 
         }
     }
