@@ -84,6 +84,7 @@
     <TextView
         android:id="@+id/textError"
         android:visibility="invisible"
+        android:padding="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Nothing to see here!\nStart by adding a note!"

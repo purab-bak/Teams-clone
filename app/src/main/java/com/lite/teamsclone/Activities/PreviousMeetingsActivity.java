@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,6 +34,8 @@ public class PreviousMeetingsActivity extends AppCompatActivity {
 
     List<Meeting> meetingsList;
 
+    LottieAnimationView lottieAnimationView;
+    TextView textError;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,14 +55,28 @@ public class PreviousMeetingsActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
+                            if (!task.getResult().isEmpty()) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
 
-                                Meeting meeting = document.toObject(Meeting.class);
-                                meetingsList.add(meeting);
-                                adapter.notifyDataSetChanged();
+                                    if (document.exists()) {
+                                        lottieAnimationView.setVisibility(View.GONE);
+
+                                        Meeting meeting = document.toObject(Meeting.class);
+                                        meetingsList.add(meeting);
+                                        adapter.notifyDataSetChanged();
+                                    }
+
+                                }
+                            } else {
+                                lottieAnimationView.setAnimation(R.raw.error);
+                                lottieAnimationView.playAnimation();
+                                textError.setVisibility(View.VISIBLE);
                             }
                         } else {
-
+                            lottieAnimationView.setAnimation(R.raw.error);
+                            lottieAnimationView.playAnimation();
+                            textError.setText(task.getException().getMessage());
+                            textError.setVisibility(View.VISIBLE);
                         }
                     }
                 });
@@ -69,6 +86,9 @@ public class PreviousMeetingsActivity extends AppCompatActivity {
     private void initUI() {
         mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
         firestoreDb = FirebaseFirestore.getInstance();
+
+        lottieAnimationView = findViewById(R.id.lottieAnim);
+        textError = findViewById(R.id.textError);
 
         meetingsList = new ArrayList<>();
         meetingsRV = findViewById(R.id.meetingsRV);
