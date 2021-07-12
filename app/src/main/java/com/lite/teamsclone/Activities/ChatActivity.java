@@ -128,10 +128,8 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void sendMessage(String messageText) {
-
         long epoch = System.currentTimeMillis();
-
-        Message message = new Message(messageText, mCurrentUser.getDisplayName(), epoch);
+        Message message = new Message(messageText, mCurrentUser.getDisplayName(),String.valueOf(mCurrentUser.getPhotoUrl()),mCurrentUser.getUid(),epoch);
         messageEt.setText("");
         messageRef.push().setValue(message);
 

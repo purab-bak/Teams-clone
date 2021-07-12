@@ -243,7 +243,6 @@
             android:onClick="onChatButtonCLicked"
             android:src="@drawable/ic_baseline_chat_24" />
 
-
     </RelativeLayout>
 
 </RelativeLayout>

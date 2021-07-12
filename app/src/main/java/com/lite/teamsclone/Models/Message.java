@@ -4,21 +4,16 @@ public class Message {
     public Message(){
     }
 
-    String message, name, key;
-
+    String message, senderName, key;
+    String imagrUrl;
+    String senderUiD;
     long epoch;
 
-    public Message(String message, String name, long epoch) {
+    public Message(String message, String senderName, String imagrUrl, String senderUiD, long epoch) {
         this.message = message;
-        this.name = name;
-        this.epoch = epoch;
-    }
-
-    public long getEpoch() {
-        return epoch;
-    }
-
-    public void setEpoch(long epoch) {
+        this.senderName = senderName;
+        this.imagrUrl = imagrUrl;
+        this.senderUiD = senderUiD;
         this.epoch = epoch;
     }
 
@@ -30,12 +25,12 @@ public class Message {
         this.message = message;
     }
 
-    public String getName() {
-        return name;
+    public String getSenderName() {
+        return senderName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setSenderName(String senderName) {
+        this.senderName = senderName;
     }
 
     public String getKey() {
@@ -44,5 +39,29 @@ public class Message {
 
     public void setKey(String key) {
         this.key = key;
+    }
+
+    public String getImagrUrl() {
+        return imagrUrl;
+    }
+
+    public void setImagrUrl(String imagrUrl) {
+        this.imagrUrl = imagrUrl;
+    }
+
+    public String getSenderUiD() {
+        return senderUiD;
+    }
+
+    public void setSenderUiD(String senderUiD) {
+        this.senderUiD = senderUiD;
+    }
+
+    public long getEpoch() {
+        return epoch;
+    }
+
+    public void setEpoch(long epoch) {
+        this.epoch = epoch;
     }
 }

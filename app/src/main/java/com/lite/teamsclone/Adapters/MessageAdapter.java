@@ -5,12 +5,14 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.lite.teamsclone.Models.Message;
 import com.lite.teamsclone.R;
@@ -38,7 +40,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageA
     @NotNull
     @Override
     public MessageAdapterViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_message, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_message_new, parent, false);
         return new MessageAdapterViewHolder(view);
     }
 
@@ -49,24 +51,13 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageA
 
         Message message = messageList.get(position);
 
-        if (message.getName().equals(currentUserName)){
-            holder.messageLayout.setBackgroundColor(Color.DKGRAY);
-
-            holder.senderNameTV.setTextColor(Color.WHITE);
-            holder.messageTV.setTextColor(Color.WHITE);
-
-
-            holder.senderNameTV.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_END);
-            holder.messageTV.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_END);
-        }
-
-
-        holder.senderNameTV.setText(message.getName());
+        holder.senderNameTV.setText(message.getSenderName());
         holder.messageTV.setText(message.getMessage());
 
         String date = new java.text.SimpleDateFormat("dd/MM/yyyy hh:mm a").format(new java.util.Date (message.getEpoch()));
         holder.dateEt.setText(date);
 
+        Glide.with(context).load(message.getImagrUrl()).into(holder.userImage);
 
     }
 
@@ -81,13 +72,16 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageA
 
         LinearLayout messageLayout;
 
+        ImageView userImage;
+
         public MessageAdapterViewHolder(@NonNull @NotNull View itemView) {
             super(itemView);
 
             senderNameTV = itemView.findViewById(R.id.senderNameItem);
             messageTV = itemView.findViewById(R.id.messageItem);
-            messageLayout = itemView.findViewById(R.id.messageLayout);
             dateEt = itemView.findViewById(R.id.messageDateEt);
+
+            userImage = itemView.findViewById(R.id.userImage);
 
         }
     }
