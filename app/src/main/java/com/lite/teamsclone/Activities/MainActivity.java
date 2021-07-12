@@ -28,8 +28,13 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -132,9 +137,10 @@ public class MainActivity extends AppCompatActivity {
     //Notes
     private LinearLayout notesLayout;
     boolean isShowingNotes = false;
-    EditText notesTextEt;
-    Button saveNotesButton;
+    TextInputEditText notesTextEt;
+    ExtendedFloatingActionButton saveNotesButton;
     DatabaseReference notesRef;
+    TextView notesTitleTV;
 
     RelativeLayout controlPanel;
 
@@ -321,7 +327,8 @@ public class MainActivity extends AppCompatActivity {
         notesTextEt = findViewById(R.id.notesET);
         saveNotesButton = findViewById(R.id.notesSaveBtn);
         notesRef = FirebaseDatabase.getInstance().getReference().child("user-notes").child(mCurrentUser.getUid()).child(channelName);
-
+        notesTitleTV = findViewById(R.id.noteTitleTV);
+        notesTitleTV.setText(channelName);
     }
 
     private void initEngineAndJoinChannel() {
@@ -641,8 +648,12 @@ public class MainActivity extends AppCompatActivity {
     private void saveNote(String noteBody) {
 
         Note note = new Note(channelName, noteBody, channelName, System.currentTimeMillis());
-
-        notesRef.setValue(note);
+        notesRef.setValue(note).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                showToast("Note saved!");
+            }
+        });
 
     }
 
