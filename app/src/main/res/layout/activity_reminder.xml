@@ -201,7 +201,6 @@
                 app:tint="@color/grey"
                 android:layout_margin="5dp"/>
 
-
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView

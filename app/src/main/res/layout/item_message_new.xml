@@ -36,12 +36,12 @@
         android:textSize="16sp"
         android:textStyle="bold" />
 
-
-
     <androidx.cardview.widget.CardView
+        android:layout_marginLeft="-10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:cardCornerRadius="5dp"
+        android:layout_marginRight="20dp"
         app:cardBackgroundColor="@color/grey"
         android:layout_below="@id/senderNameItem"
         android:layout_toEndOf="@id/imageCardView"

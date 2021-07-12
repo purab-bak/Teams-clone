@@ -10,10 +10,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.lite.teamsclone.Models.Message;
 import com.lite.teamsclone.R;
 
@@ -27,12 +29,12 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageA
     Context context;
     List<Message> messageList;
 
-    String currentUserName;
+    FirebaseUser mCurrentUser;
 
     public MessageAdapter(Context context, List<Message> messageList) {
         this.context = context;
         this.messageList = messageList;
-        currentUserName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+        mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
 
     }
 
@@ -43,8 +45,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageA
         View view = LayoutInflater.from(context).inflate(R.layout.item_message_new, parent, false);
         return new MessageAdapterViewHolder(view);
     }
-
-
 
     @Override
     public void onBindViewHolder(@NonNull @NotNull MessageAdapterViewHolder holder, int position) {
@@ -59,6 +59,15 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageA
 
         Glide.with(context).load(message.getImagrUrl()).into(holder.userImage);
 
+        if (message.getSenderUiD().equals(mCurrentUser.getUid())){
+
+            holder.senderNameTV.setTextColor(context.getColor(R.color.green));
+            holder.senderNameTV.setText("Me");
+            holder.messageCardView.setCardBackgroundColor(context.getColor(R.color.darkGrey));
+            holder.messageTV.setTextColor(context.getColor(R.color.grey));
+
+        }
+
     }
 
     @Override
@@ -70,7 +79,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageA
 
         TextView senderNameTV, messageTV, dateEt;
 
-        LinearLayout messageLayout;
+        CardView imageCardView, messageCardView;
 
         ImageView userImage;
 
@@ -82,6 +91,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageA
             dateEt = itemView.findViewById(R.id.messageDateEt);
 
             userImage = itemView.findViewById(R.id.userImage);
+            imageCardView = itemView.findViewById(R.id.imageCardView);
+            messageCardView = itemView.findViewById(R.id.messageCardView);
 
         }
     }

@@ -121,12 +121,12 @@ public class MainActivity extends AppCompatActivity {
 
     ////chat
 
-    private LinearLayout mChatLinearLayout;
+    private RelativeLayout mChatLinearLayout;
     boolean isShowingChat = false;
     MessageAdapter messageAdapter;
     RecyclerView chatRV;
-    EditText messageEt;
-    Button sendMessageButton;
+    TextInputEditText messageEt;
+    FloatingActionButton sendMessageButton;
     List<Message> messageList;
     DatabaseReference messageRef;
 
@@ -162,14 +162,6 @@ public class MainActivity extends AppCompatActivity {
                 public void run() {
 
                     currentSessionInfo.setUserCount(1);
-
-                    //Toast.makeText(MainActivity.this, "My UID : " + uid, Toast.LENGTH_SHORT).show();
-                    //updateDatabase(uid);
-
-                    //multipleUsers
-
-                    //SurfaceView localView = mUidsList.remove(0);
-
                     agoraUser.setAgoraUid(uid);
                     SurfaceView localView = mUidsList.remove(0);
                     mUidsList.put(uid, localView);
@@ -613,12 +605,22 @@ public class MainActivity extends AppCompatActivity {
         isShowingChat = !isShowingChat;
         mChatLinearLayout.setVisibility(isShowingChat ? View.VISIBLE : View.GONE);
 
+        if (isShowingNotes){
+            isShowingNotes= false;
+            notesLayout.setVisibility(View.GONE);
+        }
+
     }
 
     public void onNotesButtonCLicked(View view) {
 
         isShowingNotes = ! isShowingNotes;
         notesLayout.setVisibility(isShowingNotes? View.VISIBLE : View.GONE);
+
+        if (isShowingChat){
+            isShowingChat = false;
+            mChatLinearLayout.setVisibility(View.GONE);
+        }
 
     }
 

@@ -106,8 +106,9 @@
 
         </LinearLayout>
 
-
     </androidx.cardview.widget.CardView>
+
+
 
     <ViewStub
         android:id="@+id/small_video_view_dock"
@@ -117,53 +118,80 @@
         android:inflatedId="@id/small_video_view_dock"
         android:layout="@layout/small_video_view_dock" />
 
-    <LinearLayout
-        android:id="@+id/layout_show_chat"
+
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="400dp"
+        android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginHorizontal="20dp"
+        android:layout_above="@id/upButton"
         android:layout_marginTop="120dp"
-        android:alpha="0.75"
-        android:background="#F1F1F1"
-        android:orientation="vertical"
-        android:visibility="gone">
-
-        <TextView
+        android:alpha="0.9"
+        app:cardCornerRadius="10dp"
+        android:elevation="8dp">
+        <RelativeLayout
+            android:layout_marginVertical="15dp"
+            android:id="@+id/layout_show_chat"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="20dp"
-            android:text="Chat"
-            android:textAlignment="center"
-            android:textSize="20dp" />
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:layout_marginHorizontal="15dp"
+            android:orientation="vertical"
+            android:visibility="gone">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/chat_recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            tools:listitem="@layout/item_message" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp">
-
-            <EditText
-                android:id="@+id/chatMessageET"
-                android:layout_width="wrap_content"
+            <TextView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:hint="message" />
+                android:text="Chat"
+                android:fontFamily="@font/gotham"
+                android:textAlignment="center"
+                android:textSize="20dp"
+                android:id="@+id/chatTV"/>
 
-            <Button
-                android:id="@+id/sendMessageButton"
-                android:layout_width="wrap_content"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/chat_recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:listitem="@layout/item_message_new"
+                android:layout_below="@id/chatTV"
+                android:layout_above="@id/ll"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:id="@+id/ll"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.5"
-                android:text="send" />
-        </LinearLayout>
+                android:layout_alignParentBottom="true" android:layout_marginLeft="10dp">
 
-    </LinearLayout>
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="Your message"
+                    android:layout_weight="2"
+                    android:layout_marginVertical="10dp"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/calibri"
+                        android:id="@+id/chatMessageET"
+                        android:maxLines="1"/>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/sendMessageButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:fabSize="mini"
+                    android:layout_gravity="center"
+                    app:srcCompat="@drawable/ic_baseline_send_24"
+                    app:tint="@color/grey"
+                    android:layout_margin="5dp"/>
+            </LinearLayout>
+
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
 
     <ImageView
         android:layout_width="50dp"

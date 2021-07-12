@@ -47,11 +47,11 @@
         android:background="@color/darkGrey"
         android:text="Channel : #"
         android:fontFamily="@font/calibri"
-        android:textStyle="italic"
+        android:textStyle="italic|bold"
         android:gravity="center"
         android:padding="5dp"
         android:textSize="16sp"
-        android:textColor="@color/lightGrey"
+        android:textColor="@color/grey"
         android:id="@+id/channelNameTV"/>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -63,24 +63,43 @@
         android:layout_above="@id/ll"/>
 
     <LinearLayout
+        android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:id="@+id/ll"
-        android:layout_alignParentBottom="true">
-        <EditText
-            android:id="@+id/chatMessageET"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"/>
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp">
 
-        <Button
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Send"
-            android:id="@+id/sendMessageButton"/>
+            android:hint="Your message"
+            android:layout_weight="2"
+            android:layout_marginVertical="10dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/chatMessageET"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/calibri"
+                android:maxLines="1" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/sendMessageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fabSize="mini"
+            android:layout_gravity="center"
+            app:srcCompat="@drawable/ic_baseline_send_24"
+            app:tint="@color/grey"
+            android:layout_margin="5dp"/>
 
     </LinearLayout>
-
 
 
 </RelativeLayout>

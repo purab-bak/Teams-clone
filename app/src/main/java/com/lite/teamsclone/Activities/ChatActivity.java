@@ -14,6 +14,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -37,8 +39,8 @@ public class ChatActivity extends AppCompatActivity {
 
     MessageAdapter messageAdapter;
     RecyclerView chatRV;
-    EditText messageEt;
-    Button sendMessageButton;
+    TextInputEditText messageEt;
+    FloatingActionButton sendMessageButton;
     List<Message> messageList;
     DatabaseReference messageRef;
 
