@@ -124,6 +124,7 @@ public class MainActivity extends AppCompatActivity {
 
     //disabling video
     boolean isVideoEnabled = true;
+    ImageView videoFreezeButton;
 
     //Notes
     private LinearLayout notesLayout;
@@ -131,6 +132,10 @@ public class MainActivity extends AppCompatActivity {
     EditText notesTextEt;
     Button saveNotesButton;
     DatabaseReference notesRef;
+
+    RelativeLayout controlPanel;
+
+    boolean isControlPanelVisible = false;
 
 
     private final IRtcEngineEventHandler mRtcHandler = new IRtcEngineEventHandler() {
@@ -151,8 +156,6 @@ public class MainActivity extends AppCompatActivity {
                     //multipleUsers
 
                     //SurfaceView localView = mUidsList.remove(0);
-
-                    showToast("Channel Joined");
 
                     agoraUser.setAgoraUid(uid);
                     SurfaceView localView = mUidsList.remove(0);
@@ -224,8 +227,6 @@ public class MainActivity extends AppCompatActivity {
 
         initUi();
 
-        showToast("On Create");
-
         if (checkSelfPermission(REQUESTED_PERMISSIONS[0], PERMISSION_REQ_ID) &&
                 checkSelfPermission(REQUESTED_PERMISSIONS[1], PERMISSION_REQ_ID) &&
                 checkSelfPermission(REQUESTED_PERMISSIONS[2], PERMISSION_REQ_ID)) {
@@ -270,10 +271,13 @@ public class MainActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         mCurrentUser = mAuth.getCurrentUser();
 
+        controlPanel = findViewById(R.id.control_panel);
+
         activeChannelsRef = FirebaseDatabase.getInstance().getReference().child("active-channels");
 
         currentSessionInfo = new SessionInfo(0, channelName);
 
+        videoFreezeButton = findViewById(R.id.video_off_button);
         ///multiple users
         agoraUser = new AgoraUser();
         //mCallBtn = findViewById(R.id.start_call_end_call_btn);
@@ -501,7 +505,7 @@ public class MainActivity extends AppCompatActivity {
     public void onLocalAudioMuteClicked(View view) {
         isMuted = !isMuted;
         mRtcEngine.muteLocalAudioStream(isMuted);
-        int res = isMuted ? R.drawable.btn_mute : R.drawable.btn_unmute;
+        int res = isMuted ? R.drawable.ic_baseline_mic_off_24 : R.drawable.ic_baseline_mic_on;
         mMuteBtn.setImageResource(res);
 
     }
@@ -592,6 +596,9 @@ public class MainActivity extends AppCompatActivity {
         mRtcEngine.enableLocalVideo(!isVideoEnabled);
 
         isVideoEnabled = !isVideoEnabled;
+
+        int res = isVideoEnabled ? R.drawable.ic_baseline_videocam_24 : R.drawable.ic_baseline_videocam_off_24;
+        videoFreezeButton.setImageResource(res);
 
     }
 
