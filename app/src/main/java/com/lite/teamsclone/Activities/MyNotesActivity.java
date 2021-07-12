@@ -9,7 +9,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.SearchView;
+import android.widget.TextView;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -39,6 +41,9 @@ public class MyNotesActivity extends AppCompatActivity {
     DatabaseReference notesRef;
 
     SearchView searchView;
+
+    LottieAnimationView lottieAnimationView;
+    TextView textError;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,12 +87,21 @@ public class MyNotesActivity extends AppCompatActivity {
         notesRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()){
-                    Note note = dataSnapshot.getValue(Note.class);
 
-                    notesList.add(note);
-                    adapter.notifyDataSetChanged();
+                if (snapshot.exists()){
+                    for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+                        lottieAnimationView.setVisibility(View.GONE);
+                        Note note = dataSnapshot.getValue(Note.class);
+                        notesList.add(note);
+                        adapter.notifyDataSetChanged();
+                    }
                 }
+                else {
+                    lottieAnimationView.setAnimation(R.raw.error);
+                    lottieAnimationView.playAnimation();
+                    textError.setVisibility(View.VISIBLE);
+                }
+
             }
 
             @Override
@@ -115,6 +129,9 @@ public class MyNotesActivity extends AppCompatActivity {
         notesRV.setAdapter(adapter);
 
         adapter.notifyDataSetChanged();
+
+        lottieAnimationView = findViewById(R.id.lottieAnim);
+        textError = findViewById(R.id.textError);
     }
 
     public void onBackClicked(View view) {

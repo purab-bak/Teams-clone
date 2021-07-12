@@ -70,7 +70,32 @@
         android:layout_margin="10dp"
         android:visibility="gone"/>
 
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lottieAnim"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:elevation="8dp"
+        android:visibility="visible"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:lottie_rawRes="@raw/raw_loading"
+        android:layout_centerInParent="true"/>
+
+    <TextView
+        android:id="@+id/textError"
+        android:visibility="invisible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nothing to see here!\nStart by adding a note!"
+        android:layout_below="@id/lottieAnim"
+        android:layout_centerHorizontal="true"
+        android:fontFamily="@font/calibri"
+        android:textStyle="bold|italic"
+        android:textAlignment="center"/>
+
+
     <androidx.recyclerview.widget.RecyclerView
+        android:visibility="visible"
         android:id="@+id/notesRV"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
