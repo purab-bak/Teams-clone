@@ -46,7 +46,6 @@ public class ChatActivity extends AppCompatActivity {
 
     FirebaseUser mCurrentUser;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

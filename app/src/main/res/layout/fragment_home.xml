@@ -79,23 +79,25 @@
         app:layout_editor_absoluteX="0dp">
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/instantMeetingCV"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_row="0"
             android:layout_rowWeight="1"
+            android:layout_column="0"
             android:layout_columnWeight="1"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="8dp"
             android:background="@color/cardColor"
             app:cardCornerRadius="8dp"
-            app:cardElevation="6dp"
-            android:id="@+id/instantMeetingCV">
+            app:cardElevation="6dp">
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal|center_vertical"
-                android:layout_margin="16dp"
+                android:layout_margin="8dp"
                 android:gravity="center"
                 android:orientation="vertical">
 
@@ -103,17 +105,17 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:background="@drawable/ic_new_play"/>
+                    android:background="@drawable/ic_new_play" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:fontFamily="@font/calibri"
                     android:text="Instant meeting"
                     android:textColor="@color/textcardColor"
                     android:textSize="14sp"
-                    android:layout_marginTop="8dp"
-                    android:fontFamily="@font/calibri"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>
@@ -123,9 +125,9 @@
             android:layout_height="0dp"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="8dp"
             android:background="@color/cardColor"
             app:cardCornerRadius="8dp"
             app:cardElevation="6dp"
@@ -135,7 +137,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal|center_vertical"
-                android:layout_margin="16dp"
+                android:layout_margin="8dp"
                 android:gravity="center"
                 android:orientation="vertical">
 
@@ -163,9 +165,9 @@
             android:layout_height="0dp"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="8dp"
             android:background="@color/cardColor"
             app:cardCornerRadius="8dp"
             app:cardElevation="6dp"
@@ -175,7 +177,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal|center_vertical"
-                android:layout_margin="16dp"
+                android:layout_margin="8dp"
                 android:gravity="center"
                 android:orientation="vertical">
 
@@ -203,9 +205,9 @@
             android:layout_height="0dp"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="8dp"
             android:background="@color/cardColor"
             app:cardCornerRadius="8dp"
             app:cardElevation="6dp"
@@ -215,7 +217,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal|center_vertical"
-                android:layout_margin="16dp"
+                android:layout_margin="8dp"
                 android:gravity="center"
                 android:orientation="vertical">
 
@@ -244,9 +246,9 @@
             android:layout_height="0dp"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="8dp"
             android:background="@color/cardColor"
             app:cardCornerRadius="8dp"
             app:cardElevation="6dp"
@@ -256,7 +258,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal|center_vertical"
-                android:layout_margin="16dp"
+                android:layout_margin="8dp"
                 android:gravity="center"
                 android:orientation="vertical">
 
@@ -284,9 +286,9 @@
             android:layout_height="0dp"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="8dp"
             android:background="@color/cardColor"
             app:cardCornerRadius="8dp"
             app:cardElevation="6dp"
@@ -296,7 +298,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal|center_vertical"
-                android:layout_margin="16dp"
+                android:layout_margin="8dp"
                 android:gravity="center"
                 android:orientation="vertical">
 
