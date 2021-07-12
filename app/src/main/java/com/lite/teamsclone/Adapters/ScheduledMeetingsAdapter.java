@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -13,6 +14,8 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.lite.teamsclone.Activities.ChatActivity;
 import com.lite.teamsclone.Activities.MainActivity;
 import com.lite.teamsclone.Models.Meeting;
@@ -41,7 +44,7 @@ public class ScheduledMeetingsAdapter extends RecyclerView.Adapter<ScheduledMeet
     @NotNull
     @Override
     public ScheduledMeetingsAdapter.ScheduledMeetingsViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.items_scheduled_meetings, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_meeting_new, parent, false);
         return new ScheduledMeetingsAdapter.ScheduledMeetingsViewHolder(view);
     }
 
@@ -60,11 +63,11 @@ public class ScheduledMeetingsAdapter extends RecyclerView.Adapter<ScheduledMeet
         String date = new java.text.SimpleDateFormat("dd/MM/yyyy").format(new java.util.Date (epoch));
         String time = new java.text.SimpleDateFormat("HH:mm a").format(new java.util.Date (epoch));
 
-        holder.date.append(" " + date);
-        holder.time.append(" " + time);
+        holder.date.setText(date);
+        holder.time.setText(time);
 
-        holder.host.append(" " +meeting.getHostEmail());
-        holder.desc.append(" " + meeting.getDescription());
+        holder.host.setText(meeting.getHostEmail());
+        holder.desc.setText(meeting.getDescription());
 
         if (meeting.getParticipantsEmailList() != null){
             for (String s: meeting.getParticipantsEmailList()){
@@ -75,13 +78,13 @@ public class ScheduledMeetingsAdapter extends RecyclerView.Adapter<ScheduledMeet
 
         }
         else {
-            holder.participantsTv.setText("Cant show participant list for instant meetings");
+            holder.participantsLL.setVisibility(View.GONE);
         }
 
 
 
         final boolean isExpanded = position==mExpandedPosition;
-        holder.participantsLL.setVisibility(isExpanded?View.VISIBLE:View.GONE);
+        holder.collapseLayout.setVisibility(isExpanded?View.VISIBLE:View.GONE);
         holder.itemView.setActivated(isExpanded);
 
         if (isExpanded)
@@ -133,7 +136,10 @@ public class ScheduledMeetingsAdapter extends RecyclerView.Adapter<ScheduledMeet
 
         CardView meetingCV;
 
-        MaterialButton joinBtn, chatBtn;
+        ExtendedFloatingActionButton joinBtn;
+        FloatingActionButton chatBtn;
+
+        RelativeLayout collapseLayout;
 
         public ScheduledMeetingsViewHolder(@NonNull @NotNull View itemView) {
 
@@ -150,6 +156,8 @@ public class ScheduledMeetingsAdapter extends RecyclerView.Adapter<ScheduledMeet
             meetingCV = itemView.findViewById(R.id.meetingCV);
             joinBtn = itemView.findViewById(R.id.joinCallButtonHolder);
             chatBtn = itemView.findViewById(R.id.chatButtonHolder);
+
+            collapseLayout = itemView.findViewById(R.id.collapseLayout);
 
         }
     }

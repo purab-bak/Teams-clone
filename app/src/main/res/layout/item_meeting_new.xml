@@ -1,0 +1,264 @@
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginVertical="18dp"
+    android:layout_marginHorizontal="15dp"
+    android:elevation="10dp"
+    android:padding="8dp"
+    app:cardCornerRadius="20dp"
+    android:id="@+id/meetingCV"
+    app:cardBackgroundColor="@color/yellow">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:layout_marginLeft="20dp"
+        android:padding="10dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Title"
+            android:textSize="20sp"
+            android:textColor="@color/darkGrey"
+            android:fontFamily="@font/gotham"
+            android:textStyle="bold"
+            android:id="@+id/meetingTitleHolder"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/meetingTitleHolder"
+            android:id="@+id/codeLL">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Meeting ID : #"
+                android:textSize="16sp"
+                android:textColor="@color/darkGrey"
+                android:fontFamily="@font/gotham"
+                android:textStyle="italic"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ID"
+                android:textSize="16sp"
+                android:textColor="@color/darkGrey"
+                android:fontFamily="@font/gotham"
+                android:textStyle="italic"
+                android:id="@+id/meetingIdHolder"/>
+
+        </LinearLayout>
+
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginVertical="8dp"
+            android:background="@color/darkGrey"
+            android:layout_below="@id/codeLL"
+            android:id="@+id/lineView"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/lineView"
+            android:id="@+id/dateLL">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_baseline_date_range_24"/>
+
+            <TextView
+                android:id="@+id/meetingDateHolder"
+                android:layout_marginLeft="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="10/07/2021"
+                android:layout_gravity="center"
+                android:fontFamily="@font/gotham"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/lineView"
+            android:layout_toEndOf="@id/dateLL"
+            android:layout_marginLeft="20dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_baseline_access_time_24"/>
+
+            <TextView
+                android:id="@+id/meetingTimeHolder"
+                android:layout_marginLeft="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="02:58 PM"
+                android:layout_gravity="center"
+                android:fontFamily="@font/gotham"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/dateLL"
+            android:layout_marginTop="10dp"
+            android:id="@+id/hostLL">
+
+            <TextView
+                android:layout_marginLeft="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Hosted by "
+                android:layout_gravity="center"
+                android:fontFamily="@font/calibri"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:id="@+id/meetingHostHolder"
+                android:layout_marginLeft="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="purab.bak@gmail.com"
+                android:layout_gravity="center"
+                android:fontFamily="@font/gotham"/>
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/hostLL"
+            android:visibility="visible"
+            android:id="@+id/collapseLayout">
+
+            <LinearLayout
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/descLL"
+                android:background="@color/grey">
+
+                <TextView
+                    android:layout_marginLeft="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Description : "
+                    android:layout_gravity="center"
+                    android:fontFamily="@font/gotham"/>
+
+                <TextView
+                    android:id="@+id/meetingDescHolder"
+                    android:layout_weight="3"
+                    android:layout_gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/hostLL"
+                    android:fontFamily="@font/calibri"
+                    android:textSize="16dp"
+                    android:text="\n\n\n"
+                    android:padding="8dp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/descLL"
+                android:id="@+id/participantsLL"
+                android:background="@color/grey">
+
+                <TextView
+                    android:layout_marginLeft="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Participants : "
+                    android:layout_gravity="center"
+                    android:fontFamily="@font/gotham"/>
+
+                <TextView
+                    android:layout_weight="3"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/calibri"
+                    android:textSize="16dp"
+                    android:id="@+id/participantsTvHolder"
+                    android:text="\n\n\n"
+                    android:padding="8dp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/participantsLL"
+                android:layout_marginTop="10dp">
+
+                <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+                    android:padding="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="Join"
+                    android:gravity="center"
+                    android:layout_marginHorizontal="5dp"
+                    android:textColor="@color/grey"
+                    app:icon="@drawable/ic_join"
+                    app:iconTint="@color/grey"
+                    android:id="@+id/joinCallButtonHolder"/>
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    app:fabSize="mini"
+                    android:padding="10dp"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_marginHorizontal="5dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/icon_chat"
+                    android:text="Chat"
+                    android:gravity="center"
+                    android:textColor="@color/grey"
+                    app:tint="@color/grey"
+                    android:id="@+id/chatButtonHolder"/>
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    app:fabSize="mini"
+                    android:padding="10dp"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_marginHorizontal="5dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_notes"
+                    android:text="Chat"
+                    android:gravity="center"
+                    android:textColor="@color/grey"
+                    app:tint="@color/grey"
+                    android:id="@+id/notesButtonHolder"/>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+
+
+    </RelativeLayout>
+
+
+
+
+</androidx.cardview.widget.CardView>

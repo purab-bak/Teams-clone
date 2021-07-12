@@ -58,6 +58,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/tempTv"
         android:id="@+id/meetingsRV"
-        tools:listitem="@layout/items_scheduled_meetings"/>
+        tools:listitem="@layout/item_meeting_new"/>
 
 </RelativeLayout>
