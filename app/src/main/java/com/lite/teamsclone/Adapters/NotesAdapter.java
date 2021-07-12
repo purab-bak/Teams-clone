@@ -84,7 +84,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesViewHol
             title.setText(note.getTitle());
             body.setText(note.getBody());
 
-            String dateEpoch = new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new java.util.Date (note.getEpoch()));
+            String dateEpoch = new java.text.SimpleDateFormat("dd/MM/yyyy h:mm a").format(new java.util.Date (note.getEpoch()));
             date.setText(dateEpoch);
 
         }
