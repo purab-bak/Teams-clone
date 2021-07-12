@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black"
-    tools:context=".Activities.MainActivity">
+    tools:context=".Activities.MainActivity"
+    android:id="@+id/mainLayout">
 
 
     <com.lite.teamsclone.Layouts.GridVideoViewContainer
@@ -13,36 +14,29 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"></com.lite.teamsclone.Layouts.GridVideoViewContainer>
-
-    <ImageView
-        android:id="@+id/start_call_end_call_btn"
-        android:layout_width="@dimen/call_button_size"
-        android:layout_height="@dimen/call_button_size"
-        android:layout_centerHorizontal="true"
-        android:onClick="onLockRoomClick"
-        android:scaleType="centerCrop"
-        android:src="@drawable/ic_close_black_24dp"
-        android:visibility="visible" />
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="-3dp" />
 
 
     <ImageView
         android:id="@+id/notes_vc_activity"
-        android:layout_width="@dimen/other_button_size"
-        android:layout_height="@dimen/other_button_size"
-        android:layout_marginTop="20dp"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_margin="20dp"
         android:onClick="onNotesButtonCLicked"
         android:scaleType="centerCrop"
-        android:src="@drawable/ic_baseline_notes_24"
-        android:visibility="visible" />
+        android:src="@drawable/ic_notes"
+        android:visibility="visible"
+        app:tint="@color/white"/>
 
     <ImageView
         android:id="@+id/shareImageView"
         android:layout_alignParentRight="true"
-        android:layout_width="@dimen/other_button_size"
-        android:layout_height="@dimen/other_button_size"
-        android:layout_marginTop="20dp"
-        android:onClick="onNotesButtonCLicked"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_margin="20dp"
+        android:onClick="onShareButtonClicked"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_baseline_share_24"
         android:visibility="visible" />
@@ -140,7 +134,16 @@
 
     </LinearLayout>
 
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/ic_baseline_keyboard_arrow_up_24"
+        android:layout_above="@id/control_panel"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/upButton"/>
+
     <RelativeLayout
+        android:visibility="invisible"
         android:id="@+id/control_panel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

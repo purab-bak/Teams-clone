@@ -142,8 +142,6 @@ public class VideoViewAdapterUtil {
 
     public static void renderExtraData(Context context, UserStatusData user, VideoUserStatusHolder myHolder) {
 
-        Toast.makeText(context.getApplicationContext(), "rendering extra data", Toast.LENGTH_SHORT).show();
-        Toast.makeText(context.getApplicationContext(), user.toString(), Toast.LENGTH_SHORT).show();
         Log.i("Extra data", user.toString());
 
         if (user.mStatus != null) {

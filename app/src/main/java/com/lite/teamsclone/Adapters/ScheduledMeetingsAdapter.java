@@ -174,7 +174,7 @@ public class ScheduledMeetingsAdapter extends RecyclerView.Adapter<ScheduledMeet
             @Override
             public void onClick(View v) {
                 ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData clip = ClipData.newPlainText("Meeting Code", meeting.getMeetingId());
+                ClipData clip = ClipData.newPlainText("Meeting Code", "Use the code "+meeting.getMeetingId() + " to join the meeting.");
                 showToast("Meeting code copied to clipboard!");
                 clipboard.setPrimaryClip(clip);
             }

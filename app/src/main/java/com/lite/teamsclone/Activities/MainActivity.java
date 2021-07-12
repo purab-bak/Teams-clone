@@ -11,6 +11,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -137,6 +140,10 @@ public class MainActivity extends AppCompatActivity {
 
     boolean isControlPanelVisible = false;
 
+    RelativeLayout mainLayout;
+
+    ImageView upButton;
+
 
     private final IRtcEngineEventHandler mRtcHandler = new IRtcEngineEventHandler() {
 
@@ -150,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
 
                     currentSessionInfo.setUserCount(1);
 
-                    Toast.makeText(MainActivity.this, "My UID : " + uid, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(MainActivity.this, "My UID : " + uid, Toast.LENGTH_SHORT).show();
                     //updateDatabase(uid);
 
                     //multipleUsers
@@ -193,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
 
                         setupRemoteVideo(uid);
                         //userCount = getUserCountFromDatabase();
-                        Toast.makeText(MainActivity.this, "User count local " + currentSessionInfo.getUserCount(), Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(MainActivity.this, "User count local " + currentSessionInfo.getUserCount(), Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -261,6 +268,20 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        upButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                isControlPanelVisible = !isControlPanelVisible;
+                controlPanel.setVisibility(isControlPanelVisible? View.VISIBLE : View.INVISIBLE);
+
+                int res = isControlPanelVisible ? R.drawable.ic_baseline_keyboard_arrow_down_24 : R.drawable.ic_baseline_keyboard_arrow_up_24;
+                upButton.setImageResource(res);
+
+            }
+        });
+
+
     }
 
 
@@ -275,7 +296,9 @@ public class MainActivity extends AppCompatActivity {
 
         activeChannelsRef = FirebaseDatabase.getInstance().getReference().child("active-channels");
 
+        upButton = findViewById(R.id.upButton);
         currentSessionInfo = new SessionInfo(0, channelName);
+        mainLayout = findViewById(R.id.mainLayout);
 
         videoFreezeButton = findViewById(R.id.video_off_button);
         ///multiple users
@@ -563,32 +586,8 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    //check
-    public void onLockRoomClick(View view) {
-        if (isLocalCall) {
-            //when the user is in his own room
-            if (localState.equals(Constant.USER_STATE_LOCK)) {
-                //set the room to public
-                localState = Constant.USER_STATE_OPEN;
-            } else {
-                //set the room to private so that no one can join the room
-                localState = Constant.USER_STATE_LOCK;
-            }
-        } else {
-            //when user is joining other people's room
-            //leave that room and come back to user's own room
-            isLocalCall = true;
-            finishCalling();
-            channelName = channelName;
-            startCalling();
-            localState = Constant.USER_STATE_OPEN;
-            //update user's room state
-        }
-    }
-
-
     /**
-     * This method is pausing video. Checkkk!!!!
+     * This method is pausing video. !!!!
      **/
     public void onVideoButtonClicked(View view) {
 
@@ -771,4 +770,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    public void onShareButtonClicked(View view) {
+        ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clip = ClipData.newPlainText("Meeting Code", "Use the code "+channelName+ " to join the meeting.");
+        showToast("Meeting code copied to clipboard!");
+        clipboard.setPrimaryClip(clip);
+    }
 }
