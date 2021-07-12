@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.lite.teamsclone.Activities.AddNoteActivity;
 import com.lite.teamsclone.Activities.ChatActivity;
 import com.lite.teamsclone.Activities.MainActivity;
 import com.lite.teamsclone.Models.Meeting;
@@ -132,6 +133,15 @@ public class ScheduledMeetingsAdapter extends RecyclerView.Adapter<ScheduledMeet
             }
         });
 
+        holder.notesBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, AddNoteActivity.class);
+                intent.putExtra("meetingCode", meeting.getMeetingId());
+                context.startActivity(intent);
+            }
+        });
+
     }
 
     @Override
@@ -149,7 +159,7 @@ public class ScheduledMeetingsAdapter extends RecyclerView.Adapter<ScheduledMeet
         CardView meetingCV;
 
         ExtendedFloatingActionButton joinBtn;
-        FloatingActionButton chatBtn;
+        FloatingActionButton chatBtn, notesBtn;
 
         RelativeLayout collapseLayout;
 
@@ -170,6 +180,7 @@ public class ScheduledMeetingsAdapter extends RecyclerView.Adapter<ScheduledMeet
             chatBtn = itemView.findViewById(R.id.chatButtonHolder);
 
             collapseLayout = itemView.findViewById(R.id.collapseLayout);
+            notesBtn = itemView.findViewById(R.id.notesButtonHolder);
 
         }
     }

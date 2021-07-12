@@ -41,6 +41,8 @@ public class AddNoteActivity extends AppCompatActivity {
 
     TextView errorTv;
 
+    String meetingCodeFromIntent;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,6 +144,11 @@ public class AddNoteActivity extends AppCompatActivity {
         notesRef = FirebaseDatabase.getInstance().getReference().child("user-notes").child(mCurrentUser.getUid());
 
         noteIntent = (Note) getIntent().getSerializableExtra("noteIntent");
+        meetingCodeFromIntent = getIntent().getStringExtra("meetingCode");
+
+        if (meetingCodeFromIntent != null){
+            notesTitleEt.setText(meetingCodeFromIntent);
+        }
 
         deleteFAB = findViewById(R.id.deleteFAB);
         errorTv = findViewById(R.id.errorTV);

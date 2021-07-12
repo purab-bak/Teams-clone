@@ -64,8 +64,6 @@ public class PreviousMeetingsActivity extends AppCompatActivity {
                     }
                 });
 
-
-
     }
 
     private void initUI() {
