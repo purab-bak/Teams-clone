@@ -140,5 +140,6 @@ public class MyNotesActivity extends AppCompatActivity {
 
     public void onAddNoteClicked(View view) {
         startActivity(new Intent(MyNotesActivity.this, AddNoteActivity.class));
+        finish();
     }
 }

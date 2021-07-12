@@ -127,8 +127,6 @@ public class AddNoteActivity extends AppCompatActivity {
                         finish();
                     }
                 });
-
-
     }
 
     private void showToast(String s) {
