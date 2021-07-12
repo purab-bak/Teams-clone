@@ -44,19 +44,62 @@
 
     </LinearLayout>
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="20dp"
+        android:orientation="vertical"
+        android:id="@+id/ll"
         android:layout_below="@id/appBarLayout"
-        android:id="@+id/tempTv"
-        android:visibility="visible"/>
+        android:padding="20dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@id/appBarLayout"
+            android:layout_margin="5dp">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                app:cardBackgroundColor="@color/orangeCard"
+                app:cardCornerRadius="15dp"/>
+
+            <TextView
+                android:layout_marginLeft="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Previous Scheduled meetings"
+                android:layout_gravity="center"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@id/appBarLayout"
+            android:layout_margin="5dp">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                app:cardBackgroundColor="@color/darkGrey"
+                app:cardCornerRadius="15dp"/>
+
+            <TextView
+                android:layout_marginLeft="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Instant Meetings"
+                android:layout_gravity="center"/>
+        </LinearLayout>
+
+    </LinearLayout>
 
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tempTv"
+        android:layout_below="@id/ll"
         android:id="@+id/meetingsRV"
         tools:listitem="@layout/item_meeting_new"/>
 

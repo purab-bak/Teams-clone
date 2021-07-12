@@ -17,7 +17,7 @@
     <color name="remoteBackground">#484258</color>
     <color name="colorAccentDark">#000000</color>
     <color name="blue">#32c5f3</color>
-    <color name="green">#4ACC60</color>
+    <color name="green">#5CA565</color>
     <color name="pink">#6A2290</color>
     <color name="pink_dark">#4B0082</color>
     <color name="yellow">#FF7F24</color>
@@ -37,4 +37,6 @@
     <color name="textcardColor">#3f3f3f</color>
 
     <color name="redError">#FF6347</color>
+
+    <color name="orangeCard">#FFCE5D</color>
 </resources>

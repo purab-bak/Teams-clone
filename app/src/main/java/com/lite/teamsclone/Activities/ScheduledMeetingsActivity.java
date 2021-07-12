@@ -30,8 +30,6 @@ public class ScheduledMeetingsActivity extends AppCompatActivity {
     FirebaseUser mCurrentUser;
     FirebaseFirestore firestoreDb;
 
-    TextView tempTv;
-
     //RV
 
     RecyclerView meetingsRV;
@@ -46,21 +44,21 @@ public class ScheduledMeetingsActivity extends AppCompatActivity {
 
         initUI();
 
-
+        long epoch = System.currentTimeMillis();
         firestoreDb.collection(mCurrentUser.getEmail())
+                .whereGreaterThan("timeUTC", String.valueOf(epoch))
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull @NotNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                tempTv.append(document.getId() + " => " + document.getData());
                                 Meeting meeting = document.toObject(Meeting.class);
                                 meetingsList.add(meeting);
                                 adapter.notifyDataSetChanged();
                             }
                         } else {
-                            tempTv.append("Error getting documents.");
+
                         }
                     }
                 });
@@ -70,8 +68,6 @@ public class ScheduledMeetingsActivity extends AppCompatActivity {
     private void initUI() {
         mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
         firestoreDb = FirebaseFirestore.getInstance();
-
-        tempTv = findViewById(R.id.tempTv);
 
         meetingsList = new ArrayList<>();
         meetingsRV = findViewById(R.id.meetingsRV);

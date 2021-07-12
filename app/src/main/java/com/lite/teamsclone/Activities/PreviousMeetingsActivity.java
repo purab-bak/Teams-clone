@@ -33,8 +33,6 @@ public class PreviousMeetingsActivity extends AppCompatActivity {
 
     List<Meeting> meetingsList;
 
-    TextView tempTv;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,23 +40,6 @@ public class PreviousMeetingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_previous_meetings);
 
         initUI();
-
-//        firestoreDb.collection(mCurrentUser.getEmail())
-//                .get()
-//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull @NotNull Task<QuerySnapshot> task) {
-//                        if (task.isSuccessful()) {
-//                            for (QueryDocumentSnapshot document : task.getResult()) {
-//                                Meeting meeting = document.toObject(Meeting.class);
-//                                meetingsList.add(meeting);
-//                                adapter.notifyDataSetChanged();
-//                            }
-//                        } else {
-//                            //
-//                        }
-//                    }
-//                });
 
         long epoch = System.currentTimeMillis();
 
@@ -78,7 +59,7 @@ public class PreviousMeetingsActivity extends AppCompatActivity {
                                 adapter.notifyDataSetChanged();
                             }
                         } else {
-                            tempTv.setText("Error getting documents: ");
+
                         }
                     }
                 });
@@ -103,7 +84,6 @@ public class PreviousMeetingsActivity extends AppCompatActivity {
         meetingsRV.setAdapter(adapter);
         adapter.notifyDataSetChanged();
 
-        tempTv = findViewById(R.id.tempTv);
     }
 
 
