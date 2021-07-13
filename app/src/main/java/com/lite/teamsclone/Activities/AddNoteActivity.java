@@ -23,6 +23,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.lite.teamsclone.Models.Note;
 import com.lite.teamsclone.R;
 
+/**
+ * Activity to edit/remove a note
+ **/
+
+
 public class AddNoteActivity extends AppCompatActivity {
 
     TextInputEditText notesTitleEt, notesBodyEt;
@@ -51,7 +56,8 @@ public class AddNoteActivity extends AppCompatActivity {
 
         initUI();
 
-        if (noteIntent != null){
+        //new note
+        if (noteIntent != null) {
             deleteFAB.setEnabled(true);
             notesTitleEt.setText(noteIntent.getTitle());
             notesBodyEt.setText(noteIntent.getBody());
@@ -60,6 +66,8 @@ public class AddNoteActivity extends AppCompatActivity {
 
             toastMessage = "Note Edited!";
         }
+
+        //note previously exists
         else {
             noteId = notesRef.push().getKey();
             toastMessage = "Note Added!";
@@ -73,18 +81,16 @@ public class AddNoteActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 title = notesTitleEt.getText().toString();
-                body  = notesBodyEt.getText().toString();
+                body = notesBodyEt.getText().toString();
 
-                if (!TextUtils.isEmpty(title) && !TextUtils.isEmpty(body)){
+                if (!TextUtils.isEmpty(title) && !TextUtils.isEmpty(body)) {
 
                     saveToDatabase();
-                }
-                else {
-                    if (title.isEmpty()){
+                } else {
+                    if (title.isEmpty()) {
                         errorTv.setText("Title cannot be empty");
                         errorTv.startAnimation(shakeError());
-                    }
-                    else{
+                    } else {
                         errorTv.setText("Body cannot be empty");
                         errorTv.startAnimation(shakeError());
                     }
@@ -144,7 +150,7 @@ public class AddNoteActivity extends AppCompatActivity {
         noteIntent = (Note) getIntent().getSerializableExtra("noteIntent");
         meetingCodeFromIntent = getIntent().getStringExtra("meetingCode");
 
-        if (meetingCodeFromIntent != null){
+        if (meetingCodeFromIntent != null) {
             notesTitleEt.setText(meetingCodeFromIntent);
         }
 

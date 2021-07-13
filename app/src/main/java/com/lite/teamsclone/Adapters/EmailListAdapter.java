@@ -15,6 +15,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+/**
+ Adapter and ViewHolder to for emailing participants
+ **/
+
+
 public class EmailListAdapter extends RecyclerView.Adapter<EmailListAdapter.EmailListViewHolder> {
 
     Context context;

@@ -14,6 +14,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.lite.teamsclone.R;
 
+/**Activity to Display a splash screen on app start**/
+
 public class SplashScreenActivity extends AppCompatActivity {
 
     ImageView logo;
@@ -34,12 +36,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
 
-        logo = findViewById(R.id.splashLogo);
-
-        splashAnim = AnimationUtils.loadAnimation(this, R.anim.splash_anim);
-
-        logo.setAnimation(splashAnim);
-
+        initUI();
 
         new Handler().postDelayed(new Runnable() {
 
@@ -57,5 +54,12 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         }, SPLASH_TIME_OUT);
 
+    }
+
+    private void initUI() {
+
+        logo = findViewById(R.id.splashLogo);
+        splashAnim = AnimationUtils.loadAnimation(this, R.anim.splash_anim);
+        logo.setAnimation(splashAnim);
     }
 }

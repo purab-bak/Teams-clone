@@ -24,6 +24,10 @@ import com.lite.teamsclone.Activities.ReminderActivity;
 import com.lite.teamsclone.Activities.ScheduledMeetingsActivity;
 import com.lite.teamsclone.R;
 
+/**
+ Fragment for Dashboard Layout
+ **/
+
 
 public class HomeFragment extends Fragment {
 

@@ -25,6 +25,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.lite.teamsclone.Models.Meeting;
 import com.lite.teamsclone.R;
 
+/**Activity to allow a user join a meeting from a code**/
+
 public class JoinChannelActivity extends AppCompatActivity {
 
     TextInputEditText channelNameEt;
@@ -58,7 +60,6 @@ public class JoinChannelActivity extends AppCompatActivity {
     private void gotoMainActivity() {
 
         channelName = channelNameEt.getText().toString().trim();
-
 
         if (TextUtils.isEmpty(channelName)){
             errorTv.startAnimation(shakeError());

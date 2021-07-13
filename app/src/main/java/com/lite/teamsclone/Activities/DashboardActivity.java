@@ -22,6 +22,9 @@ import com.lite.teamsclone.R;
 
 import org.jetbrains.annotations.NotNull;
 
+
+/**Activity to display the contents of dashboard on successful login**/
+
 public class DashboardActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
 
@@ -43,7 +46,6 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
         initUI();
 
         window = this.getWindow();
-        //window.setStatusBarColor(ContextCompat.getColor(getApplicationContext(), R.color.white));
 
         navigationDrawer();
 
@@ -58,7 +60,6 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
                 } else {
                     window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
                     window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-//                    window.setStatusBarColor(ContextCompat.getColor(getApplicationContext(), R.color.LightestOrange));
                     drawerLayout.openDrawer(GravityCompat.START);
                 }
             }
@@ -96,13 +97,8 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
 
         if (item.getItemId()==R.id.nav_editProfle){
 
-
             Intent intent = new Intent(getApplicationContext(), EditProfileActivity.class);
             startActivity(intent);
-
-           // selectedFragment = new EditProfileFragment();
-            //navigationView.setCheckedItem(R.id.menu_none);
-            //navigationView.setCheckedItem(R.id.nav_editProfle);
 
         }
 
@@ -117,7 +113,6 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
         if (drawerLayout.isDrawerVisible(GravityCompat.START)) {
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-//            window.setStatusBarColor(ContextCompat.getColor(getApplicationContext(), R.color.white));
             drawerLayout.closeDrawer(GravityCompat.START);
         } else {
             finish();

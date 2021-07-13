@@ -28,6 +28,10 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+    Activity to display various notes created by a user
+ **/
+
 public class MyNotesActivity extends AppCompatActivity {
 
 

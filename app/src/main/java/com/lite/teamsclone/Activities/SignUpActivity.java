@@ -42,6 +42,11 @@ import org.jetbrains.annotations.NotNull;
 
 import static android.widget.Toast.LENGTH_SHORT;
 
+/**
+ * Activity to signup a user
+ **/
+
+
 public class SignUpActivity extends AppCompatActivity {
 
     EditText emailET, passwordET, fullNameET;
@@ -86,7 +91,7 @@ public class SignUpActivity extends AppCompatActivity {
                 String password = passwordET.getText().toString();
                 String name = fullNameET.getText().toString();
 
-                if (isAllFilledAndVerified()){
+                if (isAllFilledAndVerified()) {
                     createUser(email, password, name);
                 }
 
@@ -127,7 +132,7 @@ public class SignUpActivity extends AppCompatActivity {
         if (requestCode == RC_SIGN_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
-                Toast.makeText(getApplicationContext(),"Signing in...",LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Signing in...", LENGTH_SHORT).show();
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 //Log.d(TAG, "firebaseAuthWithGoogle:" + account.getId());
@@ -175,11 +180,10 @@ public class SignUpActivity extends AppCompatActivity {
         userRef.child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
-                if (snapshot.exists()){
+                if (snapshot.exists()) {
                     //user already exists
                     showToast("Welcome back +" + user.getDisplayName());
-                }
-                else {
+                } else {
                     //register user
                     uploadDetailsDatabase(user.getEmail(), user.getDisplayName());
 
@@ -205,7 +209,7 @@ public class SignUpActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
 
-                        if (task.isSuccessful()){
+                        if (task.isSuccessful()) {
 
                             uploadDetailsDatabase(email, name);
                             //Toast.makeText(SignUpActivity.this, task.getResult().toString(), Toast.LENGTH_SHORT).show();
@@ -227,8 +231,7 @@ public class SignUpActivity extends AppCompatActivity {
                             startActivity(new Intent(SignUpActivity.this, DashboardActivity.class));
                             finish();
 
-                        }
-                        else {
+                        } else {
                             errorTv.setText(task.getException().getMessage());
                             errorTv.startAnimation(shakeError());
                             //Toast.makeText(SignUpActivity.this, task.getException().getLocalizedMessage(), Toast.LENGTH_LONG).show();
@@ -271,7 +274,7 @@ public class SignUpActivity extends AppCompatActivity {
             errorTv.setText("Enter your email");
             errorTv.startAnimation(shakeError());
             return false;
-        }else if (passwordET.getText().toString().isEmpty()) {
+        } else if (passwordET.getText().toString().isEmpty()) {
             errorTv.setText("Enter a password");
             errorTv.startAnimation(shakeError());
             return false;
@@ -310,7 +313,7 @@ public class SignUpActivity extends AppCompatActivity {
         return shake;
     }
 
-    private AlphaAnimation animation(){
+    private AlphaAnimation animation() {
         AlphaAnimation greenAnim = new AlphaAnimation(0.3f, 1.0f);
         greenAnim.setDuration(500);
         return greenAnim;

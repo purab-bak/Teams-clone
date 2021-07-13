@@ -23,6 +23,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+/**
+ Adapter and ViewHolder for displaying messages
+ **/
+
+
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageAdapterViewHolder> {
 
 
@@ -59,6 +64,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageA
 
         Glide.with(context).load(message.getImagrUrl()).into(holder.userImage);
 
+        //if user is also the sender
         if (message.getSenderUiD().equals(mCurrentUser.getUid())){
 
             holder.senderNameTV.setTextColor(context.getColor(R.color.green));

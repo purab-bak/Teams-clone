@@ -47,6 +47,10 @@ import org.jetbrains.annotations.NotNull;
 
 import static android.widget.Toast.LENGTH_SHORT;
 
+/**
+ * Activity to login a user
+ **/
+
 public class LoginActivity extends AppCompatActivity {
 
     EditText emailET, passwordET;
@@ -96,18 +100,17 @@ public class LoginActivity extends AppCompatActivity {
                 String email = emailET.getText().toString();
                 String password = passwordET.getText().toString();
 
-                if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password)){
+                if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password)) {
 
-                    if (email.matches(emailPattern)){
+                    if (email.matches(emailPattern)) {
                         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
-                                if (task.isSuccessful()){
+                                if (task.isSuccessful()) {
                                     Toast.makeText(LoginActivity.this, "Logged in", Toast.LENGTH_LONG).show();
 
                                     startActivity(new Intent(LoginActivity.this, DashboardActivity.class));
-                                }
-                                else {
+                                } else {
 
 
                                     errorTv.setText(task.getException().getMessage());
@@ -116,19 +119,16 @@ public class LoginActivity extends AppCompatActivity {
                                 }
                             }
                         });
-                    }
-                    else {
+                    } else {
                         errorTv.setText("Invalid email");
                         errorTv.startAnimation(shakeError());
                     }
-                }
-                else {
+                } else {
 
-                    if (email.isEmpty()){
+                    if (email.isEmpty()) {
                         errorTv.setText("email cannot be empty");
                         errorTv.startAnimation(shakeError());
-                    }
-                    else if (password.isEmpty()){
+                    } else if (password.isEmpty()) {
                         errorTv.setText("password cannot be empty");
                         errorTv.startAnimation(shakeError());
                     }
@@ -158,58 +158,62 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                final EditText mResetEmail = new EditText(view.getContext());
-
-                AlertDialog.Builder passwordResetDialog = new AlertDialog.Builder(view.getContext());
-
-                passwordResetDialog.setTitle("Reset password");
-                passwordResetDialog.setMessage("Enter your email to receive reset link");
-                passwordResetDialog.setView(mResetEmail);
-
-                passwordResetDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        //extract email and set reset link
-                        String mail = mResetEmail.getText().toString();
-
-                        if (!mail.isEmpty()){
-                            mAuth.sendPasswordResetEmail(mail).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-
-                                    errorTv.startAnimation(animation());
-                                    errorTv.setText("Reset link has been sent to your mail");
-
-
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    errorTv.setText("Error resetting the password " + e.getMessage());
-                                    errorTv.startAnimation(shakeError());
-                                }
-                            });
-                        }
-                        else {
-                            errorTv.setText("Email cannot be empty");
-                            errorTv.startAnimation(shakeError());
-                        }
-
-
-                    }
-                });
-
-                passwordResetDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        //close dialog
-                    }
-                });
-
-                passwordResetDialog.create().show();
+                forgotPassword(view);
 
             }
         });
+    }
+
+    private void forgotPassword(View view) {
+        final EditText mResetEmail = new EditText(view.getContext());
+
+        AlertDialog.Builder passwordResetDialog = new AlertDialog.Builder(view.getContext());
+
+        passwordResetDialog.setTitle("Reset password");
+        passwordResetDialog.setMessage("Enter your email to receive reset link");
+        passwordResetDialog.setView(mResetEmail);
+
+        passwordResetDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //extract email and set reset link
+                String mail = mResetEmail.getText().toString();
+
+                if (!mail.isEmpty()) {
+                    mAuth.sendPasswordResetEmail(mail).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+
+                            errorTv.startAnimation(animation());
+                            errorTv.setText("Reset link has been sent to your mail");
+
+
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            errorTv.setText("Error resetting the password " + e.getMessage());
+                            errorTv.startAnimation(shakeError());
+                        }
+                    });
+                } else {
+                    errorTv.setText("Email cannot be empty");
+                    errorTv.startAnimation(shakeError());
+                }
+
+
+            }
+        });
+
+        passwordResetDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //close dialog
+            }
+        });
+
+        passwordResetDialog.create().show();
+
     }
 
     private void signUpWithGoogle() {
@@ -228,7 +232,7 @@ public class LoginActivity extends AppCompatActivity {
         if (requestCode == RC_SIGN_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
-                Toast.makeText(getApplicationContext(),"Signing in...",LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Signing in...", LENGTH_SHORT).show();
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 firebaseAuthWithGoogle(account.getIdToken());
@@ -274,11 +278,10 @@ public class LoginActivity extends AppCompatActivity {
         userRef.child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
-                if (snapshot.exists()){
+                if (snapshot.exists()) {
                     //user already exists
                     showToast("Welcome back! " + user.getDisplayName());
-                }
-                else {
+                } else {
                     //register user
                     uploadDetailsDatabase(user.getEmail(), user.getDisplayName());
 
@@ -296,6 +299,7 @@ public class LoginActivity extends AppCompatActivity {
     private void showToast(String s) {
         Toast.makeText(LoginActivity.this, s, LENGTH_SHORT).show();
     }
+
     private void uploadDetailsDatabase(String email, String name) {
 
         User user = new User(mAuth.getUid(), name, email);
@@ -328,7 +332,7 @@ public class LoginActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-        if (mAuth.getCurrentUser()!=null){
+        if (mAuth.getCurrentUser() != null) {
             startActivity(new Intent(LoginActivity.this, DashboardActivity.class));
             finish();
         }
@@ -348,7 +352,7 @@ public class LoginActivity extends AppCompatActivity {
         return shake;
     }
 
-    private AlphaAnimation animation(){
+    private AlphaAnimation animation() {
         AlphaAnimation greenAnim = new AlphaAnimation(0.3f, 1.0f);
         greenAnim.setDuration(500);
         return greenAnim;

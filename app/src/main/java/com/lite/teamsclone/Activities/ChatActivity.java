@@ -32,6 +32,11 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Activity to display meeting chat
+ **/
+
+
 public class ChatActivity extends AppCompatActivity {
 
     TextView channelNameTV;
@@ -119,7 +124,6 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
-
     }
 
     private void displayMessages(List<Message> messageList) {
@@ -130,7 +134,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private void sendMessage(String messageText) {
         long epoch = System.currentTimeMillis();
-        Message message = new Message(messageText, mCurrentUser.getDisplayName(),String.valueOf(mCurrentUser.getPhotoUrl()),mCurrentUser.getUid(),epoch);
+        Message message = new Message(messageText, mCurrentUser.getDisplayName(), String.valueOf(mCurrentUser.getPhotoUrl()), mCurrentUser.getUid(), epoch);
         messageEt.setText("");
         messageRef.push().setValue(message);
 
@@ -139,9 +143,7 @@ public class ChatActivity extends AppCompatActivity {
     private void initUI() {
         channelNameTV = findViewById(R.id.channelNameTV);
         channelName = getIntent().getStringExtra("channelName");
-
         channelNameTV.append(channelName);
-
         messageEt = findViewById(R.id.chatMessageET);
         sendMessageButton = findViewById(R.id.sendMessageButton);
         chatRV = findViewById(R.id.chatRV);

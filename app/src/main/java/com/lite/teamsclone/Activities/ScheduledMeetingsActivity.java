@@ -26,6 +26,11 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ Activity to display upcoming meetings
+ **/
+
+
 public class ScheduledMeetingsActivity extends AppCompatActivity {
 
     FirebaseUser mCurrentUser;
@@ -48,6 +53,8 @@ public class ScheduledMeetingsActivity extends AppCompatActivity {
         initUI();
 
         long epoch = System.currentTimeMillis();
+
+        //querying database to get upcoming meetings
         firestoreDb.collection(mCurrentUser.getEmail())
                 .whereGreaterThan("timeUTC", String.valueOf(epoch))
                 .get()
@@ -95,8 +102,6 @@ public class ScheduledMeetingsActivity extends AppCompatActivity {
         meetingsList = new ArrayList<>();
         meetingsRV = findViewById(R.id.meetingsRV);
 
-        //Meeting meeting = new Meeting("a", "a", "a", null, "a", "a");
-        //meetingsList.add(meeting);
 
         adapter = new ScheduledMeetingsAdapter(ScheduledMeetingsActivity.this, meetingsList);
 

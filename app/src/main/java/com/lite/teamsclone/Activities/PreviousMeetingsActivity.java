@@ -24,6 +24,11 @@ import com.lite.teamsclone.R;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Activity to past meetings
+ **/
+
+
 public class PreviousMeetingsActivity extends AppCompatActivity {
 
     FirebaseUser mCurrentUser;
@@ -47,7 +52,7 @@ public class PreviousMeetingsActivity extends AppCompatActivity {
         long epoch = System.currentTimeMillis();
 
 
-
+        //querying database to get past meetings
         firestoreDb.collection(mCurrentUser.getEmail())
                 .whereLessThan("timeUTC", String.valueOf(epoch))
                 .get()

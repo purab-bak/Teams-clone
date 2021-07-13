@@ -31,6 +31,9 @@ import com.lite.teamsclone.R;
 
 import java.io.IOException;
 
+/**Activity to allow a user to edit display name and image**/
+
+
 public class EditProfileActivity extends AppCompatActivity {
 
     ImageView profilePictureEdit;
@@ -42,7 +45,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
     private Uri filePath;
 
-    private StorageReference reference= FirebaseStorage.getInstance().getReference();
+    private StorageReference reference = FirebaseStorage.getInstance().getReference();
 
     String imageURL;
 
@@ -80,79 +83,25 @@ public class EditProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if (filePath != null){
+                if (filePath != null) {
+                    uploadToStorage();
+                } else {
 
-                    StorageReference fileref = reference.child(mCurrentUser.getUid());
-                    fileref.putFile(filePath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-
-                            fileref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                @Override
-                                public void onSuccess(Uri uri) {
-                                    errorTv.setTextColor(Color.GREEN);
-                                    errorTv.startAnimation(animation());
-                                    errorTv.setText("Updating!");
-
-                                    imageURL=uri.toString();
-
-                                    UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                                            .setDisplayName(nameEt.getText().toString())
-                                            .setPhotoUri(Uri.parse(imageURL))
-                                            .build();
-
-                                    mCurrentUser.updateProfile(profileUpdates)
-                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                @Override
-                                                public void onSuccess(Void unused) {
-                                                    Toast.makeText(EditProfileActivity.this, "Details updated", Toast.LENGTH_SHORT).show();
-                                                    startActivity(new Intent(EditProfileActivity.this, DashboardActivity.class));
-                                                    finish();
-                                                }
-                                            });
-                                }
-                            });
-
-                        }
-                    });
-
-
-                }
-                else {
-
-                    if (TextUtils.isEmpty(nameEt.getText().toString())){
+                    if (TextUtils.isEmpty(nameEt.getText().toString())) {
 
                         errorTv.startAnimation(shakeError());
                         errorTv.setText("Name cannot be empty");
 
-                    }
-                    else {
-                        if (nameEt.getText().toString().equals(mCurrentUser.getDisplayName())){
+                    } else {
+                        if (nameEt.getText().toString().equals(mCurrentUser.getDisplayName())) {
 
                             errorTv.startAnimation(shakeError());
                             errorTv.setText("No changes detected");
 
-                        }
-                        else {
+                        } else {
 
-                            errorTv.setTextColor(Color.GREEN);
-                            errorTv.startAnimation(animation());
-                            errorTv.setText("Updating!");
+                            updateAndGotoDashboard();
 
-                            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                                    .setDisplayName(nameEt.getText().toString())
-                                    .build();
-
-
-                            mCurrentUser.updateProfile(profileUpdates)
-                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void unused) {
-                                            Toast.makeText(EditProfileActivity.this, "Name updated", Toast.LENGTH_SHORT).show();
-                                            startActivity(new Intent(EditProfileActivity.this, DashboardActivity.class));
-                                            finish();
-                                        }
-                                    });
                         }
                     }
 
@@ -162,11 +111,69 @@ public class EditProfileActivity extends AppCompatActivity {
 
     }
 
+    private void updateAndGotoDashboard() {
+
+        errorTv.setTextColor(Color.GREEN);
+        errorTv.startAnimation(animation());
+        errorTv.setText("Updating!");
+
+        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                .setDisplayName(nameEt.getText().toString())
+                .build();
+
+
+        mCurrentUser.updateProfile(profileUpdates)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Toast.makeText(EditProfileActivity.this, "Name updated", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(EditProfileActivity.this, DashboardActivity.class));
+                        finish();
+                    }
+                });
+    }
+
+    private void uploadToStorage() {
+        StorageReference fileref = reference.child(mCurrentUser.getUid());
+        fileref.putFile(filePath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                fileref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        errorTv.setTextColor(Color.GREEN);
+                        errorTv.startAnimation(animation());
+                        errorTv.setText("Updating!");
+
+                        imageURL = uri.toString();
+
+                        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                .setDisplayName(nameEt.getText().toString())
+                                .setPhotoUri(Uri.parse(imageURL))
+                                .build();
+
+                        mCurrentUser.updateProfile(profileUpdates)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void unused) {
+                                        Toast.makeText(EditProfileActivity.this, "Details updated", Toast.LENGTH_SHORT).show();
+                                        startActivity(new Intent(EditProfileActivity.this, DashboardActivity.class));
+                                        finish();
+                                    }
+                                });
+                    }
+                });
+
+            }
+        });
+    }
+
     private void showFileChooser() {
         Intent galleryIntent = new Intent();
         galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
         galleryIntent.setType("image/*");
-        startActivityForResult(galleryIntent,2);
+        startActivityForResult(galleryIntent, 2);
 
     }
 
@@ -174,8 +181,8 @@ public class EditProfileActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode==2 && resultCode==RESULT_OK && data!=null){
-            filePath=data.getData();
+        if (requestCode == 2 && resultCode == RESULT_OK && data != null) {
+            filePath = data.getData();
             profilePictureEdit.setImageURI(filePath);
         }
     }
@@ -192,7 +199,7 @@ public class EditProfileActivity extends AppCompatActivity {
         return shake;
     }
 
-    private AlphaAnimation animation(){
+    private AlphaAnimation animation() {
         AlphaAnimation greenAnim = new AlphaAnimation(0.3f, 1.0f);
         greenAnim.setDuration(500);
         return greenAnim;

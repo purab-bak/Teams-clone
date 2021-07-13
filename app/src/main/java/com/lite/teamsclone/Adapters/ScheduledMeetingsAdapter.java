@@ -30,6 +30,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+/**
+ Adapter and ViewHolder for displaying meetings
+ **/
+
 public class ScheduledMeetingsAdapter extends RecyclerView.Adapter<ScheduledMeetingsAdapter.ScheduledMeetingsViewHolder> {
 
     Context context;

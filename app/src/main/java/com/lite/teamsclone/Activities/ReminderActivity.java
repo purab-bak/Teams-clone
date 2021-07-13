@@ -46,6 +46,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * Activity to schedule a meeting
+ **/
+
+
 public class ReminderActivity extends AppCompatActivity {
 
     TextInputEditText eventNameEt, eventDescEt, meetingIDEt, recipientEmailET;
@@ -130,15 +135,17 @@ public class ReminderActivity extends AppCompatActivity {
             }
         });
 
+
         calendarSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
 
                 addToCalendar = isChecked;
-                //showToast(String.valueOf(addToCalendar));
             }
         });
 
+
+        //generate random ID
         generateUniqueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -253,6 +260,8 @@ public class ReminderActivity extends AppCompatActivity {
         }
     }
 
+
+    //view time dialog
     private void pickTime() {
 
         time = "";
@@ -281,6 +290,8 @@ public class ReminderActivity extends AppCompatActivity {
         timePickerDialog.show();
     }
 
+
+    //view Date dialog
     private void pickDate() {
         sDate1 = "";
 

@@ -18,6 +18,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+/**
+ Adapter and ViewHolder for displaying notes
+ **/
+
 public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesViewHolder>{
 
     Context context;

@@ -64,7 +64,9 @@ import io.agora.rtc.Constants;
 import io.agora.rtc.IRtcEngineEventHandler;
 import io.agora.rtc.RtcEngine;
 import io.agora.rtc.video.VideoCanvas;
-
+/**
+    Main Activity to handle video conferencing callbacks
+ **/
 public class MainActivity extends AppCompatActivity {
 
     private static final int PERMISSION_REQ_ID = 22;
@@ -197,13 +199,11 @@ public class MainActivity extends AppCompatActivity {
                         currentSessionInfo.setUserCount(currentSessionInfo.getUserCount() + 1);
 
                         setupRemoteVideo(uid);
-                        //userCount = getUserCountFromDatabase();
-                        //Toast.makeText(MainActivity.this, "User count local " + currentSessionInfo.getUserCount(), Toast.LENGTH_SHORT).show();
-                    }
+                         }
                 });
             }
 
-            if (state == Constants.REMOTE_VIDEO_STATE_REASON_LOCAL_MUTED){
+            if (state == Constants.REMOTE_VIDEO_STATE_REASON_LOCAL_MUTED) {
                 //change here
             }
         }
@@ -271,7 +271,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 isControlPanelVisible = !isControlPanelVisible;
-                controlPanel.setVisibility(isControlPanelVisible? View.VISIBLE : View.INVISIBLE);
+                controlPanel.setVisibility(isControlPanelVisible ? View.VISIBLE : View.INVISIBLE);
 
                 int res = isControlPanelVisible ? R.drawable.ic_baseline_keyboard_arrow_down_24 : R.drawable.ic_baseline_keyboard_arrow_up_24;
                 upButton.setImageResource(res);
@@ -323,13 +323,12 @@ public class MainActivity extends AppCompatActivity {
         notesTitleTV.setText(channelName);
     }
 
+
+
     private void initEngineAndJoinChannel() {
 
         //init engine
         initializeEngine();
-
-        //setup video config
-        //setupVideoConfig();
 
         //setup local video
         setupLocalVideo();
@@ -340,7 +339,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    //done
     private void initializeEngine() {
         try {
             mRtcEngine = RtcEngine.create(getBaseContext(), getString(R.string.agora_app_id), mRtcHandler);
@@ -350,19 +348,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-//    private void setupVideoConfig(){
-//        mRtcEngine.enableVideo();
-//
-//        mRtcEngine.setVideoEncoderConfiguration(new VideoEncoderConfiguration(VideoEncoderConfiguration.VD_640x360,
-//                VideoEncoderConfiguration.FRAME_RATE.FRAME_RATE_FPS_15,
-//                VideoEncoderConfiguration.STANDARD_BITRATE,
-//                VideoEncoderConfiguration.ORIENTATION_MODE.ORIENTATION_MODE_FIXED_PORTRAIT
-//                ));
-//
-//    }
-
-
-    //done
     private void setupLocalVideo() {
         runOnUiThread(new Runnable() {
             @Override
@@ -387,7 +372,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    //done
+    //join a video call channel
     private void joinChannel() {
         String token = getString(R.string.agora_access_token);
         if (TextUtils.isEmpty(token)) {
@@ -398,7 +383,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    //done
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -414,7 +399,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    //done
+    //ask for permissions
     private boolean checkSelfPermission(String permission, int requestCode) {
         if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, REQUESTED_PERMISSIONS, requestCode);
@@ -423,13 +408,10 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    //done
     private void onRemoteUserLeft(int uid) {
         removeRemoteVideo(uid);
     }
 
-
-    //done
     private void removeRemoteVideo(final int uid) {
         runOnUiThread(new Runnable() {
             @Override
@@ -444,8 +426,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
-    //done
     private void setupRemoteVideo(int uid) {
         runOnUiThread(new Runnable() {
             @Override
@@ -464,7 +444,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    //done
     private void switchToDefaultVideoView() {
 
         mGridVideoViewContainer.initViewContainer(MainActivity.this, agoraUser.getAgoraUid(), mUidsList, mIsLandscape);
@@ -506,24 +485,10 @@ public class MainActivity extends AppCompatActivity {
         mRtcEngine.leaveChannel();
     }
 
-    //done
-    private void finishCalling() {
-        leaveChannel();
-        mUidsList.clear();
-    }
-
-    //done
-    private void startCalling() {
-        setupLocalVideo();
-        joinChannel();
-    }
-
-    //done
     public void onSwitchCameraClicked(View view) {
         mRtcEngine.switchCamera();
     }
 
-    //done
     public void onLocalAudioMuteClicked(View view) {
         isMuted = !isMuted;
         mRtcEngine.muteLocalAudioStream(isMuted);
@@ -585,12 +550,9 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    /**
-     * This method is pausing video. !!!!
-     **/
+
     public void onVideoButtonClicked(View view) {
 
-        //mRtcEngine.muteLocalVideoStream(isVideoEnabled);
         mRtcEngine.enableLocalVideo(!isVideoEnabled);
 
         isVideoEnabled = !isVideoEnabled;
@@ -605,8 +567,8 @@ public class MainActivity extends AppCompatActivity {
         isShowingChat = !isShowingChat;
         mChatLinearLayout.setVisibility(isShowingChat ? View.VISIBLE : View.GONE);
 
-        if (isShowingNotes){
-            isShowingNotes= false;
+        if (isShowingNotes) {
+            isShowingNotes = false;
             notesLayout.setVisibility(View.GONE);
         }
 
@@ -614,23 +576,23 @@ public class MainActivity extends AppCompatActivity {
 
     public void onNotesButtonCLicked(View view) {
 
-        isShowingNotes = ! isShowingNotes;
-        notesLayout.setVisibility(isShowingNotes? View.VISIBLE : View.GONE);
+        isShowingNotes = !isShowingNotes;
+        notesLayout.setVisibility(isShowingNotes ? View.VISIBLE : View.GONE);
 
-        if (isShowingChat){
+        if (isShowingChat) {
             isShowingChat = false;
             mChatLinearLayout.setVisibility(View.GONE);
         }
 
     }
 
-    private void getNotes(){
+    private void getNotes() {
 
         notesRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
 
-                if (snapshot.exists()){
+                if (snapshot.exists()) {
 
                     Note savedNote = snapshot.getValue(Note.class);
                     notesTextEt.setText(savedNote.getBody());
@@ -659,11 +621,11 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
     private void showToast(String s) {
         Toast.makeText(MainActivity.this, s, Toast.LENGTH_SHORT).show();
     }
 
+    //get message from database
     private void getMessages() {
 
         messageRef.addChildEventListener(new ChildEventListener() {
@@ -724,67 +686,17 @@ public class MainActivity extends AppCompatActivity {
     private void sendMessage(String messageText) {
 
         long epoch = System.currentTimeMillis();
-        Message message = new Message(messageText, mCurrentUser.getDisplayName(),String.valueOf(mCurrentUser.getPhotoUrl()),mCurrentUser.getUid(),epoch);
+        Message message = new Message(messageText, mCurrentUser.getDisplayName(), String.valueOf(mCurrentUser.getPhotoUrl()), mCurrentUser.getUid(), epoch);
         messageEt.setText("");
         messageRef.push().setValue(message);
 
     }
 
 
-    private void updateDatabase(int uid) {
-
-        activeChannelsRef.child(channelName).child("users").child(mCurrentUser.getUid()).setValue(uid);
-
-        //activeChannelsRef.child(channelName).child("users-count").setValue()
-
-
-        activeChannelsRef.child(channelName).runTransaction(new Transaction.Handler() {
-            @NonNull
-            @NotNull
-            @Override
-            public Transaction.Result doTransaction(@NonNull @NotNull MutableData currentData) {
-                if (currentData.child("user-count").getValue() != null) {
-                    userCount = Integer.parseInt(currentData.child("user-count").getValue().toString()) + 1;
-                } else {
-                    userCount = 1;
-                }
-
-                currentData.child("user-count").setValue(userCount);
-                return Transaction.success(currentData);
-            }
-
-            @Override
-            public void onComplete(@Nullable @org.jetbrains.annotations.Nullable DatabaseError error, boolean committed, @Nullable @org.jetbrains.annotations.Nullable DataSnapshot currentData) {
-                Toast.makeText(MainActivity.this, "Transaction complete", Toast.LENGTH_SHORT).show();
-                Toast.makeText(MainActivity.this, "user count txn compl: " + userCount, Toast.LENGTH_SHORT).show();
-
-            }
-        });
-
-    }
-
-    private int getUserCountFromDatabase() {
-
-        activeChannelsRef.child(channelName).child("user-count").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
-                userCount = Integer.parseInt(snapshot.getValue().toString());
-                Toast.makeText(MainActivity.this, "User count from function call : " + userCount, Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onCancelled(@NonNull @NotNull DatabaseError error) {
-
-            }
-        });
-
-        return userCount;
-    }
-
-
+    //sharing code
     public void onShareButtonClicked(View view) {
         ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-        ClipData clip = ClipData.newPlainText("Meeting Code", "Use the code "+channelName+ " to join the meeting.");
+        ClipData clip = ClipData.newPlainText("Meeting Code", "Use the code " + channelName + " to join the meeting.");
         showToast("Meeting code copied to clipboard!");
         clipboard.setPrimaryClip(clip);
     }
